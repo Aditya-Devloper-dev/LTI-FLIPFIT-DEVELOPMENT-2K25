@@ -1,5 +1,8 @@
 package com.lti.flipfit.services;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Author      :
  * Version     : 1.0
@@ -13,6 +16,6 @@ public interface GymOwnerFlipFitService {
 
     boolean updateCenter(String centerId);
 
-    Object viewAllBookings(String centerId);
+    List<Map<String, Object>> viewAllBookings(String centerId);
 
 }
