@@ -1,5 +1,6 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.services.GymOwnerFlipFitService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,24 +12,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/owner")
 public class GymOwnerFlipFitController {
 
+    private final GymOwnerFlipFitService service;
+
+    public GymOwnerFlipFitController(GymOwnerFlipFitService service) {
+        this.service = service;
+    }
+
     @PostMapping("/approve-booking/{bookingId}")
     public boolean approveBooking(@PathVariable String bookingId) {
-        return false;
+        return service.approveBooking(bookingId);
     }
 
     @PostMapping("/add-center")
     public boolean addCenter(@RequestParam String ownerId,
                              @RequestParam String centerId) {
-        return false;
+        return service.addCenter(ownerId, centerId);
     }
 
     @PutMapping("/update-center/{centerId}")
     public boolean updateCenter(@PathVariable String centerId) {
-        return false;
+        return service.updateCenter(centerId);
     }
 
     @GetMapping("/all-bookings/{centerId}")
     public Object viewAllBookings(@PathVariable String centerId) {
-        return null;
+        return service.viewAllBookings(centerId);
     }
 }

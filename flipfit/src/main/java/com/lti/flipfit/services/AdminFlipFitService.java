@@ -1,5 +1,10 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.beans.GymCenter;
+import com.lti.flipfit.beans.Slot;
+
+import java.util.List;
+
 /**
  * Author      :
  * Version     : 1.0
@@ -7,6 +12,12 @@ package com.lti.flipfit.services;
  */
 public interface AdminFlipFitService {
 
-    boolean approveCenterRegistration(String centerId);
+    String createCenter(GymCenter center);
 
+    String createSlot(String centerId, Slot slot);
+
+    List<GymCenter> getAllCenters();
+
+    GymCenter getCenterById(String centerId);
 }
+

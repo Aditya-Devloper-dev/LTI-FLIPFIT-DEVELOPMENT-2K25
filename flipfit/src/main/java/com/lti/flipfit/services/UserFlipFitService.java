@@ -1,5 +1,7 @@
 package com.lti.flipfit.services;
 
+import java.util.Map;
+
 /**
  * Author      :
  * Version     : 1.0
@@ -9,7 +11,7 @@ public interface UserFlipFitService {
 
     String register(Object userDto);
 
-    Object login(String email, String password);
+    Map<String, Object> login(String email, String password);
 
     boolean updateProfile(String userId);
 

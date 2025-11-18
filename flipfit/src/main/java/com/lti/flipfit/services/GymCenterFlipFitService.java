@@ -1,5 +1,8 @@
 package com.lti.flipfit.services;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Author      :
  * Version     : 1.0
@@ -7,7 +10,7 @@ package com.lti.flipfit.services;
  */
 public interface GymCenterFlipFitService {
 
-    Object getSlotsByDate(String centerId, String date);
+    List<Map<String, Object>> getSlotsByDate(String centerId, String date);
 
     boolean updateCenterInfo(String centerId);
 
