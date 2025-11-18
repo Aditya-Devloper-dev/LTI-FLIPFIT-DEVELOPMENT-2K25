@@ -1,5 +1,6 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.services.PaymentFlipFitService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,19 +12,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/payment")
 public class PaymentFlipFitController {
 
+    private final PaymentFlipFitService service;
+
+    public PaymentFlipFitController(PaymentFlipFitService service) {
+        this.service = service;
+    }
+
     @PostMapping("/process")
     public boolean processPayment(@RequestParam String bookingId,
                                   @RequestParam double amount) {
-        return false;
+        return service.processPayment(bookingId, amount);
     }
 
     @PostMapping("/refund/{paymentId}")
     public boolean refund(@PathVariable String paymentId) {
-        return false;
+        return service.refund(paymentId);
     }
 
     @GetMapping("/status/{paymentId}")
     public String checkStatus(@PathVariable String paymentId) {
-        return null;
+        return service.checkStatus(paymentId);
     }
 }
