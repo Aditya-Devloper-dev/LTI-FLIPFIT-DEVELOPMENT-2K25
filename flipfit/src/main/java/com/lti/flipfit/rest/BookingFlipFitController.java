@@ -7,16 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Author      :
- * Version     : 1.0
- * Description : Controller for handling all booking operations.
- */
 @RestController
 @RequestMapping("/booking")
 public class BookingFlipFitController {
 
-    private BookingFlipFitService bookingService;
+    private final BookingFlipFitService bookingService;
 
     public BookingFlipFitController(BookingFlipFitService bookingService) {
         this.bookingService = bookingService;
@@ -24,17 +19,19 @@ public class BookingFlipFitController {
 
     @PostMapping("/book")
     public ResponseEntity<String> bookSlot(@RequestBody Booking booking) {
-        return null;
+        String response = bookingService.bookSlot(booking);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/cancel/{bookingId}")
     public ResponseEntity<String> cancelBooking(@PathVariable String bookingId) {
-        return null;
+        String response = bookingService.cancelBooking(bookingId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Booking>> getUserBookings(@PathVariable String userId) {
-        return null;
+        List<Booking> bookings = bookingService.getUserBookings(userId);
+        return ResponseEntity.ok(bookings);
     }
 }
-
