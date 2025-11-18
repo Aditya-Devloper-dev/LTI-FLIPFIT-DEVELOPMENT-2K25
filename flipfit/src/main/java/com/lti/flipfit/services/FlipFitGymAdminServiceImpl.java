@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class AdminFlipFitServiceImpl implements AdminFlipFitService {
+public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     // Temporary in-memory store for dummy testing
     private final Map<String, GymCenter> centerStore = new HashMap<>();

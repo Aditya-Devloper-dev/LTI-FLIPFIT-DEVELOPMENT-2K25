@@ -1,7 +1,7 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.beans.Booking;
-import com.lti.flipfit.services.BookingFlipFitService;
+import com.lti.flipfit.services.FlipFitGymBookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +16,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/booking")
-public class BookingFlipFitController {
+public class FlipFitGymBookingController {
 
-    private final BookingFlipFitService bookingService;
+    private final FlipFitGymBookingService bookingService;
 
-    public BookingFlipFitController(BookingFlipFitService bookingService) {
+    public FlipFitGymBookingController(FlipFitGymBookingService bookingService) {
         this.bookingService = bookingService;
     }
 

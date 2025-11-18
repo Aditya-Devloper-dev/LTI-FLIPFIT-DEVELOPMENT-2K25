@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.services.SchedulerFlipFitService;
+import com.lti.flipfit.services.FlipFitGymSchedulerService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/scheduler")
-public class SchedulerFlipFitController {
+public class FlipFitGymSchedulerController {
 
-    private final SchedulerFlipFitService service;
+    private final FlipFitGymSchedulerService service;
 
-    public SchedulerFlipFitController(SchedulerFlipFitService service) {
+    public FlipFitGymSchedulerController(FlipFitGymSchedulerService service) {
         this.service = service;
     }
 

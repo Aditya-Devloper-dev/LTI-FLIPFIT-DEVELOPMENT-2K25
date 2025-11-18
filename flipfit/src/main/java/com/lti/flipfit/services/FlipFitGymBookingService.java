@@ -1,7 +1,6 @@
 package com.lti.flipfit.services;
 
 import com.lti.flipfit.beans.Booking;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * Description : Handles booking creation, updates, and cancellations.
  */
 
-public interface BookingFlipFitService {
+public interface FlipFitGymBookingService {
 
     String bookSlot(Booking booking);
 

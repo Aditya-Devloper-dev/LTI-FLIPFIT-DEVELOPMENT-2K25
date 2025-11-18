@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class PaymentFlipFitServiceImpl implements PaymentFlipFitService {
+public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
 
     private final Map<String, String> paymentStore = new HashMap<>();
 

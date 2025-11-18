@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.services.NotificationFlipFitService;
+import com.lti.flipfit.services.FlipFitGymNotificationService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/notification")
-public class NotificationFlipFitController {
+public class FlipFitGymNotificationController {
 
-    private final NotificationFlipFitService service;
+    private final FlipFitGymNotificationService service;
 
-    public NotificationFlipFitController(NotificationFlipFitService service) {
+    public FlipFitGymNotificationController(FlipFitGymNotificationService service) {
         this.service = service;
     }
 

@@ -5,7 +5,7 @@ package com.lti.flipfit.services;
  * Version     : 1.0
  * Description : Service to send notifications to users.
  */
-public interface NotificationFlipFitService {
+public interface FlipFitGymNotificationService {
 
     boolean sendNotification(String receiverId, String message, String type);
 

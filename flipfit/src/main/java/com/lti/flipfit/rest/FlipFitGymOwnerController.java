@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.services.GymOwnerFlipFitService;
+import com.lti.flipfit.services.FlipFitGymOwnerService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/owner")
-public class GymOwnerFlipFitController {
+public class FlipFitGymOwnerController {
 
-    private final GymOwnerFlipFitService service;
+    private final FlipFitGymOwnerService service;
 
-    public GymOwnerFlipFitController(GymOwnerFlipFitService service) {
+    public FlipFitGymOwnerController(FlipFitGymOwnerService service) {
         this.service = service;
     }
 

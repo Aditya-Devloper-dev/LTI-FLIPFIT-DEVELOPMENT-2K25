@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class GymCenterFlipFitServiceImpl implements GymCenterFlipFitService {
+public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
 
     @Override
     public List<Map<String, Object>> getSlotsByDate(String centerId, String date) {

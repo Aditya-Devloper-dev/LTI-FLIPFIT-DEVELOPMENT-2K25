@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class GymOwnerFlipFitServiceImpl implements GymOwnerFlipFitService {
+public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public boolean approveBooking(String bookingId) {

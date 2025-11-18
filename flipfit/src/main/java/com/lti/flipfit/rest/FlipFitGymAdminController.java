@@ -2,7 +2,7 @@ package com.lti.flipfit.rest;
 
 import com.lti.flipfit.beans.GymCenter;
 import com.lti.flipfit.beans.Slot;
-import com.lti.flipfit.services.AdminFlipFitService;
+import com.lti.flipfit.services.FlipFitGymAdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminFlipFitController {
+public class FlipFitGymAdminController {
 
-    private final AdminFlipFitService adminService;
+    private final FlipFitGymAdminService adminService;
 
-    public AdminFlipFitController(AdminFlipFitService adminService) {
+    public FlipFitGymAdminController(FlipFitGymAdminService adminService) {
         this.adminService = adminService;
     }
 

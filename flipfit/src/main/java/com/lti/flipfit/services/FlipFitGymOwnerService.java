@@ -8,7 +8,7 @@ import java.util.Map;
  * Version     : 1.0
  * Description : Service for Gym Owners to manage centers and bookings.
  */
-public interface GymOwnerFlipFitService {
+public interface FlipFitGymOwnerService {
 
     boolean approveBooking(String bookingId);
 

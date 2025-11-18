@@ -10,7 +10,7 @@ import java.util.List;
  * Version     : 1.0
  * Description : Service operations for system admins.
  */
-public interface AdminFlipFitService {
+public interface FlipFitGymAdminService {
 
     String createCenter(GymCenter center);
 

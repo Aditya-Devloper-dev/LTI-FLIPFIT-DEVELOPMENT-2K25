@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.services.UserFlipFitService;
+import com.lti.flipfit.services.FlipFitGymUserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-public class UserFlipFitController {
+public class FlipFitGymUserController {
 
-    private final UserFlipFitService service;
+    private final FlipFitGymUserService service;
 
-    public UserFlipFitController(UserFlipFitService service) {
+    public FlipFitGymUserController(FlipFitGymUserService service) {
         this.service = service;
     }
 
