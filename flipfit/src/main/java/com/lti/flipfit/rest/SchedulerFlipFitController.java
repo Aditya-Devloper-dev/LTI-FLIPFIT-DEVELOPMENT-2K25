@@ -1,5 +1,6 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.services.SchedulerFlipFitService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,9 +12,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/scheduler")
 public class SchedulerFlipFitController {
 
+    private final SchedulerFlipFitService service;
+
+    public SchedulerFlipFitController(SchedulerFlipFitService service) {
+        this.service = service;
+    }
+
     @PostMapping("/run-waitlist-job")
-    public void runWaitlistPromotionJob() {}
+    public String runWaitlistPromotionJob() {
+        service.runWaitlistPromotionJob();
+        return "Waitlist promotion job executed.";
+    }
 
     @PostMapping("/send-reminders")
-    public void sendDailyReminders() {}
+    public String sendDailyReminders() {
+        service.sendDailyReminders();
+        return "Daily reminders sent.";
+    }
 }
