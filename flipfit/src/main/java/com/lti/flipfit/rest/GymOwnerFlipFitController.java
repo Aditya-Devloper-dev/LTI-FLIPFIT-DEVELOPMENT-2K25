@@ -18,10 +18,24 @@ public class GymOwnerFlipFitController {
         this.service = service;
     }
 
+    /*
+     * @Method: Approving a booking
+     * @Description: Marks a pending booking as approved by the gym owner
+     * @MethodParameters: String bookingId
+     * @Exception: Throws exceptions if booking is not found or owner is not authorized
+     */
+
     @PostMapping("/approve-booking/{bookingId}")
     public boolean approveBooking(@PathVariable String bookingId) {
         return service.approveBooking(bookingId);
     }
+
+    /*
+     * @Method: Adding a center under an owner
+     * @Description: Links an existing center to the specified owner account
+     * @MethodParameters: String ownerId, String centerId
+     * @Exception: Throws exceptions if owner/center is invalid or mapping already exists
+     */
 
     @PostMapping("/add-center")
     public boolean addCenter(@RequestParam String ownerId,
@@ -29,10 +43,24 @@ public class GymOwnerFlipFitController {
         return service.addCenter(ownerId, centerId);
     }
 
+    /*
+     * @Method: Updating center details by owner
+     * @Description: Updates information of a center managed by the owner
+     * @MethodParameters: String centerId
+     * @Exception: Throws exceptions if center does not exist or owner lacks permission
+     */
+
     @PutMapping("/update-center/{centerId}")
     public boolean updateCenter(@PathVariable String centerId) {
         return service.updateCenter(centerId);
     }
+
+    /*
+     * @Method: Viewing all bookings for a center
+     * @Description: Retrieves every booking associated with the given centerId
+     * @MethodParameters: String centerId
+     * @Exception: Throws exceptions if center is invalid or booking data retrieval fails
+     */
 
     @GetMapping("/all-bookings/{centerId}")
     public Object viewAllBookings(@PathVariable String centerId) {

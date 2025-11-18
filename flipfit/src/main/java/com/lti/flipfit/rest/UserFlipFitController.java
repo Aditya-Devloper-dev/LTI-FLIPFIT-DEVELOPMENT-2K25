@@ -5,6 +5,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Author      :
+ * Version     : 1.0
+ * Description : Controller for user registration, login, and profile updates across
+ *               admin, owner, and customer roles.
+ */
+
 @RestController
 @RequestMapping("/user")
 public class UserFlipFitController {

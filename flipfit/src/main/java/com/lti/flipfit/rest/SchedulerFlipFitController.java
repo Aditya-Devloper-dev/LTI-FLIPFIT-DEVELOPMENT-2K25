@@ -18,11 +18,25 @@ public class SchedulerFlipFitController {
         this.service = service;
     }
 
+    /*
+     * @Method: Triggering the waitlist promotion job
+     * @Description: Manually runs the job that promotes users from the waitlist when slots free up
+     * @MethodParameters: None
+     * @Exception: Throws exceptions if job execution fails
+     */
+
     @PostMapping("/run-waitlist-job")
     public String runWaitlistPromotionJob() {
         service.runWaitlistPromotionJob();
         return "Waitlist promotion job executed.";
     }
+
+    /*
+     * @Method: Sending daily reminder notifications
+     * @Description: Manually triggers the scheduler to send daily reminders to users
+     * @MethodParameters: None
+     * @Exception: Throws exceptions if reminder execution fails
+     */
 
     @PostMapping("/send-reminders")
     public String sendDailyReminders() {
