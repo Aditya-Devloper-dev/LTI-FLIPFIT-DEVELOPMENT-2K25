@@ -1,5 +1,9 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.beans.Booking;
+
+import java.util.List;
+
 /**
  * Author      :
  * Version     : 1.0
@@ -7,12 +11,10 @@ package com.lti.flipfit.services;
  */
 public interface BookingFlipFitService {
 
-    String bookSlot(String customerId, String centerId, String slotId);
+    String bookSlot(Booking booking);
 
-    boolean cancelBooking(String bookingId);
+    String cancelBooking(String bookingId);
 
-    boolean confirmBooking(String bookingId);
-
-    boolean requestOwnerApproval(String bookingId);
-
+    List<Booking> getUserBookings(String userId);
 }
+

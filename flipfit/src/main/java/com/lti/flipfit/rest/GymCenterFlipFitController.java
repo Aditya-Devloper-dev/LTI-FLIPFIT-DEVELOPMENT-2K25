@@ -1,5 +1,6 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.services.GymCenterFlipFitService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,14 +12,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/gym-center")
 public class GymCenterFlipFitController {
 
+    private final GymCenterFlipFitService service;
+
+    public GymCenterFlipFitController(GymCenterFlipFitService service) {
+        this.service = service;
+    }
+
     @GetMapping("/slots")
     public Object getSlotsByDate(@RequestParam String centerId,
                                  @RequestParam String date) {
-        return null;
+        return service.getSlotsByDate(centerId, date);
     }
 
     @PutMapping("/update/{centerId}")
     public boolean updateCenterInfo(@PathVariable String centerId) {
-        return false;
+        return service.updateCenterInfo(centerId);
     }
 }
+

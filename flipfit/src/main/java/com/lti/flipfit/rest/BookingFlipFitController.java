@@ -1,6 +1,11 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.beans.Booking;
+import com.lti.flipfit.services.BookingFlipFitService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Author      :
@@ -11,25 +16,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/booking")
 public class BookingFlipFitController {
 
-    @PostMapping("/create")
-    public String createBooking(@RequestParam String customerId,
-                                @RequestParam String centerId,
-                                @RequestParam String slotId) {
+    private BookingFlipFitService bookingService;
+
+    public BookingFlipFitController(BookingFlipFitService bookingService) {
+        this.bookingService = bookingService;
+    }
+
+    @PostMapping("/book")
+    public ResponseEntity<String> bookSlot(@RequestBody Booking booking) {
         return null;
     }
 
     @DeleteMapping("/cancel/{bookingId}")
-    public boolean cancelBooking(@PathVariable String bookingId) {
-        return false;
+    public ResponseEntity<String> cancelBooking(@PathVariable String bookingId) {
+        return null;
     }
 
-    @PostMapping("/confirm/{bookingId}")
-    public boolean confirmBooking(@PathVariable String bookingId) {
-        return false;
-    }
-
-    @PostMapping("/request-owner-approval/{bookingId}")
-    public boolean requestOwnerApproval(@PathVariable String bookingId) {
-        return false;
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Booking>> getUserBookings(@PathVariable String userId) {
+        return null;
     }
 }
+
