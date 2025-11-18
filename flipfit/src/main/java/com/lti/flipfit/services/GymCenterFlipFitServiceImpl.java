@@ -2,16 +2,8 @@ package com.lti.flipfit.services;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/**
- * Author      : Aditya Anand Mishra
- * Version     : 1.0
- * Description : Service implementation for gym center operations.
- */
 @Service
 public class GymCenterFlipFitServiceImpl implements GymCenterFlipFitService {
 
@@ -30,14 +22,14 @@ public class GymCenterFlipFitServiceImpl implements GymCenterFlipFitService {
         slot2.put("startTime", "07:00");
         slot2.put("endTime", "08:00");
         slot2.put("capacity", 20);
-        slot2.put("availableSeats", 0);  // full slot
+        slot2.put("availableSeats", 0);
 
         return Arrays.asList(slot1, slot2);
     }
 
     @Override
     public boolean updateCenterInfo(String centerId) {
-        // For dummy testing → always return true
+        // always return true for dummy test
         return true;
     }
 }
