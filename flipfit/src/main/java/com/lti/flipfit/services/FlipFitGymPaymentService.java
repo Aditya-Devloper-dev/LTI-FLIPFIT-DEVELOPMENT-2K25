@@ -5,7 +5,7 @@ package com.lti.flipfit.services;
  * Version     : 1.0
  * Description : Handles payment processing for bookings.
  */
-public interface PaymentFlipFitService {
+public interface FlipFitGymPaymentService {
 
     boolean processPayment(String bookingId, double amount);
 

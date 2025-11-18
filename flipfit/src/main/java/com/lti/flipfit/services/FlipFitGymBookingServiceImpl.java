@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class BookingFlipFitServiceImpl implements BookingFlipFitService {
+public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
     // simple in-memory booking store
     private final Map<String, Booking> bookingStore = new HashMap<>();

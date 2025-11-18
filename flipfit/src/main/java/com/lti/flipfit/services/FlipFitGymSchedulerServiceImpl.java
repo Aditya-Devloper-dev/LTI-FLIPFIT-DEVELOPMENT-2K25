@@ -3,7 +3,7 @@ package com.lti.flipfit.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SchedulerFlipFitServiceImpl implements SchedulerFlipFitService {
+public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerService {
 
     @Override
     public void runWaitlistPromotionJob() {

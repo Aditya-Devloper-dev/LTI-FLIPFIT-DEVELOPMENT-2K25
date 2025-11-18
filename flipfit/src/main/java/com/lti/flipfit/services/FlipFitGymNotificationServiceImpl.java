@@ -3,7 +3,7 @@ package com.lti.flipfit.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class NotificationFlipFitServiceImpl implements NotificationFlipFitService {
+public class FlipFitGymNotificationServiceImpl implements FlipFitGymNotificationService {
 
     @Override
     public boolean sendNotification(String receiverId, String message, String type) {

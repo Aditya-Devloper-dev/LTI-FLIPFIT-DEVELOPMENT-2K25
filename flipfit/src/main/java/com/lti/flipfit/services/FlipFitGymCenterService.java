@@ -8,7 +8,7 @@ import java.util.Map;
  * Version     : 1.0
  * Description : Operations related to gym centers.
  */
-public interface GymCenterFlipFitService {
+public interface FlipFitGymCenterService {
 
     List<Map<String, Object>> getSlotsByDate(String centerId, String date);
 

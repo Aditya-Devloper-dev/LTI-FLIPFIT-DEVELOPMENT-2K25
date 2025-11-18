@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.services.PaymentFlipFitService;
+import com.lti.flipfit.services.FlipFitGymPaymentService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/payment")
-public class PaymentFlipFitController {
+public class FlipFitGymPaymentController {
 
-    private final PaymentFlipFitService service;
+    private final FlipFitGymPaymentService service;
 
-    public PaymentFlipFitController(PaymentFlipFitService service) {
+    public FlipFitGymPaymentController(FlipFitGymPaymentService service) {
         this.service = service;
     }
 

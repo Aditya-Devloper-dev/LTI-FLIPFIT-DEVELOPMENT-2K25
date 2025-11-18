@@ -5,7 +5,7 @@ package com.lti.flipfit.services;
  * Version     : 1.0
  * Description : Automated tasks such as reminders and waitlist promotions.
  */
-public interface SchedulerFlipFitService {
+public interface FlipFitGymSchedulerService {
 
     void runWaitlistPromotionJob();
 

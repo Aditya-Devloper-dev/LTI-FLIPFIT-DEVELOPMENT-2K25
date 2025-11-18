@@ -7,7 +7,7 @@ import java.util.Map;
  * Version     : 1.0
  * Description : Handles user account actions such as registration and login.
  */
-public interface UserFlipFitService {
+public interface FlipFitGymUserService {
 
     String register(Object userDto);
 
