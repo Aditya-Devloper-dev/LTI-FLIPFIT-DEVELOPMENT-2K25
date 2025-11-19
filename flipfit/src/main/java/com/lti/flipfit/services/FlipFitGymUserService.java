@@ -1,5 +1,8 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.beans.User;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,10 +12,13 @@ import java.util.Map;
  */
 public interface FlipFitGymUserService {
 
-    String register(Object userDto);
+    String register(User user);
 
     Map<String, Object> login(String email, String password);
 
     boolean updateProfile(String userId);
+
+    List<User> getAllUsers();
+
 
 }
