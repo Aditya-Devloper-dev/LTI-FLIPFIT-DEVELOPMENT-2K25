@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  * Description : Contains all custom exceptions related to Admin operations such as
  *               center creation, slot creation, time validation, and capacity rules.
  */
-public class FlipFitCenterExceptions {
+public class CenterExceptions {
 
     /*
      * @Exception: CenterAlreadyExistsException

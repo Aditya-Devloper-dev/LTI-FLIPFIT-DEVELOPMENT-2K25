@@ -2,7 +2,7 @@ package com.lti.flipfit.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class FlipFitSlotExceptions  {
+public class SlotExceptions {
     /*
      * @Exception: SlotAlreadyExistsException
      * @Description: Thrown when a slot overlaps with an existing slot in the center.

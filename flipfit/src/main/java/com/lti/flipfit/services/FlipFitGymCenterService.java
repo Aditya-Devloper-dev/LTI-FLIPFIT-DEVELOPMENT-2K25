@@ -1,17 +1,14 @@
 package com.lti.flipfit.services;
 
-import java.util.List;
-import java.util.Map;
+import com.lti.flipfit.beans.GymCenter;
+import com.lti.flipfit.beans.Slot;
 
-/**
- * Author      :
- * Version     : 1.0
- * Description : Operations related to gym centers.
- */
+import java.time.LocalDate;
+import java.util.List;
+
 public interface FlipFitGymCenterService {
 
-    List<Map<String, Object>> getSlotsByDate(String centerId, String date);
+    List<Slot> getSlotsByDate(String centerId, LocalDate date);
 
-    boolean updateCenterInfo(String centerId);
-
+    boolean updateCenterInfo(String centerId, GymCenter updatedCenter);
 }
