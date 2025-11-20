@@ -1,4 +1,4 @@
-package com.lti.flipfit.exceptions;
+package com.lti.flipfit.exceptions.slots;
 
 public class SlotFullException extends RuntimeException {
 
