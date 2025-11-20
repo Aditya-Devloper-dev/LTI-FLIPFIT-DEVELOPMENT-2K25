@@ -12,10 +12,11 @@ import java.util.List;
 
 public interface FlipFitGymBookingService {
 
+
     String bookSlot(GymBooking booking);
 
-    String cancelBooking(String bookingId);
+    String cancelBooking(Long bookingId);
 
-    List<GymBooking> getUserBookings(String userId);
+    List<GymBooking> getUserBookings(Long userId);
 }
 

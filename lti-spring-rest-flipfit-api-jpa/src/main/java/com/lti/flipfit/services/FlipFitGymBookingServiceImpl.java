@@ -1,7 +1,15 @@
 package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymBooking;
+import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.bookings.*;
+import com.lti.flipfit.exceptions.slots.SlotFullException;
+import com.lti.flipfit.repository.FlipFitGymBookingRepository;
+import com.lti.flipfit.repository.FlipFitGymCenterRepository;
+import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
+import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,8 +18,20 @@ import java.util.*;
 @Service
 public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
-    // simple in-memory booking store
-    private final Map<String, GymBooking> bookingStore = new HashMap<>();
+    private final FlipFitGymBookingRepository bookingRepo;
+    private final FlipFitGymCustomerRepository customerRepo;
+    private final FlipFitGymSlotRepository slotRepo;
+    private final FlipFitGymCenterRepository centerRepo;
+
+    public FlipFitGymBookingServiceImpl(FlipFitGymBookingRepository bookingRepo,
+                                        FlipFitGymCustomerRepository customerRepo,
+                                        FlipFitGymSlotRepository slotRepo,
+                                        FlipFitGymCenterRepository centerRepo) {
+        this.bookingRepo = bookingRepo;
+        this.customerRepo = customerRepo;
+        this.slotRepo = slotRepo;
+        this.centerRepo = centerRepo;
+    }
 
     /*
      * @Method: bookSlot
@@ -22,37 +42,46 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
     @Override
     public String bookSlot(GymBooking booking) {
 
-        // Check if same user already booked same slot
-        boolean alreadyBooked = bookingStore.values().stream()
-                .anyMatch(b ->
-                        b.getCustomerId().equals(booking.getCustomerId()) &&
-                                b.getSlotId().equals(booking.getSlotId())
-                );
+        // Extract IDs from incoming JSON
+        Long customerId = Long.valueOf(booking.getCustomer().getCustomerId());
+        Long slotId = booking.getSlot().getSlotId();
+        Long centerId = booking.getCenter().getCenterId();
 
-        if (alreadyBooked) {
-            throw new BookingAlreadyExistsException(
-                    "User already booked this slot: " + booking.getSlotId()
-            );
-        }
-        // Limit: Max 3 bookings per user (example rule)
-        long userBookingsCount = bookingStore.values().stream()
-                .filter(b -> b.getCustomerId().equals(booking.getCustomerId()))
-                .count();
+        GymCustomer customer = customerRepo.findById(customerId)
+                .orElseThrow(() -> new InvalidBookingException("Invalid customerId"));
 
-        if (userBookingsCount >= 3) {
-            throw new BookingLimitExceededException(
-                    "User exceeded max allowed bookings (3 per day)"
-            );
+        GymSlot slot = slotRepo.findById(slotId)
+                .orElseThrow(() -> new InvalidBookingException("Invalid slotId"));
+
+        GymCenter center = centerRepo.findById(centerId)
+                .orElseThrow(() -> new InvalidBookingException("Invalid centerId"));
+
+        // Check duplicate booking
+        if (bookingRepo.existsByCustomerAndSlot(customer, slot)) {
+            throw new BookingAlreadyExistsException("User already booked this slot");
         }
-        // Create booking ID
-        String bookingId = UUID.randomUUID().toString();
-        booking.setBookingId(bookingId);
+
+        // Check availability
+        if (slot.getAvailableSeats() <= 0) {
+            throw new SlotFullException("Slot is full");
+        }
+
+        // Reduce slot availability
+        slot.setAvailableSeats(slot.getAvailableSeats() - 1);
+        slotRepo.save(slot);
+
+        // Now set actual persistent objects
+        booking.setCustomer(customer);
+        booking.setSlot(slot);
+        booking.setCenter(center);
+        booking.setStatus("BOOKED");
         booking.setCreatedAt(LocalDateTime.now());
 
-        bookingStore.put(bookingId, booking);
+        GymBooking saved = bookingRepo.save(booking);
 
-        return "Booking successful with ID: " + bookingId;
+        return "Booking successful with ID: " + saved.getBookingId();
     }
+
 
     /*
      * @Method: cancelBooking
@@ -61,23 +90,23 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      * @Exception: Throws BookingNotFoundException, BookingCancellationNotAllowedException
      */
     @Override
-    public String cancelBooking(String bookingId) {
+    public String cancelBooking(Long bookingId) {
 
-        GymBooking existing = bookingStore.get(bookingId);
+        GymBooking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
-        if (existing == null) {
-            throw new BookingNotFoundException("Booking not found: " + bookingId);
+        if ("COMPLETED".equalsIgnoreCase(booking.getStatus())) {
+            throw new BookingCancellationNotAllowedException("Cannot cancel completed bookings");
         }
 
-        // Example rule: booking cannot be cancelled after status is COMPLETED
-        if ("COMPLETED".equalsIgnoreCase(existing.getStatus())) {
-            throw new BookingCancellationNotAllowedException(
-                    "Booking cannot be cancelled after completion"
-            );
-        }
+        // Restore seat
+        GymSlot slot = booking.getSlot();
+        slot.setAvailableSeats(slot.getAvailableSeats() + 1);
+        slotRepo.save(slot);
 
-        bookingStore.remove(bookingId);
-        return "Booking " + bookingId + " cancelled successfully";
+        bookingRepo.delete(booking);
+
+        return "Booking cancelled with ID: " + bookingId;
     }
 
     /*
@@ -87,16 +116,11 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      * @Exception: None (empty list returned if no bookings)
      */
     @Override
-    public List<GymBooking> getUserBookings(String userId) {
+    public List<GymBooking> getUserBookings(Long userId) {
 
-        List<GymBooking> list = new ArrayList<>();
+        GymCustomer customer = customerRepo.findById(userId)
+                .orElseThrow(() -> new BookingNotFoundException("Invalid userId"));
 
-        for (GymBooking b : bookingStore.values()) {
-            if (b.getCustomerId().equals(userId)) {
-                list.add(b);
-            }
-        }
-
-        return list;
+        return bookingRepo.findByCustomer(customer);
     }
 }
