@@ -16,7 +16,7 @@ public interface FlipFitGymUserService {
 
     Map<String, Object> login(String email, String password);
 
-    boolean updateProfile(Long userId, User updatedData);
+    String updateProfile(Long userId, User userData);
 
     List<User> getAllUsers();
 }

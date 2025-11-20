@@ -80,17 +80,13 @@ public class FlipFitGymUserController {
      *             Throws UserNotFoundException if user does not exist.
      */
     @PutMapping("/update/{userId}")
-    public boolean updateProfile(
+    public String updateProfile(
             @PathVariable Long userId,
             @RequestBody User userData
     ) {
-
-        if (userId == null) {
-            throw new InvalidInputException("User ID cannot be empty");
-        }
-
         return service.updateProfile(userId, userData);
     }
+
 
 
     /*
