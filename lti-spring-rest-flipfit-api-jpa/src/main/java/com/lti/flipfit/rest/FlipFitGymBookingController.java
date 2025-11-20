@@ -2,7 +2,6 @@ package com.lti.flipfit.rest;
 
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.services.FlipFitGymBookingService;
-import com.lti.flipfit.validator.BookingValidator;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +32,17 @@ public class FlipFitGymBookingController {
      * @Exception: Throws InvalidBookingException for missing data,
      *             and service-level exceptions for conflict/full/slot not found
      */
+
     @PostMapping("/book")
     public ResponseEntity<String> bookSlot(@RequestBody GymBooking booking) {
 
-        BookingValidator.validateBookingRequest(booking);
+        if (booking.getCustomer() == null ||
+                booking.getSlot() == null ||
+                booking.getCenter() == null) {
+            throw new InvalidInputException("customer, slot, center are required");
+        }
 
-        String response = bookingService.bookSlot(booking);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(bookingService.bookSlot(booking));
     }
 
     /*
@@ -50,14 +53,8 @@ public class FlipFitGymBookingController {
      *             booking-related exceptions if booking doesn't exist
      */
     @DeleteMapping("/cancel/{bookingId}")
-    public ResponseEntity<String> cancelBooking(@PathVariable String bookingId) {
-
-        if (bookingId == null || bookingId.isBlank()) {
-            throw new InvalidInputException("Booking ID cannot be empty");
-        }
-
-        String response = bookingService.cancelBooking(bookingId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<String> cancelBooking(@PathVariable Long bookingId) {
+        return ResponseEntity.ok(bookingService.cancelBooking(bookingId));
     }
 
     /*
@@ -68,13 +65,7 @@ public class FlipFitGymBookingController {
      *             service-level exceptions if user not found
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<GymBooking>> getUserBookings(@PathVariable String userId) {
-
-        if (userId == null || userId.isBlank()) {
-            throw new InvalidInputException("User ID cannot be empty");
-        }
-
-        List<GymBooking> bookings = bookingService.getUserBookings(userId);
-        return ResponseEntity.ok(bookings);
+    public ResponseEntity<List<GymBooking>> getUserBookings(@PathVariable Long userId) {
+        return ResponseEntity.ok(bookingService.getUserBookings(userId));
     }
 }

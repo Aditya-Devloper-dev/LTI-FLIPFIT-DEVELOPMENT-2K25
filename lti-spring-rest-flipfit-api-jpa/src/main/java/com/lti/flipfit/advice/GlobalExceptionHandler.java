@@ -216,6 +216,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InvalidBookingException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidBookingException(InvalidBookingException ex) {
+
+        ErrorResponse error = new ErrorResponse();
+        error.setTimestamp(LocalDateTime.now());
+        error.setMessage(ex.getMessage());
+        error.setErrorCode("INVALID_BOOKING_ERROR");
+        error.setDetails(null);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+
 
     // ------------------------- FALLBACK EXCEPTION -------------------------
 

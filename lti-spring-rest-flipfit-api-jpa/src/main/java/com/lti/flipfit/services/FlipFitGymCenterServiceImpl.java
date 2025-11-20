@@ -5,6 +5,8 @@ import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.center.CenterNotFoundException;
 import com.lti.flipfit.exceptions.center.CenterUpdateNotAllowedException;
 import com.lti.flipfit.exceptions.center.InvalidCenterLocationException;
+import com.lti.flipfit.repository.FlipFitGymCenterRepository;
+import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,9 +15,14 @@ import java.util.*;
 @Service
 public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
 
-    // In-memory stores (since DAO not used yet)
-    private final Map<String, GymCenter> centerStore = new HashMap<>();
-    private final Map<String, List<GymSlot>> slotStore = new HashMap<>();
+    private final FlipFitGymCenterRepository centerRepo;
+    private final FlipFitGymSlotRepository slotRepo;
+
+    public FlipFitGymCenterServiceImpl(FlipFitGymCenterRepository centerRepo,
+                                       FlipFitGymSlotRepository slotRepo) {
+        this.centerRepo = centerRepo;
+        this.slotRepo = slotRepo;
+    }
     /*
      * @Method: getSlotsByDate
      * @Description: Fetches all slots for a given center on a specific date.
@@ -23,21 +30,23 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      * @Exception: Throws CenterNotFoundException if center does not exist.
      */
     @Override
-    public List<GymSlot> getSlotsByDate(String centerId, LocalDate date) {
+    public List<GymSlot> getSlotsByDate(Long centerId, LocalDate date) {
 
-        GymCenter center = centerStore.get(centerId);
-
-        if (center == null) {
-            throw new CenterNotFoundException("Center " + centerId + " not found");
-        }
+        GymCenter center = centerRepo.findById(centerId)
+                .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));
 
         if (!Boolean.TRUE.equals(center.getIsActive())) {
-            throw new CenterUpdateNotAllowedException("Center is inactive, cannot fetch slots");
+            throw new CenterUpdateNotAllowedException("Center is inactive");
         }
 
-        List<GymSlot> slots = slotStore.get(centerId);
+        List<GymSlot> slots = slotRepo.findByCenterCenterId(centerId);
 
-        return (slots == null) ? Collections.emptyList() : slots;
+        // If you want to match date manually (ONLY IF NEEDED)
+        // return slots.stream()
+        //        .filter(s -> s.getStartTime().toLocalDate().isEqual(date))
+        //        .toList();
+
+        return slots;
     }
 
 
@@ -49,20 +58,18 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      * @Exception: Throws CenterNotFoundException, InvalidCenterLocationException, CenterUpdateNotAllowedException
      */
     @Override
-    public boolean updateCenterInfo(String centerId, GymCenter updatedCenter) {
+    public boolean updateCenterInfo(Long centerId, GymCenter updatedCenter) {
 
-        GymCenter existingCenter = centerStore.get(centerId);
+        GymCenter existingCenter = centerRepo.findById(centerId)
+                .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));
 
-        if (existingCenter == null) {
-            throw new CenterNotFoundException("Center " + centerId + " not found");
-        }
-
-        // Center ID cannot change
-        if (updatedCenter.getCenterId() != null) {
+        // Prevent changing centerId
+        if (updatedCenter.getCenterId() != null &&
+                !updatedCenter.getCenterId().equals(centerId)) {
             throw new CenterUpdateNotAllowedException("centerId cannot be changed");
         }
 
-        // Validate location if updated
+        // Validate city name
         if (updatedCenter.getCity() != null &&
                 updatedCenter.getCity().trim().length() < 3) {
             throw new InvalidCenterLocationException("Invalid city name provided");
@@ -85,6 +92,9 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
             existingCenter.setIsActive(updatedCenter.getIsActive());
         }
 
+        existingCenter.setUpdatedAt(java.time.LocalDateTime.now());
+
+        centerRepo.save(existingCenter);
         return true;
     }
 }

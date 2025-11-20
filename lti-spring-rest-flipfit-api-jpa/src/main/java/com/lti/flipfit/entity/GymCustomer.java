@@ -9,8 +9,9 @@ import lombok.Data;
 public class GymCustomer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
-    private String customerId;
+    private Long customerId;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

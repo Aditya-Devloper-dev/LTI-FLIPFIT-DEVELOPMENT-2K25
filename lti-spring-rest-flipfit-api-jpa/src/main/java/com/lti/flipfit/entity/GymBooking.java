@@ -10,20 +10,21 @@ import java.time.LocalDateTime;
 public class GymBooking {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
-    private String bookingId;
+    private Long bookingId;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private GymCustomer customerId;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private GymCustomer customer;
 
     @ManyToOne
-    @JoinColumn(name = "center_id")
-    private GymCenter centerId;
+    @JoinColumn(name = "slot_id", nullable = false)
+    private GymSlot slot;
 
     @ManyToOne
-    @JoinColumn(name = "slot_id")
-    private GymSlot slotId;
+    @JoinColumn(name = "center_id", nullable = false)
+    private GymCenter center;
 
     private String status;
 
@@ -31,8 +32,8 @@ public class GymBooking {
     private LocalDateTime createdAt;
 
     @Column(name = "owner_approval_required")
-    private Boolean ownerApprovalRequired;
+    private Boolean ownerApprovalRequired = false;
 
     @Column(name = "approved_by_owner")
-    private Boolean approvedByOwner;
+    private Boolean approvedByOwner = false;
 }

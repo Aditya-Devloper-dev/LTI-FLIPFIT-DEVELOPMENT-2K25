@@ -7,15 +7,15 @@ public class BookingValidator {
 
     public static void validateBookingRequest(GymBooking booking) {
 
-        if (booking.getCustomerId() == null ) {
+        if (booking.getCustomer() == null ) {
             throw new InvalidInputException("Customer ID is required");
         }
 
-        if (booking.getCenterId() == null ) {
+        if (booking.getCenter() == null ) {
             throw new InvalidInputException("Center ID is required");
         }
 
-        if (booking.getSlotId() == null ) {
+        if (booking.getSlot() == null ) {
             throw new InvalidInputException("Slot ID is required");
         }
     }

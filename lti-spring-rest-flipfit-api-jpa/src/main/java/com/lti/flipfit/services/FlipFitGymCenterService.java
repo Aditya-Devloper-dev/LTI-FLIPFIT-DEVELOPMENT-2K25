@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FlipFitGymCenterService {
 
-    List<GymSlot> getSlotsByDate(String centerId, LocalDate date);
+    List<GymSlot> getSlotsByDate(Long centerId, LocalDate date);
 
-    boolean updateCenterInfo(String centerId, GymCenter updatedCenter);
+    boolean updateCenterInfo(Long centerId, GymCenter updatedCenter);
 }

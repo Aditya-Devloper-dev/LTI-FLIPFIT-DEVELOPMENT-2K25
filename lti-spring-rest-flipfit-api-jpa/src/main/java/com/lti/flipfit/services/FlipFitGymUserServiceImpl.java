@@ -1,9 +1,11 @@
 package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymAdmin;
+import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.User;
 import com.lti.flipfit.exceptions.user.*;
 import com.lti.flipfit.repository.FlipFitGymAdminRepository;
+import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
 import com.lti.flipfit.repository.FlipFitGymUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
     @Autowired
     private FlipFitGymAdminRepository adminRepo;
+
+    @Autowired
+    private FlipFitGymCustomerRepository customerRepo;
 
     /*
      * @Method: register
@@ -54,6 +59,12 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
             GymAdmin admin = new GymAdmin();
             admin.setUser(user);
             adminRepo.save(admin);
+        }
+
+        if ("ROLE_CUSTOMER".equals(user.getRole().getRoleId())) {
+            GymCustomer customer = new GymCustomer();
+            customer.setUser(user);
+            customerRepo.save(customer);
         }
 
         return "User registered with ID: " + user.getUserId();

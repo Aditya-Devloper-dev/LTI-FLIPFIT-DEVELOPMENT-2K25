@@ -30,18 +30,13 @@ public class FlipFitGymCenterController {
      * @Exception: Throws InvalidInputException for blank centerId/date
      */
     @GetMapping("/slots")
-    public Object getSlotsByDate(@RequestParam String centerId,
+    public Object getSlotsByDate(@RequestParam Long centerId,
                                  @RequestParam String date) {
-
-        if (centerId == null || centerId.isBlank()) {
-            throw new InvalidInputException("Center ID cannot be empty");
-        }
 
         if (date == null || date.isBlank()) {
             throw new InvalidInputException("Date cannot be empty");
         }
 
-        // Convert string date to LocalDate
         LocalDate parsedDate;
         try {
             parsedDate = LocalDate.parse(date);
@@ -58,15 +53,9 @@ public class FlipFitGymCenterController {
      * @MethodParameters: centerId -> unique center ID, GymCenter center -> new data
      * @Exception: Throws InvalidInputException for blank ID or missing data
      */
-    @PutMapping("/update/{centerId}")
-    public boolean updateCenterInfo(@PathVariable String centerId,
+    @PutMapping("/update-center/{centerId}")
+    public boolean updateCenterInfo(@PathVariable Long centerId,
                                     @RequestBody GymCenter center) {
-
-        if (centerId == null || centerId.isBlank()) {
-            throw new InvalidInputException("Center ID cannot be empty");
-        }
-
-        CenterValidator.validateCreateCenter(center); // reusing the same validator
 
         return service.updateCenterInfo(centerId, center);
     }
