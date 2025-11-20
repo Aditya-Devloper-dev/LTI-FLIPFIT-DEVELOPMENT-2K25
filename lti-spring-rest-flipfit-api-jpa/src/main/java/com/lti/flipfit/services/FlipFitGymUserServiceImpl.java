@@ -1,9 +1,12 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.User;
 import com.lti.flipfit.exceptions.user.*;
+import com.lti.flipfit.repository.FlipFitGymAdminRepository;
 import com.lti.flipfit.repository.FlipFitGymUserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,11 +15,11 @@ import java.util.*;
 @Service
 public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
-    private final FlipFitGymUserRepository userRepo;
+    @Autowired
+    private FlipFitGymUserRepository userRepo;
 
-    public FlipFitGymUserServiceImpl(FlipFitGymUserRepository userRepo) {
-        this.userRepo = userRepo;
-    }
+    @Autowired
+    private FlipFitGymAdminRepository adminRepo;
 
     /*
      * @Method: register
@@ -46,6 +49,12 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
         user.setUpdatedAt(LocalDateTime.now());
 
         userRepo.save(user);
+
+        if ("ROLE_ADMIN".equals(user.getRole().getRoleId())) {
+            GymAdmin admin = new GymAdmin();
+            admin.setUser(user);
+            adminRepo.save(admin);
+        }
 
         return "User registered with ID: " + user.getUserId();
     }

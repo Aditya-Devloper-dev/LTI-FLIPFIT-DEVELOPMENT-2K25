@@ -10,26 +10,26 @@ import java.time.LocalTime;
 public class GymSlot {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "slot_id")
-    private String slotId;
+    private Long slotId;
 
     @ManyToOne
     @JoinColumn(name = "center_id", nullable = false)
     private GymCenter center;
 
-    @Column(name = "start_time")
+    @Column(nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "end_time")
+    @Column(nullable = false)
     private LocalTime endTime;
 
-    private Integer capacity;
+    @Column(nullable = false)
+    private int capacity;
 
     @Column(name = "available_seats")
-    private Integer availableSeats;
+    private int availableSeats;
 
     private String status;
-
-    @Column(name = "is_waitlist_enabled")
-    private Boolean waitlistEnabled;
 }
+
