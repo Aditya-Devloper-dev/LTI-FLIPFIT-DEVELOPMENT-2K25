@@ -58,8 +58,7 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
         }
 
         // Center ID cannot change
-        if (updatedCenter.getCenterId() != null &&
-                !updatedCenter.getCenterId().equals(centerId)) {
+        if (updatedCenter.getCenterId() != null) {
             throw new CenterUpdateNotAllowedException("centerId cannot be changed");
         }
 

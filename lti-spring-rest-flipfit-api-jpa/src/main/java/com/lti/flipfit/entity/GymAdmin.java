@@ -9,10 +9,12 @@ import lombok.Data;
 public class GymAdmin {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
-    private String adminId;
+    private Long adminId;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
+

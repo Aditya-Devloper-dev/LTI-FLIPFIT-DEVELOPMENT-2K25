@@ -36,12 +36,10 @@ public class FlipFitGymAdminController {
      */
     @PostMapping("/center")
     public ResponseEntity<String> createCenter(@RequestBody GymCenter center) {
-
         CenterValidator.validateCreateCenter(center);
-
-        String response = adminService.createCenter(center);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(adminService.createCenter(center));
     }
+
 
     /*
      * @Method: createSlot
@@ -50,17 +48,16 @@ public class FlipFitGymAdminController {
      * @Exception: Throws InvalidInputException for invalid input, center not found handled in service
      */
     @PostMapping("/slot/{centerId}")
-    public ResponseEntity<String> createSlot(@PathVariable String centerId,
+    public ResponseEntity<String> createSlot(@PathVariable Long centerId,
                                              @RequestBody GymSlot gymSlot) {
 
-        if (centerId == null || centerId.isBlank()) {
+        if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
         }
 
         SlotValidator.validateSlot(gymSlot);
 
-        String response = adminService.createSlot(centerId, gymSlot);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(adminService.createSlot(centerId, gymSlot));
     }
 
     /*
@@ -71,8 +68,7 @@ public class FlipFitGymAdminController {
      */
     @GetMapping("/centers")
     public ResponseEntity<List<GymCenter>> getAllCenters() {
-        List<GymCenter> centers = adminService.getAllCenters();
-        return ResponseEntity.ok(centers);
+        return ResponseEntity.ok(adminService.getAllCenters());
     }
 
     /*
@@ -82,13 +78,12 @@ public class FlipFitGymAdminController {
      * @Exception: Throws InvalidInputException if centerId is blank
      */
     @GetMapping("/center/{centerId}")
-    public ResponseEntity<GymCenter> getCenterById(@PathVariable String centerId) {
+    public ResponseEntity<GymCenter> getCenterById(@PathVariable Long centerId) {
 
-        if (centerId == null || centerId.isBlank()) {
+        if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
         }
 
-        GymCenter center = adminService.getCenterById(centerId);
-        return ResponseEntity.ok(center);
+        return ResponseEntity.ok(adminService.getCenterById(centerId));
     }
 }

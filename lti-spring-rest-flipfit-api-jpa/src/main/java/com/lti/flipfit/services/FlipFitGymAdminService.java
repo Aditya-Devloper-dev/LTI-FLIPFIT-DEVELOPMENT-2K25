@@ -16,10 +16,10 @@ public interface FlipFitGymAdminService {
 
     String createCenter(GymCenter center);
 
-    String createSlot(String centerId, GymSlot gymSlot);
+    String createSlot(Long centerId, GymSlot gymSlot);
 
     List<GymCenter> getAllCenters();
 
-    GymCenter getCenterById(String centerId);
+    GymCenter getCenterById(Long centerId);
 }
 
