@@ -86,7 +86,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
      */
     @Override
     @Transactional
-    public boolean updateProfile(Long userId, User updatedData) {
+    public String updateProfile(Long userId, User updatedData) {
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() ->
@@ -100,16 +100,15 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
             user.setPhoneNumber(updatedData.getPhoneNumber());
 
         if (updatedData.getPassword() != null)
-            user.setPassword(updatedData.getPassword()); // no hashing, as per your choice
+            user.setPassword(updatedData.getPassword());
 
         if (updatedData.getRole() != null)
             user.setRole(updatedData.getRole());
 
         user.setUpdatedAt(LocalDateTime.now());
-
         userRepo.save(user);
 
-        return true;
+        return "User has been updated successfully with userId: " + userId;
     }
 
     /*
