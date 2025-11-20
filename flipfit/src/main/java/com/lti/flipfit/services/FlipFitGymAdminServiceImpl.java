@@ -2,8 +2,7 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.beans.GymCenter;
 import com.lti.flipfit.beans.Slot;
-import com.lti.flipfit.exceptions.CenterExceptions.*;
-import com.lti.flipfit.exceptions.SlotExceptions;
+import com.lti.flipfit.exceptions.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -52,14 +51,14 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
         // Slot time validation
         if (!slot.getEndTime().isAfter(slot.getStartTime())) {
-            throw new SlotExceptions.InvalidSlotTimeException(
+            throw new InvalidSlotTimeException(
                     "End time must be after start time"
             );
         }
 
         // Capacity validation
         if (slot.getCapacity() <= 0) {
-            throw new SlotExceptions.CapacityInvalidException("Capacity must be greater than 0");
+            throw new CapacityInvalidException("Capacity must be greater than 0");
         }
 
         // Check overlapping or duplicate time slot
@@ -73,7 +72,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         );
 
         if (overlap) {
-            throw new SlotExceptions.SlotAlreadyExistsException(
+            throw new SlotAlreadyExistsException(
                     "A slot already exists in this time range"
             );
         }
