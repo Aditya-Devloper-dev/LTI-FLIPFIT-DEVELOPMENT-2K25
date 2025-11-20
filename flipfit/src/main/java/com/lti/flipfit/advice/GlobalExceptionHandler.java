@@ -2,6 +2,7 @@ package com.lti.flipfit.advice;
 
 import com.lti.flipfit.beans.ErrorResponse;
 import com.lti.flipfit.exceptions.*;
+import com.lti.flipfit.exceptions.bookings.*;
 import com.lti.flipfit.exceptions.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -136,11 +137,50 @@ public class GlobalExceptionHandler {
 
     // ------------------------- BOOKING EXCEPTIONS -------------------------
 
+    @ExceptionHandler(BookingAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleBookingAlreadyExists(BookingAlreadyExistsException ex, WebRequest request) {
+        ErrorResponse res = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                ex.getErrorCode(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(res, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BookingCancellationNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleBookingCancellationNotAllowed(BookingCancellationNotAllowedException ex, WebRequest request) {
+        ErrorResponse res = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                ex.getErrorCode(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BookingLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleBookingLimitExceeded(BookingLimitExceededException ex, WebRequest request) {
+        ErrorResponse res = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                ex.getErrorCode(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(res, HttpStatus.TOO_MANY_REQUESTS); // 429
+    }
+
     @ExceptionHandler(BookingNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleBookingNotFound(BookingNotFoundException ex, WebRequest request) {
-        ErrorResponse res = buildResponse(ex, "BOOKING_NOT_FOUND", request);
+        ErrorResponse res = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                ex.getErrorCode(),
+                request.getDescription(false)
+        );
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
+
 
     // ------------------------- FALLBACK EXCEPTION -------------------------
 

@@ -1,5 +1,7 @@
 package com.lti.flipfit.beans;
 
+import java.time.LocalDateTime;
+
 /**
  * Author      :
  * Version     : 1.0
@@ -12,7 +14,7 @@ public class Booking {
     private String centerId;
     private String slotId;
     private String status;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private boolean ownerApprovalRequired;
     private boolean approvedByOwner;
 
@@ -56,11 +58,11 @@ public class Booking {
         this.status = status;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
