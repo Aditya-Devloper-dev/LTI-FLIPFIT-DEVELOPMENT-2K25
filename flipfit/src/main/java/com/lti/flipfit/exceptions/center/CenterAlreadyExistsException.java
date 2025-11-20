@@ -1,5 +1,8 @@
-package com.lti.flipfit.exceptions;
+package com.lti.flipfit.exceptions.center;
 
+/**
+ * Thrown when a gym center with same name/location already exists.
+ */
 public class CenterAlreadyExistsException extends RuntimeException {
 
     private final String errorCode = "CENTER_ALREADY_EXISTS";

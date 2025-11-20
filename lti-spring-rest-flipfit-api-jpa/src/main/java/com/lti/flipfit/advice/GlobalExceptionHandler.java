@@ -1,6 +1,6 @@
 package com.lti.flipfit.advice;
 
-import com.lti.flipfit.beans.ErrorResponse;
+import com.lti.flipfit.entity.ErrorResponse;
 import com.lti.flipfit.exceptions.*;
 import com.lti.flipfit.exceptions.bookings.*;
 import com.lti.flipfit.exceptions.center.*;
@@ -220,17 +220,16 @@ public class GlobalExceptionHandler {
     // ------------------------- FALLBACK EXCEPTION -------------------------
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
-        ErrorResponse res = new ErrorResponse(
+    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
+
+        ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
-                "An unexpected error occurred",
-                "INTERNAL_SERVER_ERROR",
-                request.getDescription(false)
+                ex.getMessage(),
+                "INTERNAL_SERVER_ERROR"
         );
 
-        ex.printStackTrace(); // optional, remove in production
-
-        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(500).body(error);
     }
+
 
 }
