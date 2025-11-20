@@ -2,7 +2,7 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.beans.GymCenter;
 import com.lti.flipfit.beans.Slot;
-import com.lti.flipfit.exceptions.CenterExceptions.CenterNotFoundException;
+import com.lti.flipfit.exceptions.CenterNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

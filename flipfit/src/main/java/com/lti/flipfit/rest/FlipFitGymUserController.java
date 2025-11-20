@@ -1,7 +1,6 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.exceptions.InvalidInputException;
-import com.lti.flipfit.exceptions.UserNotFoundException;
 import com.lti.flipfit.services.FlipFitGymUserService;
 import com.lti.flipfit.beans.User;
 import org.springframework.web.bind.annotation.*;
