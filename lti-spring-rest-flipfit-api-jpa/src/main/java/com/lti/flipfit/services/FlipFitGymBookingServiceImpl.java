@@ -1,5 +1,11 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymBookingService interface.
+ */
+
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymCustomer;
@@ -24,9 +30,9 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
     private final FlipFitGymCenterRepository centerRepo;
 
     public FlipFitGymBookingServiceImpl(FlipFitGymBookingRepository bookingRepo,
-                                        FlipFitGymCustomerRepository customerRepo,
-                                        FlipFitGymSlotRepository slotRepo,
-                                        FlipFitGymCenterRepository centerRepo) {
+            FlipFitGymCustomerRepository customerRepo,
+            FlipFitGymSlotRepository slotRepo,
+            FlipFitGymCenterRepository centerRepo) {
         this.bookingRepo = bookingRepo;
         this.customerRepo = customerRepo;
         this.slotRepo = slotRepo;
@@ -35,9 +41,14 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
     /*
      * @Method: bookSlot
-     * @Description: Books a new slot after validating duplicate bookings and booking limits.
+     * 
+     * @Description: Books a new slot after validating duplicate bookings and
+     * booking limits.
+     * 
      * @MethodParameters: booking -> Booking request payload
-     * @Exception: Throws BookingAlreadyExistsException, BookingLimitExceededException
+     * 
+     * @Exception: Throws BookingAlreadyExistsException,
+     * BookingLimitExceededException
      */
     @Override
     public String bookSlot(GymBooking booking) {
@@ -82,12 +93,16 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         return "Booking successful with ID: " + saved.getBookingId();
     }
 
-
     /*
      * @Method: cancelBooking
-     * @Description: Cancels an existing booking after validating booking existence and state.
+     * 
+     * @Description: Cancels an existing booking after validating booking existence
+     * and state.
+     * 
      * @MethodParameters: bookingId -> Unique booking identifier
-     * @Exception: Throws BookingNotFoundException, BookingCancellationNotAllowedException
+     * 
+     * @Exception: Throws BookingNotFoundException,
+     * BookingCancellationNotAllowedException
      */
     @Override
     public String cancelBooking(Long bookingId) {
@@ -111,8 +126,11 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
     /*
      * @Method: getUserBookings
+     * 
      * @Description: Returns all bookings made by a user.
+     * 
      * @MethodParameters: userId -> user ID
+     * 
      * @Exception: None (empty list returned if no bookings)
      */
     @Override

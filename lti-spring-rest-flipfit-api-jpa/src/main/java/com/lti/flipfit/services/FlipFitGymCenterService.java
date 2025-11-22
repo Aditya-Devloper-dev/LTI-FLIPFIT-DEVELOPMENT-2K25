@@ -1,5 +1,11 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Service interface for managing Gym Centers.
+ */
+
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 

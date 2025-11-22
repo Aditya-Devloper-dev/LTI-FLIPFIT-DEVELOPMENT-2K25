@@ -1,5 +1,11 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymCustomerService interface.
+ */
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;

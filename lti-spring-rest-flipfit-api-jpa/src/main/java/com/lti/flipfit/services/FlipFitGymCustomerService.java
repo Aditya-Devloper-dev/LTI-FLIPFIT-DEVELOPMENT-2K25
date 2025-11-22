@@ -1,11 +1,17 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Service interface for handling Customer operations.
+ */
+
 import java.util.List;
 import java.util.Map;
 
 /**
- * Author      :
- * Version     : 1.0
+ * Author :
+ * Version : 1.0
  * Description : Customer functions like searching slots and making bookings.
  */
 public interface FlipFitGymCustomerService {

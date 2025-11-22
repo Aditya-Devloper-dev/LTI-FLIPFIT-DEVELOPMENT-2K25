@@ -1,5 +1,11 @@
 package com.lti.flipfit.entity;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing Gym Admin.
+ */
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,4 +23,3 @@ public class GymAdmin {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
-

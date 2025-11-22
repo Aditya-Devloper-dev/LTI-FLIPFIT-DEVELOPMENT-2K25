@@ -4,8 +4,8 @@ import com.lti.flipfit.services.FlipFitGymNotificationService;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Author      :
- * Version     : 1.0
+ * Author :
+ * Version : 1.0
  * Description : Controller for sending notifications.
  */
 @RestController
@@ -18,10 +18,10 @@ public class FlipFitGymNotificationController {
         this.service = service;
     }
 
-    @PostMapping("/send")
+    @RequestMapping(value = "/send", method = RequestMethod.POST)
     public boolean sendNotification(@RequestParam String receiverId,
-                                    @RequestParam String message,
-                                    @RequestParam String type) {
+            @RequestParam String message,
+            @RequestParam String type) {
 
         return service.sendNotification(receiverId, message, type);
     }

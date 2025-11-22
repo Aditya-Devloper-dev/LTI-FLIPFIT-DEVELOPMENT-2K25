@@ -4,8 +4,8 @@ import com.lti.flipfit.services.FlipFitGymPaymentService;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Author      :
- * Version     : 1.0
+ * Author :
+ * Version : 1.0
  * Description : Controller for processing payments and refunds.
  */
 @RestController
@@ -18,18 +18,18 @@ public class FlipFitGymPaymentController {
         this.service = service;
     }
 
-    @PostMapping("/process")
+    @RequestMapping(value = "/process", method = RequestMethod.POST)
     public boolean processPayment(@RequestParam String bookingId,
-                                  @RequestParam double amount) {
+            @RequestParam double amount) {
         return service.processPayment(bookingId, amount);
     }
 
-    @PostMapping("/refund/{paymentId}")
+    @RequestMapping(value = "/refund/{paymentId}", method = RequestMethod.POST)
     public boolean refund(@PathVariable String paymentId) {
         return service.refund(paymentId);
     }
 
-    @GetMapping("/status/{paymentId}")
+    @RequestMapping(value = "/status/{paymentId}", method = RequestMethod.GET)
     public String checkStatus(@PathVariable String paymentId) {
         return service.checkStatus(paymentId);
     }

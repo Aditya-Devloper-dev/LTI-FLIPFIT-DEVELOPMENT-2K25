@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Author      : <Your Name>
- * Version     : 1.0
- * Repository  : GymCenterRepository
+ * Author : <Your Name>
+ * Version : 1.0
+ * Repository : GymCenterRepository
  * Description : JPA repository for managing CRUD operations on GymCenter.
- *               Includes custom query method to detect duplicate centers.
+ * Includes custom query method to detect duplicate centers.
  */
 
 @Repository

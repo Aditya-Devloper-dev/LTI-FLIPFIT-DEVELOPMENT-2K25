@@ -1,9 +1,10 @@
 package com.lti.flipfit.exceptions.bookings;
 
 /**
- * Author      :
- * Version     : 1.0
- * Description : Thrown when the user attempts to book a slot they already booked.
+ * Author :
+ * Version : 1.0
+ * Description : Thrown when the user attempts to book a slot they already
+ * booked.
  */
 public class BookingAlreadyExistsException extends RuntimeException {
 

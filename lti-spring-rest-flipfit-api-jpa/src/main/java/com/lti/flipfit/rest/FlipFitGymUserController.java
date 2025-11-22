@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Author      :
- * Version     : 1.0
- * Description : Controller for user registration, login, and profile updates across
- *               admin, owner, and customer roles. Includes validation and exception
- *               handling using the central exception framework.
+ * Author :
+ * Version : 1.0
+ * Description : Controller for user registration, login, and profile updates
+ * across
+ * admin, owner, and customer roles. Includes validation and exception
+ * handling using the central exception framework.
  */
 @RestController
 @RequestMapping("/user")
@@ -27,11 +28,25 @@ public class FlipFitGymUserController {
 
     /*
      * @Method: register
+     * 
      * @Description: Registers a new user (admin/owner/customer) into the system.
+     * 
      * @MethodParameters: userDto -> JSON payload containing user registration data.
-     * @Exception: Throws InvalidInputException for null payload or invalid registration.
+     * 
+     * @Exception: Throws InvalidInputException for null payload or invalid
+     * registration.
      */
-    @PostMapping("/register")
+    /*
+     * @Method: register
+     * 
+     * @Description: Registers a new user (admin/owner/customer) into the system.
+     * 
+     * @MethodParameters: userDto -> JSON payload containing user registration data.
+     * 
+     * @Exception: Throws InvalidInputException for null payload or invalid
+     * registration.
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestBody User user) {
 
         if (user.getFullName() == null || user.getFullName().isBlank()) {
@@ -51,14 +66,17 @@ public class FlipFitGymUserController {
 
     /*
      * @Method: login
+     * 
      * @Description: Authenticates user using email and password.
+     * 
      * @MethodParameters: email -> user's email, password -> user's password.
+     * 
      * @Exception: Throws InvalidInputException for missing inputs,
-     *             Throws UserNotFoundException if credentials are invalid.
+     * Throws UserNotFoundException if credentials are invalid.
      */
-    @PostMapping("/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(@RequestParam String email,
-                                     @RequestParam String password) {
+            @RequestParam String password) {
 
         if (email.isBlank()) {
             throw new InvalidInputException("Email cannot be empty");
@@ -74,28 +92,31 @@ public class FlipFitGymUserController {
 
     /*
      * @Method: updateProfile
+     * 
      * @Description: Updates user profile information for a given user ID.
+     * 
      * @MethodParameters: userId -> Unique identifier of the user.
+     * 
      * @Exception: Throws InvalidInputException for empty userId,
-     *             Throws UserNotFoundException if user does not exist.
+     * Throws UserNotFoundException if user does not exist.
      */
-    @PutMapping("/update/{userId}")
+    @RequestMapping(value = "/update/{userId}", method = RequestMethod.PUT)
     public String updateProfile(
             @PathVariable Long userId,
-            @RequestBody User userData
-    ) {
+            @RequestBody User userData) {
         return service.updateProfile(userId, userData);
     }
 
-
-
     /*
      * @Method: getAllUsers
+     * 
      * @Description: Returns a list of all registered users in the system.
+     * 
      * @MethodParameters: None
+     * 
      * @Exception: None (unless storage access fails)
      */
-    @GetMapping("/all")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<User> getAllUsers() {
         return service.getAllUsers();
     }
