@@ -1,6 +1,12 @@
 package com.lti.flipfit.exceptions.center;
 
 /**
+ * Author :
+ * Version : 1.0
+ * Description : Exception thrown when center is not found.
+ */
+
+/**
  * Thrown when a centerId does not exist in the system.
  */
 public class CenterNotFoundException extends RuntimeException {

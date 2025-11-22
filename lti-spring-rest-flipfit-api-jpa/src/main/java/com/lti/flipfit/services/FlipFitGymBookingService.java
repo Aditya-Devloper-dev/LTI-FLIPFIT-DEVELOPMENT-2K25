@@ -1,17 +1,16 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Service interface for handling Gym Booking operations.
+ */
+
 import com.lti.flipfit.entity.GymBooking;
 
 import java.util.List;
 
-/**
- * Author      :
- * Version     : 1.0
- * Description : Handles booking creation, updates, and cancellations.
- */
-
 public interface FlipFitGymBookingService {
-
 
     String bookSlot(GymBooking booking);
 
@@ -19,4 +18,3 @@ public interface FlipFitGymBookingService {
 
     List<GymBooking> getUserBookings(Long userId);
 }
-

@@ -1,5 +1,11 @@
 package com.lti.flipfit.repository;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : JPA repository for Gym Booking operations.
+ */
+
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.GymSlot;

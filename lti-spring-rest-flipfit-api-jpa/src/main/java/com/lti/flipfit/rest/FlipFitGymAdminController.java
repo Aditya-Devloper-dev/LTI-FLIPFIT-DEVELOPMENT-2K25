@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author      :
- * Version     : 1.0
- * Description : Controller for admin operations such as creating centers, adding slots,
- *               updating center details, and retrieving center information.
+ * Author :
+ * Version : 1.0
+ * Description : Controller for admin operations such as creating centers,
+ * adding slots, updating center details, and retrieving center information.
  */
 
 @RestController
@@ -30,26 +30,33 @@ public class FlipFitGymAdminController {
 
     /*
      * @Method: createCenter
-     * @Description: Accepts center details, validates input, and forwards it to the service layer
+     * 
+     * @Description: Accepts center details, validates input, and forwards it to the
+     * service layer
+     * 
      * @MethodParameters: GymCenter center
+     * 
      * @Exception: Throws InvalidInputException if validation fails
      */
-    @PostMapping("/center")
+    @RequestMapping(value = "/center", method = RequestMethod.POST)
     public ResponseEntity<String> createCenter(@RequestBody GymCenter center) {
         CenterValidator.validateCreateCenter(center);
         return ResponseEntity.ok(adminService.createCenter(center));
     }
 
-
     /*
      * @Method: createSlot
+     * 
      * @Description: Accepts slot details and adds a slot under the given center
+     * 
      * @MethodParameters: centerId -> Center unique ID, Slot slot -> slot details
-     * @Exception: Throws InvalidInputException for invalid input, center not found handled in service
+     * 
+     * @Exception: Throws InvalidInputException for invalid input, center not found
+     * handled in service
      */
-    @PostMapping("/slot/{centerId}")
+    @RequestMapping(value = "/slot/{centerId}", method = RequestMethod.POST)
     public ResponseEntity<String> createSlot(@PathVariable Long centerId,
-                                             @RequestBody GymSlot gymSlot) {
+            @RequestBody GymSlot gymSlot) {
 
         if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
@@ -62,22 +69,28 @@ public class FlipFitGymAdminController {
 
     /*
      * @Method: getAllCenters
+     * 
      * @Description: Retrieves the complete list of registered gym centers
+     * 
      * @MethodParameters: None
+     * 
      * @Exception: Propagates any service-level exceptions
      */
-    @GetMapping("/centers")
+    @RequestMapping(value = "/centers", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getAllCenters() {
         return ResponseEntity.ok(adminService.getAllCenters());
     }
 
     /*
      * @Method: getCenterById
+     * 
      * @Description: Fetches information for a specific center using its ID
+     * 
      * @MethodParameters: centerId -> unique identifier for the center
+     * 
      * @Exception: Throws InvalidInputException if centerId is blank
      */
-    @GetMapping("/center/{centerId}")
+    @RequestMapping(value = "/center/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<GymCenter> getCenterById(@PathVariable Long centerId) {
 
         if (centerId == null) {

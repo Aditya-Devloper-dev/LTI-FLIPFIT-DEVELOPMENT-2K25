@@ -1,5 +1,11 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymCenterService interface.
+ */
+
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.center.CenterNotFoundException;
@@ -19,14 +25,18 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
     private final FlipFitGymSlotRepository slotRepo;
 
     public FlipFitGymCenterServiceImpl(FlipFitGymCenterRepository centerRepo,
-                                       FlipFitGymSlotRepository slotRepo) {
+            FlipFitGymSlotRepository slotRepo) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
     }
+
     /*
      * @Method: getSlotsByDate
+     * 
      * @Description: Fetches all slots for a given center on a specific date.
+     * 
      * @MethodParameters: centerId -> ID of the gym center, date -> selected date.
+     * 
      * @Exception: Throws CenterNotFoundException if center does not exist.
      */
     @Override
@@ -43,19 +53,22 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
 
         // If you want to match date manually (ONLY IF NEEDED)
         // return slots.stream()
-        //        .filter(s -> s.getStartTime().toLocalDate().isEqual(date))
-        //        .toList();
+        // .filter(s -> s.getStartTime().toLocalDate().isEqual(date))
+        // .toList();
 
         return slots;
     }
 
-
-
     /*
      * @Method: updateCenterInfo
+     * 
      * @Description: Updates gym center details after validating allowed fields.
-     * @MethodParameters: centerId -> ID of the center, updatedCenter -> updated center payload
-     * @Exception: Throws CenterNotFoundException, InvalidCenterLocationException, CenterUpdateNotAllowedException
+     * 
+     * @MethodParameters: centerId -> ID of the center, updatedCenter -> updated
+     * center payload
+     * 
+     * @Exception: Throws CenterNotFoundException, InvalidCenterLocationException,
+     * CenterUpdateNotAllowedException
      */
     @Override
     public boolean updateCenterInfo(Long centerId, GymCenter updatedCenter) {

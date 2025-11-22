@@ -1,5 +1,11 @@
 package com.lti.flipfit.repository;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : JPA repository for Gym Customer operations.
+ */
+
 import com.lti.flipfit.entity.GymCustomer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

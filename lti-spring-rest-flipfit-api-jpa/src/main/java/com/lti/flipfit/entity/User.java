@@ -1,17 +1,20 @@
 package com.lti.flipfit.entity;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing User.
+ */
+
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "users",
-        indexes = {
-                @Index(name = "idx_user_email", columnList = "email"),
-                @Index(name = "idx_user_role", columnList = "role_id")
-        }
-)
+@Table(name = "users", indexes = {
+        @Index(name = "idx_user_email", columnList = "email"),
+        @Index(name = "idx_user_role", columnList = "role_id")
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
 public class User {

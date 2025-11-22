@@ -1,7 +1,14 @@
 package com.lti.flipfit.exceptions.center;
 
 /**
- * Thrown when a center field that cannot be updated is attempted to be modified.
+ * Author :
+ * Version : 1.0
+ * Description : Exception thrown when center update is not allowed.
+ */
+
+/**
+ * Thrown when a center field that cannot be updated is attempted to be
+ * modified.
  */
 public class CenterUpdateNotAllowedException extends RuntimeException {
 

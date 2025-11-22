@@ -1,6 +1,12 @@
 package com.lti.flipfit.exceptions.center;
 
 /**
+ * Author :
+ * Version : 1.0
+ * Description : Exception thrown when center already exists.
+ */
+
+/**
  * Thrown when a gym center with same name/location already exists.
  */
 public class CenterAlreadyExistsException extends RuntimeException {

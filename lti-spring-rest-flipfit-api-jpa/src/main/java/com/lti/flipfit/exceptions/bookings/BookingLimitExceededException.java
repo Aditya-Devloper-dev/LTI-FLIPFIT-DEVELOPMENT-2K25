@@ -1,9 +1,10 @@
 package com.lti.flipfit.exceptions.bookings;
 
 /**
- * Author      :
- * Version     : 1.0
- * Description : Thrown when a user tries to exceed the allowed number of bookings.
+ * Author :
+ * Version : 1.0
+ * Description : Thrown when a user tries to exceed the allowed number of
+ * bookings.
  */
 public class BookingLimitExceededException extends RuntimeException {
 

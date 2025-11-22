@@ -1,5 +1,11 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymUserService interface.
+ */
+
 import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.User;
@@ -28,8 +34,12 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
     /*
      * @Method: register
-     * @Description: Registers a new user after validating email and duplicate accounts.
+     * 
+     * @Description: Registers a new user after validating email and duplicate
+     * accounts.
+     * 
      * @MethodParameters: user -> User object received from request
+     * 
      * @Exception: Throws DuplicateEmailException, UserAlreadyExistsException
      */
     @Override
@@ -41,8 +51,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
         }
 
         if (userRepo.existsByEmailIgnoreCaseAndPhoneNumber(
-                user.getEmail(), user.getPhoneNumber()
-        )) {
+                user.getEmail(), user.getPhoneNumber())) {
             throw new UserAlreadyExistsException("User already exists with this email and phone");
         }
 
@@ -72,17 +81,18 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
     /*
      * @Method: login
+     * 
      * @Description: Authenticates a user based on email and password.
+     * 
      * @MethodParameters: email, password
+     * 
      * @Exception: Throws UserNotFoundException, AuthenticationFailedException
      */
     @Override
     public Map<String, Object> login(String email, String password) {
 
         User foundUser = Optional.ofNullable(userRepo.findByEmailIgnoreCase(email))
-                .orElseThrow(() ->
-                        new UserNotFoundException("User with email " + email + " not found")
-                );
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
 
         // Plain text comparison (temporary)
         if (!foundUser.getPassword().equals(password)) {
@@ -100,8 +110,11 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
     /*
      * @Method: updateProfile
+     * 
      * @Description: Updates user details for the given userId.
+     * 
      * @MethodParameters: userId -> unique user identifier
+     * 
      * @Exception: Throws UserNotFoundException if the user is missing
      */
     @Override
@@ -109,9 +122,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     public String updateProfile(Long userId, User updatedData) {
 
         User user = userRepo.findById(userId)
-                .orElseThrow(() ->
-                        new UserNotFoundException("User with ID " + userId + " not found")
-                );
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
 
         if (updatedData.getFullName() != null)
             user.setFullName(updatedData.getFullName());
@@ -133,8 +144,11 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
     /*
      * @Method: getAllUsers
+     * 
      * @Description: Returns a list of all registered users.
+     * 
      * @MethodParameters: None
+     * 
      * @Exception: None
      */
     public List<User> getAllUsers() {

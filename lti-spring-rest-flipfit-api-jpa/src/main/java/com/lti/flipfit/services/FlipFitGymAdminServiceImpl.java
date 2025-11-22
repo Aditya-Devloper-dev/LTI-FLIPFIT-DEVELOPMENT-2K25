@@ -1,5 +1,11 @@
 package com.lti.flipfit.services;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymAdminService interface.
+ */
+
 import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
@@ -28,8 +34,8 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     @Autowired
     public FlipFitGymAdminServiceImpl(FlipFitGymCenterRepository centerRepo,
-                                      FlipFitGymSlotRepository slotRepo,
-                                      FlipFitGymAdminRepository adminRepo) {
+            FlipFitGymSlotRepository slotRepo,
+            FlipFitGymAdminRepository adminRepo) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
         this.adminRepo = adminRepo;
@@ -39,13 +45,11 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
     public String createCenter(GymCenter center) {
 
         boolean exists = centerRepo.existsByCenterNameIgnoreCaseAndCityIgnoreCase(
-                center.getCenterName(), center.getCity()
-        );
+                center.getCenterName(), center.getCity());
 
         if (exists) {
             throw new CenterAlreadyExistsException(
-                    "Center already exists in city: " + center.getCity()
-            );
+                    "Center already exists in city: " + center.getCity());
         }
 
         Long adminId = center.getAdmin().getAdminId();
@@ -62,13 +66,11 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         return "Center created with ID: " + saved.getCenterId();
     }
 
-
     @Override
     public String createSlot(Long centerId, GymSlot slot) {
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException(
-                        "Center " + centerId + " not found"
-                ));
+                        "Center " + centerId + " not found"));
 
         if (!slot.getEndTime().isAfter(slot.getStartTime())) {
             throw new InvalidSlotTimeException("End time must be after start time");
@@ -80,14 +82,11 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
         List<GymSlot> existingSlots = slotRepo.findByCenterCenterId(centerId);
 
-        boolean overlap = existingSlots.stream().anyMatch(existing ->
-                timesOverlap(
-                        existing.getStartTime(),
-                        existing.getEndTime(),
-                        slot.getStartTime(),
-                        slot.getEndTime()
-                )
-        );
+        boolean overlap = existingSlots.stream().anyMatch(existing -> timesOverlap(
+                existing.getStartTime(),
+                existing.getEndTime(),
+                slot.getStartTime(),
+                slot.getEndTime()));
 
         if (overlap) {
             throw new SlotAlreadyExistsException("A slot already exists in this time range");

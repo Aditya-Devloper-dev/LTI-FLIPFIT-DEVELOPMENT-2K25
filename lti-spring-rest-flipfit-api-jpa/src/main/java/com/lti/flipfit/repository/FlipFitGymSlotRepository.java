@@ -4,15 +4,14 @@ import com.lti.flipfit.entity.GymSlot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Author      : <Your Name>
- * Version     : 1.0
- * Repository  : GymSlotRepository
+ * Author : <Your Name>
+ * Version : 1.0
+ * Repository : GymSlotRepository
  * Description : JPA repository for performing CRUD operations on GymSlot.
- *               Supports retrieval of all slots under a specific center.
+ * Supports retrieval of all slots under a specific center.
  */
 
 @Repository

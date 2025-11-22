@@ -4,9 +4,10 @@ import com.lti.flipfit.services.FlipFitGymSchedulerService;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Author      :
- * Version     : 1.0
- * Description : Controller for scheduler operations triggered manually for testing.
+ * Author :
+ * Version : 1.0
+ * Description : Controller for scheduler operations triggered manually for
+ * testing.
  */
 @RestController
 @RequestMapping("/scheduler")
@@ -20,12 +21,27 @@ public class FlipFitGymSchedulerController {
 
     /*
      * @Method: Triggering the waitlist promotion job
-     * @Description: Manually runs the job that promotes users from the waitlist when slots free up
+     * 
+     * @Description: Manually runs the job that promotes users from the waitlist
+     * when slots free up
+     * 
      * @MethodParameters: None
+     * 
      * @Exception: Throws exceptions if job execution fails
      */
 
-    @PostMapping("/run-waitlist-job")
+    /*
+     * @Method: Triggering the waitlist promotion job
+     * 
+     * @Description: Manually runs the job that promotes users from the waitlist
+     * when slots free up
+     * 
+     * @MethodParameters: None
+     * 
+     * @Exception: Throws exceptions if job execution fails
+     */
+
+    @RequestMapping(value = "/run-waitlist-job", method = RequestMethod.POST)
     public String runWaitlistPromotionJob() {
         service.runWaitlistPromotionJob();
         return "Waitlist promotion job executed.";
@@ -33,12 +49,16 @@ public class FlipFitGymSchedulerController {
 
     /*
      * @Method: Sending daily reminder notifications
-     * @Description: Manually triggers the scheduler to send daily reminders to users
+     * 
+     * @Description: Manually triggers the scheduler to send daily reminders to
+     * users
+     * 
      * @MethodParameters: None
+     * 
      * @Exception: Throws exceptions if reminder execution fails
      */
 
-    @PostMapping("/send-reminders")
+    @RequestMapping(value = "/send-reminders", method = RequestMethod.POST)
     public String sendDailyReminders() {
         service.sendDailyReminders();
         return "Daily reminders sent.";

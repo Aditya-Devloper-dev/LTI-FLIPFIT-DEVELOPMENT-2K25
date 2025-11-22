@@ -1,5 +1,11 @@
 package com.lti.flipfit.validator;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Validator class for Slot operations.
+ */
+
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 
