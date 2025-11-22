@@ -36,31 +36,8 @@ public class FlipFitGymUserController {
      * @Exception: Throws InvalidInputException for null payload or invalid
      * registration.
      */
-    /*
-     * @Method: register
-     * 
-     * @Description: Registers a new user (admin/owner/customer) into the system.
-     * 
-     * @MethodParameters: userDto -> JSON payload containing user registration data.
-     * 
-     * @Exception: Throws InvalidInputException for null payload or invalid
-     * registration.
-     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestBody User user) {
-
-        if (user.getFullName() == null || user.getFullName().isBlank()) {
-            throw new InvalidInputException("Full name is required");
-        }
-
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new InvalidInputException("Email is required");
-        }
-
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new InvalidInputException("Password is required");
-        }
-
         return service.register(user);
     }
 

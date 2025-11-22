@@ -8,10 +8,13 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.User;
 import com.lti.flipfit.exceptions.user.*;
+import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.repository.FlipFitGymAdminRepository;
 import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
+import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @Autowired
     private FlipFitGymCustomerRepository customerRepo;
 
+    @Autowired
+    private FlipFitGymOwnerRepository ownerRepo;
+
     /*
      * @Method: register
      * 
@@ -46,6 +52,18 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @Transactional
     public String register(User user) {
 
+        if (user.getFullName() == null || user.getFullName().isBlank()) {
+            throw new InvalidInputException("Full name is required");
+        }
+
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new InvalidInputException("Email is required");
+        }
+
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new InvalidInputException("Password is required");
+        }
+
         if (userRepo.existsByEmailIgnoreCase(user.getEmail())) {
             throw new DuplicateEmailException("Email already registered: " + user.getEmail());
         }
@@ -54,26 +72,29 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
                 user.getEmail(), user.getPhoneNumber())) {
             throw new UserAlreadyExistsException("User already exists with this email and phone");
         }
-
-        // Hash the password
         user.setPassword(user.getPassword());
-
-        // createdAt & updatedAt handled by @PrePersist / @PreUpdate if implemented
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+        // createdAt & updatedAt handled by @PrePersist / @PreUpdate
 
         userRepo.save(user);
 
-        if ("ROLE_ADMIN".equals(user.getRole().getRoleId())) {
+        if ("ADMIN".equals(user.getRole().getRoleId())) {
             GymAdmin admin = new GymAdmin();
             admin.setUser(user);
             adminRepo.save(admin);
         }
 
-        if ("ROLE_CUSTOMER".equals(user.getRole().getRoleId())) {
+        if ("CUSTOMER".equals(user.getRole().getRoleId())) {
             GymCustomer customer = new GymCustomer();
             customer.setUser(user);
             customerRepo.save(customer);
+        }
+
+        if ("OWNER".equals(user.getRole().getRoleId())) {
+            GymOwner owner = new GymOwner();
+            owner.setUser(user);
+            owner.setApproved(false);
+            // businessName, gstNumber, panNumber are null initially
+            ownerRepo.save(owner);
         }
 
         return "User registered with ID: " + user.getUserId();
@@ -90,6 +111,14 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
      */
     @Override
     public Map<String, Object> login(String email, String password) {
+
+        if (email == null || email.isBlank()) {
+            throw new InvalidInputException("Email cannot be empty");
+        }
+
+        if (password == null || password.isBlank()) {
+            throw new InvalidInputException("Password cannot be empty");
+        }
 
         User foundUser = Optional.ofNullable(userRepo.findByEmailIgnoreCase(email))
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));

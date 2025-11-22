@@ -1,6 +1,7 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymAdminService;
@@ -98,5 +99,33 @@ public class FlipFitGymAdminController {
         }
 
         return ResponseEntity.ok(adminService.getCenterById(centerId));
+    }
+
+    /*
+     * @Method: approveOwner
+     * 
+     * @Description: Approves a pending gym owner
+     * 
+     * @MethodParameters: ownerId -> Unique identifier of the owner
+     * 
+     * @Exception: Throws InvalidInputException if owner not found
+     */
+    @RequestMapping(value = "/approve-owner/{ownerId}", method = RequestMethod.PUT)
+    public ResponseEntity<String> approveOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(adminService.approveOwner(ownerId));
+    }
+
+    /*
+     * @Method: getPendingOwners
+     * 
+     * @Description: Retrieves a list of all pending gym owners
+     * 
+     * @MethodParameters: None
+     * 
+     * @Exception: None
+     */
+    @RequestMapping(value = "/pending-owners", method = RequestMethod.GET)
+    public ResponseEntity<List<GymOwner>> getPendingOwners() {
+        return ResponseEntity.ok(adminService.getPendingOwners());
     }
 }

@@ -9,8 +9,9 @@ import lombok.Data;
 public class GymOwner {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "owner_id")
-    private String ownerId;
+    private Long ownerId;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -24,4 +25,7 @@ public class GymOwner {
 
     @Column(name = "pan_number")
     private String panNumber;
+
+    @Column(name = "is_approved")
+    private boolean isApproved = false;
 }

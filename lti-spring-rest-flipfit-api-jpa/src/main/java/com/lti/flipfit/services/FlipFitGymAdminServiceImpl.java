@@ -8,6 +8,7 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.exceptions.center.CenterAlreadyExistsException;
@@ -17,6 +18,7 @@ import com.lti.flipfit.exceptions.slots.InvalidSlotTimeException;
 import com.lti.flipfit.exceptions.slots.SlotAlreadyExistsException;
 import com.lti.flipfit.repository.FlipFitGymAdminRepository;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
+import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +33,17 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
     private final FlipFitGymCenterRepository centerRepo;
     private final FlipFitGymSlotRepository slotRepo;
     private final FlipFitGymAdminRepository adminRepo;
+    private final FlipFitGymOwnerRepository ownerRepo;
 
     @Autowired
     public FlipFitGymAdminServiceImpl(FlipFitGymCenterRepository centerRepo,
             FlipFitGymSlotRepository slotRepo,
-            FlipFitGymAdminRepository adminRepo) {
+            FlipFitGymAdminRepository adminRepo,
+            FlipFitGymOwnerRepository ownerRepo) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
         this.adminRepo = adminRepo;
+        this.ownerRepo = ownerRepo;
     }
 
     @Override
@@ -116,5 +121,26 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     private boolean timesOverlap(LocalTime s1, LocalTime e1, LocalTime s2, LocalTime e2) {
         return s1.isBefore(e2) && s2.isBefore(e1);
+    }
+
+    @Override
+    public String approveOwner(Long ownerId) {
+        GymOwner owner = ownerRepo.findById(ownerId)
+                .orElseThrow(() -> new InvalidInputException("Owner not found with ID: " + ownerId));
+
+        if (owner.isApproved()) {
+            return "Owner is already approved.";
+        }
+
+        owner.setApproved(true);
+        ownerRepo.save(owner);
+        return "Owner approved successfully.";
+    }
+
+    @Override
+    public List<GymOwner> getPendingOwners() {
+        return ownerRepo.findAll().stream()
+                .filter(owner -> !owner.isApproved())
+                .toList();
     }
 }
