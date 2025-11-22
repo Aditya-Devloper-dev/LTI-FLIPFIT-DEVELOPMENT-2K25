@@ -8,13 +8,9 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymBooking;
 
-import java.util.List;
-
 public interface FlipFitGymBookingService {
 
     String bookSlot(GymBooking booking);
 
     String cancelBooking(Long bookingId);
-
-    List<GymBooking> getUserBookings(Long userId);
 }

@@ -11,6 +11,7 @@ import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.center.CenterNotFoundException;
 import com.lti.flipfit.exceptions.center.CenterUpdateNotAllowedException;
 import com.lti.flipfit.exceptions.center.InvalidCenterLocationException;
+import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,18 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      * @Exception: Throws CenterNotFoundException if center does not exist.
      */
     @Override
-    public List<GymSlot> getSlotsByDate(Long centerId, LocalDate date) {
+    public List<GymSlot> getSlotsByDate(Long centerId, String date) {
+
+        if (date == null || date.isBlank()) {
+            throw new InvalidInputException("Date cannot be empty");
+        }
+
+        LocalDate parsedDate;
+        try {
+            parsedDate = LocalDate.parse(date);
+        } catch (Exception e) {
+            throw new InvalidInputException("Invalid date format. Expected yyyy-MM-dd");
+        }
 
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));
@@ -57,6 +69,23 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
         // .toList();
 
         return slots;
+    }
+
+    /*
+     * @Method: getSlotsByCenterId
+     * 
+     * @Description: Fetches all slots for a given center.
+     * 
+     * @MethodParameters: centerId -> ID of the gym center.
+     * 
+     * @Exception: Throws CenterNotFoundException if center does not exist.
+     */
+    @Override
+    public List<GymSlot> getSlotsByCenterId(Long centerId) {
+        if (!centerRepo.existsById(centerId)) {
+            throw new CenterNotFoundException("Center " + centerId + " not found");
+        }
+        return slotRepo.findByCenterCenterId(centerId);
     }
 
     /*

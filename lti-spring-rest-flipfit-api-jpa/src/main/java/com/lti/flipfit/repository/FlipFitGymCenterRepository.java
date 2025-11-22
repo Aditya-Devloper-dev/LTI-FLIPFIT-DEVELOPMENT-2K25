@@ -16,4 +16,8 @@ import org.springframework.stereotype.Repository;
 public interface FlipFitGymCenterRepository extends JpaRepository<GymCenter, Long> {
 
     boolean existsByCenterNameIgnoreCaseAndCityIgnoreCase(String name, String city);
+
+    java.util.List<GymCenter> findByOwnerOwnerId(Long ownerId);
+
+    java.util.List<GymCenter> findByIsActive(Boolean isActive);
 }

@@ -38,18 +38,6 @@ public class FlipFitGymBookingController {
      * and service-level exceptions for conflict/full/slot not found
      */
 
-    /*
-     * @Method: bookSlot
-     * 
-     * @Description: Accepts booking details, validates them, then forwards to
-     * service layer
-     * 
-     * @MethodParameters: Booking booking
-     * 
-     * @Exception: Throws InvalidBookingException for missing data,
-     * and service-level exceptions for conflict/full/slot not found
-     */
-
     @RequestMapping(value = "/book", method = RequestMethod.POST)
     public ResponseEntity<String> bookSlot(@RequestBody GymBooking booking) {
 
@@ -77,18 +65,4 @@ public class FlipFitGymBookingController {
         return ResponseEntity.ok(bookingService.cancelBooking(bookingId));
     }
 
-    /*
-     * @Method: getUserBookings
-     * 
-     * @Description: Fetches all bookings created by a specific user
-     * 
-     * @MethodParameters: userId -> unique customer ID
-     * 
-     * @Exception: Throws InvalidInputException for blank userId,
-     * service-level exceptions if user not found
-     */
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<List<GymBooking>> getUserBookings(@PathVariable Long userId) {
-        return ResponseEntity.ok(bookingService.getUserBookings(userId));
-    }
 }

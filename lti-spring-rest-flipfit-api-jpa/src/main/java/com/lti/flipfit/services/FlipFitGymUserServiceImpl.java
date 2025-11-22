@@ -1,11 +1,5 @@
 package com.lti.flipfit.services;
 
-/**
- * Author :
- * Version : 1.0
- * Description : Implementation of the FlipFitGymUserService interface.
- */
-
 import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.GymOwner;
@@ -22,6 +16,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymUserService interface.
+ */
 
 @Service
 public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {

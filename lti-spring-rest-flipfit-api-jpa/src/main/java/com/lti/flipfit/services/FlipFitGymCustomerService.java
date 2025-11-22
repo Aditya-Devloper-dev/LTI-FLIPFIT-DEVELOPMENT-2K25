@@ -6,6 +6,9 @@ package com.lti.flipfit.services;
  * Description : Service interface for handling Customer operations.
  */
 
+import com.lti.flipfit.entity.GymBooking;
+import com.lti.flipfit.entity.GymCustomer;
+
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +21,10 @@ public interface FlipFitGymCustomerService {
 
     List<Map<String, Object>> viewAvailability(String centerId, String date);
 
-    String bookSlot(String customerId, String slotId, String centerId);
+    GymCustomer getProfile(Long customerId);
 
-    boolean cancelBooking(String bookingId);
+    boolean validateMembership(Long customerId);
+
+    List<GymBooking> getCustomerBookings(Long customerId);
 
 }
