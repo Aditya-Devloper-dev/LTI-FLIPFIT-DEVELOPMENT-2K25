@@ -7,10 +7,12 @@ package com.lti.flipfit.services;
  */
 
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymSlot;
 import org.aspectj.weaver.patterns.ConcreteCflowPointcut;
 
 import java.util.List;
+
 public interface FlipFitGymAdminService {
 
     String createCenter(GymCenter center);
@@ -20,4 +22,8 @@ public interface FlipFitGymAdminService {
     List<GymCenter> getAllCenters();
 
     GymCenter getCenterById(Long centerId);
+
+    String approveOwner(Long ownerId);
+
+    List<GymOwner> getPendingOwners();
 }
