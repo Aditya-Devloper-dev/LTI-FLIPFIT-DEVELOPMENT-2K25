@@ -37,4 +37,6 @@ public class GymSlot {
     private int availableSeats;
 
     private String status;
+    @Column(name = "is_active")
+    private Boolean isActive = false;
 }

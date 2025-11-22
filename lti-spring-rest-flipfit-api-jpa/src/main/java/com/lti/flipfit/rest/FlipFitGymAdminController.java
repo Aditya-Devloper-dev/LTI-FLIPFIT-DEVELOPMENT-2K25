@@ -1,12 +1,9 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.entity.GymCenter;
-import com.lti.flipfit.entity.GymOwner;
-import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.entity.*;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymAdminService;
-import com.lti.flipfit.validator.CenterValidator;
-import com.lti.flipfit.validator.SlotValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,42 +27,31 @@ public class FlipFitGymAdminController {
     }
 
     /*
-     * @Method: createCenter
+     * @Method: approveSlot
      * 
-     * @Description: Accepts center details, validates input, and forwards it to the
-     * service layer
+     * @Description: Approves a pending gym slot
      * 
-     * @MethodParameters: GymCenter center
+     * @MethodParameters: slotId -> Unique identifier of the slot
      * 
-     * @Exception: Throws InvalidInputException if validation fails
+     * @Exception: Throws SlotNotFoundException if slot not found
      */
-    @RequestMapping(value = "/center", method = RequestMethod.POST)
-    public ResponseEntity<String> createCenter(@RequestBody GymCenter center) {
-        CenterValidator.validateCreateCenter(center);
-        return ResponseEntity.ok(adminService.createCenter(center));
+    @RequestMapping(value = "/approve-slot/{slotId}", method = RequestMethod.PUT)
+    public ResponseEntity<String> approveSlot(@PathVariable Long slotId) {
+        return ResponseEntity.ok(adminService.approveSlot(slotId));
     }
 
     /*
-     * @Method: createSlot
+     * @Method: getPendingSlots
      * 
-     * @Description: Accepts slot details and adds a slot under the given center
+     * @Description: Retrieves a list of all pending gym slots for a center
      * 
-     * @MethodParameters: centerId -> Center unique ID, Slot slot -> slot details
+     * @MethodParameters: centerId
      * 
-     * @Exception: Throws InvalidInputException for invalid input, center not found
-     * handled in service
+     * @Exception: None
      */
-    @RequestMapping(value = "/slot/{centerId}", method = RequestMethod.POST)
-    public ResponseEntity<String> createSlot(@PathVariable Long centerId,
-            @RequestBody GymSlot gymSlot) {
-
-        if (centerId == null) {
-            throw new InvalidInputException("Center ID cannot be empty");
-        }
-
-        SlotValidator.validateSlot(gymSlot);
-
-        return ResponseEntity.ok(adminService.createSlot(centerId, gymSlot));
+    @RequestMapping(value = "/pending-slots/{centerId}", method = RequestMethod.GET)
+    public ResponseEntity<List<GymSlot>> getPendingSlots(@PathVariable Long centerId) {
+        return ResponseEntity.ok(adminService.getPendingSlots(centerId));
     }
 
     /*
@@ -127,5 +113,63 @@ public class FlipFitGymAdminController {
     @RequestMapping(value = "/pending-owners", method = RequestMethod.GET)
     public ResponseEntity<List<GymOwner>> getPendingOwners() {
         return ResponseEntity.ok(adminService.getPendingOwners());
+    }
+
+    /*
+     * @Method: approveCenter
+     * 
+     * @Description: Approves a pending gym center
+     * 
+     * @MethodParameters: centerId -> Unique identifier of the center
+     * 
+     * @Exception: Throws CenterNotFoundException if center not found
+     */
+    @RequestMapping(value = "/approve-center/{centerId}", method = RequestMethod.PUT)
+    public ResponseEntity<String> approveCenter(@PathVariable Long centerId) {
+        return ResponseEntity.ok(adminService.approveCenter(centerId));
+    }
+
+    /*
+     * @Method: getPendingCenters
+     * 
+     * @Description: Retrieves a list of all pending gym centers
+     * 
+     * @MethodParameters: None
+     * 
+     * @Exception: None
+     */
+    @RequestMapping(value = "/pending-centers", method = RequestMethod.GET)
+    public ResponseEntity<List<GymCenter>> getPendingCenters() {
+        return ResponseEntity.ok(adminService.getPendingCenters());
+    }
+
+    /*
+     * @Method: deleteCenter
+     * 
+     * @Description: Deletes a gym center
+     * 
+     * @MethodParameters: centerId -> Unique identifier of the center
+     * 
+     * @Exception: Throws CenterNotFoundException if center not found
+     */
+    @RequestMapping(value = "/delete-center/{centerId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteCenter(@PathVariable Long centerId) {
+        adminService.deleteCenter(centerId);
+        return ResponseEntity.ok("Center deleted successfully");
+    }
+
+    /*
+     * @Method: deleteSlot
+     * 
+     * @Description: Deletes a gym slot
+     * 
+     * @MethodParameters: slotId -> Unique identifier of the slot
+     * 
+     * @Exception: Throws SlotNotFoundException if slot not found
+     */
+    @RequestMapping(value = "/delete-slot/{slotId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteSlot(@PathVariable Long slotId) {
+        adminService.deleteSlot(slotId);
+        return ResponseEntity.ok("Slot deleted successfully");
     }
 }

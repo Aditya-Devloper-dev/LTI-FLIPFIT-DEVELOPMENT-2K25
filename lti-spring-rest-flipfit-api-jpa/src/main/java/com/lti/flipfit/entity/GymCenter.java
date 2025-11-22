@@ -33,9 +33,13 @@ public class GymCenter {
     @Column(name = "contact_number")
     private String contactNumber;
 
-    @OneToOne
-    @JoinColumn(name = "admin_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = true) // Made nullable as Owner is primary now
     private GymAdmin admin;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private GymOwner owner;
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -48,5 +52,5 @@ public class GymCenter {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_active")
-    private Boolean isActive = true;
+    private Boolean isActive = false;
 }

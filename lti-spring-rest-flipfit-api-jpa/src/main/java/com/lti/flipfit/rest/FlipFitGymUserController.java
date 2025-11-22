@@ -1,6 +1,5 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymUserService;
 import com.lti.flipfit.entity.User;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +11,7 @@ import java.util.Map;
  * Author :
  * Version : 1.0
  * Description : Controller for user registration, login, and profile updates
- * across
- * admin, owner, and customer roles. Includes validation and exception
+ * across admin, owner, and customer roles. Includes validation and exception
  * handling using the central exception framework.
  */
 @RestController
@@ -54,16 +52,6 @@ public class FlipFitGymUserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(@RequestParam String email,
             @RequestParam String password) {
-
-        if (email.isBlank()) {
-            throw new InvalidInputException("Email cannot be empty");
-        }
-
-        if (password.isBlank()) {
-            throw new InvalidInputException("Password cannot be empty");
-        }
-
-        // service.login() will throw if invalid
         return service.login(email, password);
     }
 

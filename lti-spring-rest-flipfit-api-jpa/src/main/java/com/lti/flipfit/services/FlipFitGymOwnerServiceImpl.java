@@ -1,53 +1,109 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.entity.GymBooking;
+import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymOwner;
+import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.exceptions.bookings.BookingNotFoundException;
+import com.lti.flipfit.exceptions.center.CenterNotFoundException;
+import com.lti.flipfit.exceptions.user.UserNotFoundException;
+import com.lti.flipfit.repository.FlipFitGymBookingRepository;
+import com.lti.flipfit.repository.FlipFitGymCenterRepository;
+import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
+import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 /**
  * Author :
  * Version : 1.0
  * Description : Implementation of the FlipFitGymOwnerService interface.
  */
-
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-
 @Service
 public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
+    private final FlipFitGymOwnerRepository ownerRepo;
+    private final FlipFitGymCenterRepository centerRepo;
+    private final FlipFitGymBookingRepository bookingRepo;
+    private final FlipFitGymSlotRepository slotRepo;
+
+    public FlipFitGymOwnerServiceImpl(FlipFitGymOwnerRepository ownerRepo,
+            FlipFitGymCenterRepository centerRepo,
+            FlipFitGymBookingRepository bookingRepo,
+            FlipFitGymSlotRepository slotRepo) {
+        this.ownerRepo = ownerRepo;
+        this.centerRepo = centerRepo;
+        this.bookingRepo = bookingRepo;
+        this.slotRepo = slotRepo;
+    }
+
     @Override
-    public boolean approveBooking(String bookingId) {
-        // Always success for testing
+    public boolean approveBooking(Long bookingId) {
+        GymBooking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+
+        booking.setApprovedByOwner(true);
+        bookingRepo.save(booking);
         return true;
     }
 
     @Override
-    public boolean addCenter(String ownerId, String centerId) {
-        // Always success for dummy use case
-        return true;
+    public GymCenter addCenter(GymCenter center, Long ownerId) {
+        GymOwner owner = ownerRepo.findById(ownerId)
+                .orElseThrow(() -> new UserNotFoundException("Owner not found"));
+
+        center.setOwner(owner);
+        return centerRepo.save(center);
     }
 
     @Override
-    public boolean updateCenter(String centerId) {
-        // Always return true for now
-        return true;
+    public GymCenter updateCenter(GymCenter center) {
+        if (center.getCenterId() == null) {
+            throw new CenterNotFoundException("Center ID is required for update");
+        }
+
+        GymCenter existingCenter = centerRepo.findById(center.getCenterId())
+                .orElseThrow(() -> new CenterNotFoundException("Center not found"));
+
+        // Update fields (only non-null)
+        if (center.getCenterName() != null)
+            existingCenter.setCenterName(center.getCenterName());
+        if (center.getCity() != null)
+            existingCenter.setCity(center.getCity());
+        if (center.getContactNumber() != null)
+            existingCenter.setContactNumber(center.getContactNumber());
+        // Don't update Owner or Admin unless explicitly needed logic is added
+
+        return centerRepo.save(existingCenter);
     }
 
     @Override
-    public List<Map<String, Object>> viewAllBookings(String centerId) {
+    public List<GymBooking> viewAllBookings(Long centerId) {
+        if (!centerRepo.existsById(centerId)) {
+            throw new CenterNotFoundException("Center not found");
+        }
+        return bookingRepo.findByCenterCenterId(centerId);
+    }
 
-        // Dummy booking 1
-        Map<String, Object> b1 = new HashMap<>();
-        b1.put("bookingId", "BK-101");
-        b1.put("customerId", "CUS-1");
-        b1.put("slotId", "SLOT-1");
-        b1.put("status", "BOOKED");
+    @Override
+    public List<GymCenter> getCentersByOwner(Long ownerId) {
+        if (!ownerRepo.existsById(ownerId)) {
+            throw new UserNotFoundException("Owner not found");
+        }
+        return centerRepo.findByOwnerOwnerId(ownerId);
+    }
 
-        // Dummy booking 2
-        Map<String, Object> b2 = new HashMap<>();
-        b2.put("bookingId", "BK-102");
-        b2.put("customerId", "CUS-2");
-        b2.put("slotId", "SLOT-2");
-        b2.put("status", "WAITING");
+    @Override
+    public void addSlot(GymSlot slot, Long centerId) {
+        GymCenter center = centerRepo.findById(centerId)
+                .orElseThrow(() -> new CenterNotFoundException("Center not found"));
 
-        return Arrays.asList(b1, b2);
+        slot.setCenter(center);
+        slot.setIsActive(false); // Default to inactive until approved
+        slot.setAvailableSeats(slot.getCapacity());
+        slot.setStatus("PENDING");
+
+        slotRepo.save(slot);
     }
 }

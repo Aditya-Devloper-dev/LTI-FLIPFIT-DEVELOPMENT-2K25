@@ -30,17 +30,6 @@ public class FlipFitGymSchedulerController {
      * @Exception: Throws exceptions if job execution fails
      */
 
-    /*
-     * @Method: Triggering the waitlist promotion job
-     * 
-     * @Description: Manually runs the job that promotes users from the waitlist
-     * when slots free up
-     * 
-     * @MethodParameters: None
-     * 
-     * @Exception: Throws exceptions if job execution fails
-     */
-
     @RequestMapping(value = "/run-waitlist-job", method = RequestMethod.POST)
     public String runWaitlistPromotionJob() {
         service.runWaitlistPromotionJob();

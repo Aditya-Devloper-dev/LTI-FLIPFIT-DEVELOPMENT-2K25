@@ -1,11 +1,13 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymCenterService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Author :
@@ -35,19 +37,24 @@ public class FlipFitGymCenterController {
     @RequestMapping(value = "/slots", method = RequestMethod.GET)
     public Object getSlotsByDate(@RequestParam Long centerId,
             @RequestParam String date) {
+        return service.getSlotsByDate(centerId, date);
+    }
 
-        if (date == null || date.isBlank()) {
-            throw new InvalidInputException("Date cannot be empty");
+    /*
+     * @Method: getSlotsByCenterId
+     * 
+     * @Description: Retrieves all slots for the given center
+     * 
+     * @MethodParameters: centerId -> unique center ID
+     * 
+     * @Exception: Throws InvalidInputException for blank centerId
+     */
+    @RequestMapping(value = "/slots/{centerId}", method = RequestMethod.GET)
+    public ResponseEntity<List<GymSlot>> getSlotsByCenterId(@PathVariable Long centerId) {
+        if (centerId == null) {
+            throw new InvalidInputException("Center ID cannot be empty");
         }
-
-        LocalDate parsedDate;
-        try {
-            parsedDate = LocalDate.parse(date);
-        } catch (Exception e) {
-            throw new InvalidInputException("Invalid date format. Expected yyyy-MM-dd");
-        }
-
-        return service.getSlotsByDate(centerId, parsedDate);
+        return ResponseEntity.ok(service.getSlotsByCenterId(centerId));
     }
 
     /*

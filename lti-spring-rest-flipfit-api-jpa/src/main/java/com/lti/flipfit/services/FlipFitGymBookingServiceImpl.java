@@ -1,11 +1,5 @@
 package com.lti.flipfit.services;
 
-/**
- * Author :
- * Version : 1.0
- * Description : Implementation of the FlipFitGymBookingService interface.
- */
-
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymCustomer;
@@ -19,7 +13,12 @@ import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymBookingService interface.
+ */
 
 @Service
 public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
@@ -124,21 +123,4 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         return "Booking cancelled with ID: " + bookingId;
     }
 
-    /*
-     * @Method: getUserBookings
-     * 
-     * @Description: Returns all bookings made by a user.
-     * 
-     * @MethodParameters: userId -> user ID
-     * 
-     * @Exception: None (empty list returned if no bookings)
-     */
-    @Override
-    public List<GymBooking> getUserBookings(Long userId) {
-
-        GymCustomer customer = customerRepo.findById(userId)
-                .orElseThrow(() -> new BookingNotFoundException("Invalid userId"));
-
-        return bookingRepo.findByCustomer(customer);
-    }
 }

@@ -1,7 +1,14 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.entity.GymBooking;
+import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymOwnerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Author :
@@ -23,43 +30,37 @@ public class FlipFitGymOwnerController {
      * 
      * @Description: Marks a pending booking as approved by the gym owner
      * 
-     * @MethodParameters: String bookingId
+     * @MethodParameters: bookingId
      * 
-     * @Exception: Throws exceptions if booking is not found or owner is not
-     * authorized
+     * @Exception: BookingNotFoundException
      */
-
-    /*
-     * @Method: Approving a booking
-     * 
-     * @Description: Marks a pending booking as approved by the gym owner
-     * 
-     * @MethodParameters: String bookingId
-     * 
-     * @Exception: Throws exceptions if booking is not found or owner is not
-     * authorized
-     */
-
     @RequestMapping(value = "/approve-booking/{bookingId}", method = RequestMethod.POST)
-    public boolean approveBooking(@PathVariable String bookingId) {
-        return service.approveBooking(bookingId);
+    public ResponseEntity<String> approveBooking(@PathVariable Long bookingId) {
+        if (bookingId == null) {
+            throw new InvalidInputException("Booking ID cannot be empty");
+        }
+        service.approveBooking(bookingId);
+        return ResponseEntity.ok("Booking approved successfully");
     }
 
     /*
      * @Method: Adding a center under an owner
      * 
-     * @Description: Links an existing center to the specified owner account
+     * @Description: Creates a new center linked to the specified owner
      * 
-     * @MethodParameters: String ownerId, String centerId
+     * @MethodParameters: ownerId, GymCenter object
      * 
-     * @Exception: Throws exceptions if owner/center is invalid or mapping already
-     * exists
+     * @Exception: UserNotFoundException
      */
+    @RequestMapping(value = "/add-center/{ownerId}", method = RequestMethod.POST)
+    public ResponseEntity<GymCenter> addCenter(
+            @PathVariable Long ownerId,
+            @RequestBody GymCenter center) {
 
-    @RequestMapping(value = "/add-center", method = RequestMethod.POST)
-    public boolean addCenter(@RequestParam String ownerId,
-            @RequestParam String centerId) {
-        return service.addCenter(ownerId, centerId);
+        if (ownerId == null) {
+            throw new InvalidInputException("Owner ID cannot be empty");
+        }
+        return ResponseEntity.ok(service.addCenter(center, ownerId));
     }
 
     /*
@@ -67,15 +68,20 @@ public class FlipFitGymOwnerController {
      * 
      * @Description: Updates information of a center managed by the owner
      * 
-     * @MethodParameters: String centerId
+     * @MethodParameters: centerId, GymCenter object
      * 
-     * @Exception: Throws exceptions if center does not exist or owner lacks
-     * permission
+     * @Exception: CenterNotFoundException
      */
-
     @RequestMapping(value = "/update-center/{centerId}", method = RequestMethod.PUT)
-    public boolean updateCenter(@PathVariable String centerId) {
-        return service.updateCenter(centerId);
+    public ResponseEntity<GymCenter> updateCenter(
+            @PathVariable Long centerId,
+            @RequestBody GymCenter center) {
+
+        if (centerId == null) {
+            throw new InvalidInputException("Center ID cannot be empty");
+        }
+        center.setCenterId(centerId); // Ensure ID is set from path
+        return ResponseEntity.ok(service.updateCenter(center));
     }
 
     /*
@@ -83,14 +89,50 @@ public class FlipFitGymOwnerController {
      * 
      * @Description: Retrieves every booking associated with the given centerId
      * 
-     * @MethodParameters: String centerId
+     * @MethodParameters: centerId
      * 
-     * @Exception: Throws exceptions if center is invalid or booking data retrieval
-     * fails
+     * @Exception: CenterNotFoundException
      */
-
     @RequestMapping(value = "/all-bookings/{centerId}", method = RequestMethod.GET)
-    public Object viewAllBookings(@PathVariable String centerId) {
-        return service.viewAllBookings(centerId);
+    public ResponseEntity<List<GymBooking>> viewAllBookings(@PathVariable Long centerId) {
+        if (centerId == null) {
+            throw new InvalidInputException("Center ID cannot be empty");
+        }
+        return ResponseEntity.ok(service.viewAllBookings(centerId));
+    }
+
+    /*
+     * @Method: View all centers by owner
+     * 
+     * @Description: Retrieves all centers owned by a specific owner
+     * 
+     * @MethodParameters: ownerId
+     * 
+     * @Exception: UserNotFoundException
+     */
+    @RequestMapping(value = "/centers/{ownerId}", method = RequestMethod.GET)
+    public ResponseEntity<List<GymCenter>> getCentersByOwner(@PathVariable Long ownerId) {
+        if (ownerId == null) {
+            throw new InvalidInputException("Owner ID cannot be empty");
+        }
+        return ResponseEntity.ok(service.getCentersByOwner(ownerId));
+    }
+
+    /*
+     * @Method: Add Slot
+     * 
+     * @Description: Adds a new slot to a center (Pending Approval)
+     * 
+     * @MethodParameters: centerId, GymSlot
+     * 
+     * @Exception: CenterNotFoundException
+     */
+    @RequestMapping(value = "/add-slot/{centerId}", method = RequestMethod.POST)
+    public ResponseEntity<String> addSlot(@PathVariable Long centerId, @RequestBody GymSlot slot) {
+        if (centerId == null) {
+            throw new InvalidInputException("Center ID cannot be empty");
+        }
+        service.addSlot(slot, centerId);
+        return ResponseEntity.ok("Slot added successfully. Waiting for Admin approval.");
     }
 }

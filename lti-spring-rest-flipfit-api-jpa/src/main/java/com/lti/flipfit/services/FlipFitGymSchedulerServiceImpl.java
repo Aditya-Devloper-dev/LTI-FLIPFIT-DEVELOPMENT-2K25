@@ -1,23 +1,19 @@
 package com.lti.flipfit.services;
 
-/**
- * Author :
- * Version : 1.0
- * Description : Implementation of the FlipFitGymSchedulerService interface.
- */
-
-import com.lti.flipfit.entity.GymBooking;
-import com.lti.flipfit.entity.GymSlot;
-import com.lti.flipfit.entity.GymWaitlist;
-import com.lti.flipfit.repository.FlipFitGymBookingRepository;
-import com.lti.flipfit.repository.FlipFitGymSlotRepository;
-import com.lti.flipfit.repository.FlipFitGymWaitlistRepository;
+import com.lti.flipfit.entity.*;
+import com.lti.flipfit.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymSchedulerService interface.
+ */
 
 @Service
 public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerService {
@@ -35,7 +31,6 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
     }
 
     @Override
-    @Transactional
     public void runWaitlistPromotionJob() {
         System.out.println("Running Waitlist Promotion Job...");
 

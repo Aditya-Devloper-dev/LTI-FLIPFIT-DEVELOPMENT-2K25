@@ -1,92 +1,55 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.entity.*;
+import com.lti.flipfit.exceptions.*;
+import com.lti.flipfit.exceptions.center.*;
+import com.lti.flipfit.exceptions.slots.*;
+import com.lti.flipfit.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalTime;
+import java.util.*;
+
 /**
  * Author :
  * Version : 1.0
  * Description : Implementation of the FlipFitGymAdminService interface.
  */
 
-import com.lti.flipfit.entity.GymAdmin;
-import com.lti.flipfit.entity.GymCenter;
-import com.lti.flipfit.entity.GymOwner;
-import com.lti.flipfit.entity.GymSlot;
-import com.lti.flipfit.exceptions.InvalidInputException;
-import com.lti.flipfit.exceptions.center.CenterAlreadyExistsException;
-import com.lti.flipfit.exceptions.center.CenterNotFoundException;
-import com.lti.flipfit.exceptions.slots.CapacityInvalidException;
-import com.lti.flipfit.exceptions.slots.InvalidSlotTimeException;
-import com.lti.flipfit.exceptions.slots.SlotAlreadyExistsException;
-import com.lti.flipfit.repository.FlipFitGymAdminRepository;
-import com.lti.flipfit.repository.FlipFitGymCenterRepository;
-import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
-import com.lti.flipfit.repository.FlipFitGymSlotRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.*;
-
 @Service
 public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
-    private final FlipFitGymCenterRepository centerRepo;
-    private final FlipFitGymSlotRepository slotRepo;
-    private final FlipFitGymAdminRepository adminRepo;
-    private final FlipFitGymOwnerRepository ownerRepo;
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymAdminServiceImpl.class);
+    private static final String SLOT_STATUS_AVAILABLE = "AVAILABLE";
 
     @Autowired
-    public FlipFitGymAdminServiceImpl(FlipFitGymCenterRepository centerRepo,
-            FlipFitGymSlotRepository slotRepo,
-            FlipFitGymAdminRepository adminRepo,
-            FlipFitGymOwnerRepository ownerRepo) {
-        this.centerRepo = centerRepo;
-        this.slotRepo = slotRepo;
-        this.adminRepo = adminRepo;
-        this.ownerRepo = ownerRepo;
-    }
+    private FlipFitGymCenterRepository centerRepo;
+
+    @Autowired
+    private FlipFitGymSlotRepository slotRepo;
+
+    @Autowired
+    private FlipFitGymAdminRepository adminRepo;
+
+    @Autowired
+    private FlipFitGymOwnerRepository ownerRepo;
 
     @Override
-    public String createCenter(GymCenter center) {
+    @Transactional
+    public String approveSlot(Long slotId) {
+        GymSlot slot = slotRepo.findById(slotId)
+                .orElseThrow(() -> new SlotNotFoundException("Slot not found with ID: " + slotId));
 
-        boolean exists = centerRepo.existsByCenterNameIgnoreCaseAndCityIgnoreCase(
-                center.getCenterName(), center.getCity());
-
-        if (exists) {
-            throw new CenterAlreadyExistsException(
-                    "Center already exists in city: " + center.getCity());
+        if (slot.getIsActive()) {
+            return "Slot is already active.";
         }
 
-        Long adminId = center.getAdmin().getAdminId();
-        GymAdmin admin = adminRepo.findById(adminId)
-                .orElseThrow(() -> new InvalidInputException("Invalid admin ID: " + adminId));
-
-        center.setAdmin(admin);
-
-        center.setCreatedAt(LocalDateTime.now());
-        center.setUpdatedAt(LocalDateTime.now());
-
-        GymCenter saved = centerRepo.save(center);
-
-        return "Center created with ID: " + saved.getCenterId();
-    }
-
-    @Override
-    public String createSlot(Long centerId, GymSlot slot) {
-        GymCenter center = centerRepo.findById(centerId)
-                .orElseThrow(() -> new CenterNotFoundException(
-                        "Center " + centerId + " not found"));
-
-        if (!slot.getEndTime().isAfter(slot.getStartTime())) {
-            throw new InvalidSlotTimeException("End time must be after start time");
-        }
-
-        if (slot.getCapacity() <= 0) {
-            throw new CapacityInvalidException("Capacity must be greater than 0");
-        }
-
-        List<GymSlot> existingSlots = slotRepo.findByCenterCenterId(centerId);
-
+        // Validate time overlap with other ACTIVE slots
+        List<GymSlot> existingSlots = slotRepo.findByCenterCenterIdAndIsActive(slot.getCenter().getCenterId(), true);
         boolean overlap = existingSlots.stream().anyMatch(existing -> timesOverlap(
                 existing.getStartTime(),
                 existing.getEndTime(),
@@ -94,17 +57,19 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
                 slot.getEndTime()));
 
         if (overlap) {
-            throw new SlotAlreadyExistsException("A slot already exists in this time range");
+            throw new SlotAlreadyExistsException("An active slot already exists in this time range");
         }
 
-        slot.setCenter(center);
-        slot.setAvailableSeats(slot.getCapacity());
+        slot.setIsActive(true);
         slot.setStatus("AVAILABLE");
+        slotRepo.save(slot);
+        logger.info("Slot approved with ID: {}", slotId);
+        return "Slot approved successfully.";
+    }
 
-        GymSlot saved = slotRepo.save(slot);
-
-        return "Slot created with ID: " + saved.getSlotId() +
-                " for center " + centerId;
+    @Override
+    public List<GymSlot> getPendingSlots(Long centerId) {
+        return slotRepo.findByCenterCenterIdAndIsActive(centerId, false);
     }
 
     @Override
@@ -124,6 +89,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
     }
 
     @Override
+    @Transactional
     public String approveOwner(Long ownerId) {
         GymOwner owner = ownerRepo.findById(ownerId)
                 .orElseThrow(() -> new InvalidInputException("Owner not found with ID: " + ownerId));
@@ -134,6 +100,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
         owner.setApproved(true);
         ownerRepo.save(owner);
+        logger.info("Owner approved with ID: {}", ownerId);
         return "Owner approved successfully.";
     }
 
@@ -142,5 +109,46 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         return ownerRepo.findAll().stream()
                 .filter(owner -> !owner.isApproved())
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public String approveCenter(Long centerId) {
+        GymCenter center = centerRepo.findById(centerId)
+                .orElseThrow(() -> new CenterNotFoundException("Center not found with ID: " + centerId));
+
+        if (center.getIsActive()) {
+            return "Center is already active.";
+        }
+
+        center.setIsActive(true);
+        centerRepo.save(center);
+        logger.info("Center approved with ID: {}", centerId);
+        return "Center approved successfully.";
+    }
+
+    @Override
+    public List<GymCenter> getPendingCenters() {
+        return centerRepo.findByIsActive(false);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCenter(Long centerId) {
+        if (!centerRepo.existsById(centerId)) {
+            throw new CenterNotFoundException("Center not found with ID: " + centerId);
+        }
+        centerRepo.deleteById(centerId);
+        logger.info("Center deleted with ID: {}", centerId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteSlot(Long slotId) {
+        if (!slotRepo.existsById(slotId)) {
+            throw new SlotNotFoundException("Slot not found with ID: " + slotId);
+        }
+        slotRepo.deleteById(slotId);
+        logger.info("Slot deleted with ID: {}", slotId);
     }
 }

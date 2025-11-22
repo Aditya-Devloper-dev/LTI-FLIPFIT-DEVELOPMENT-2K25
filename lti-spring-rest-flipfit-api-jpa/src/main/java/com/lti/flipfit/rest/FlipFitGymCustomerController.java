@@ -1,6 +1,10 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.entity.GymBooking;
+import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymCustomerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,18 +40,6 @@ public class FlipFitGymCustomerController {
      * fails
      */
 
-    /*
-     * @Method: Viewing slot availability
-     * 
-     * @Description: Fetches availability details for a given center on a specific
-     * date
-     * 
-     * @MethodParameters: String centerId, String date
-     * 
-     * @Exception: Throws exceptions if centerId/date is invalid or data retrieval
-     * fails
-     */
-
     @RequestMapping(value = "/availability", method = RequestMethod.GET)
     public List<Map<String, Object>> viewAvailability(
             @RequestParam String centerId,
@@ -57,38 +49,53 @@ public class FlipFitGymCustomerController {
     }
 
     /*
-     * @Method: Booking a slot for a customer
+     * @Method: getProfile
      * 
-     * @Description: Books a slot for the given customer after validating center and
-     * slot
+     * @Description: Fetches customer profile details
      * 
-     * @MethodParameters: String customerId, String slotId, String centerId
+     * @MethodParameters: customerId -> unique customer ID
      * 
-     * @Exception: Throws exceptions for conflicts, full slots, or invalid inputs
+     * @Exception: Throws UserNotFoundException if customer not found
      */
-
-    @RequestMapping(value = "/book", method = RequestMethod.POST)
-    public String bookSlot(
-            @RequestParam String customerId,
-            @RequestParam String slotId,
-            @RequestParam String centerId) {
-
-        return customerService.bookSlot(customerId, slotId, centerId);
+    @RequestMapping(value = "/profile/{customerId}", method = RequestMethod.GET)
+    public ResponseEntity<GymCustomer> getProfile(@PathVariable Long customerId) {
+        if (customerId == null) {
+            throw new InvalidInputException("Customer ID cannot be empty");
+        }
+        return ResponseEntity.ok(customerService.getProfile(customerId));
     }
 
     /*
-     * @Method: Cancelling a customer booking
+     * @Method: validateMembership
      * 
-     * @Description: Cancels the booking associated with the given bookingId
+     * @Description: Checks if the customer's membership is active
      * 
-     * @MethodParameters: String bookingId
+     * @MethodParameters: customerId -> unique customer ID
      * 
-     * @Exception: Throws exceptions if booking is not found or cancellation rules
-     * fail
+     * @Exception: Throws UserNotFoundException if customer not found
      */
+    @RequestMapping(value = "/validate-membership/{customerId}", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> validateMembership(@PathVariable Long customerId) {
+        if (customerId == null) {
+            throw new InvalidInputException("Customer ID cannot be empty");
+        }
+        return ResponseEntity.ok(customerService.validateMembership(customerId));
+    }
 
-    @RequestMapping(value = "/cancel/{bookingId}", method = RequestMethod.DELETE)
-    public boolean cancelBooking(@PathVariable String bookingId) {
-        return customerService.cancelBooking(bookingId);
+    /*
+     * @Method: getCustomerBookings
+     * 
+     * @Description: Fetches all bookings made by the customer
+     * 
+     * @MethodParameters: customerId -> unique customer ID
+     * 
+     * @Exception: Throws UserNotFoundException if customer not found
+     */
+    @RequestMapping(value = "/bookings/{customerId}", method = RequestMethod.GET)
+    public ResponseEntity<List<GymBooking>> getCustomerBookings(@PathVariable Long customerId) {
+        if (customerId == null) {
+            throw new InvalidInputException("Customer ID cannot be empty");
+        }
+        return ResponseEntity.ok(customerService.getCustomerBookings(customerId));
     }
 }

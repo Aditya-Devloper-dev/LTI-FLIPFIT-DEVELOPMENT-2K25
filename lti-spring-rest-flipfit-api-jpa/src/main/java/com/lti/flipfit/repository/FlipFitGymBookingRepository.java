@@ -18,4 +18,6 @@ public interface FlipFitGymBookingRepository extends JpaRepository<GymBooking, L
     boolean existsByCustomerAndSlot(GymCustomer customer, GymSlot slot);
 
     List<GymBooking> findByCustomer(GymCustomer customer);
+
+    List<GymBooking> findByCenterCenterId(Long centerId);
 }
