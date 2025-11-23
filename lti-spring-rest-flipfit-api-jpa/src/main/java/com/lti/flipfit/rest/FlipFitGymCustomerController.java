@@ -4,6 +4,8 @@ import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymCustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/customer")
 public class FlipFitGymCustomerController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymCustomerController.class);
 
     private final FlipFitGymCustomerService customerService;
 
@@ -44,6 +48,7 @@ public class FlipFitGymCustomerController {
     public List<Map<String, Object>> viewAvailability(
             @RequestParam String centerId,
             @RequestParam String date) {
+        logger.info("Received request to view availability for center ID: {} on date: {}", centerId, date);
 
         return customerService.viewAvailability(centerId, date);
     }
@@ -59,6 +64,7 @@ public class FlipFitGymCustomerController {
      */
     @RequestMapping(value = "/profile/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<GymCustomer> getProfile(@PathVariable Long customerId) {
+        logger.info("Received request to get profile for customer ID: {}", customerId);
         if (customerId == null) {
             throw new InvalidInputException("Customer ID cannot be empty");
         }
@@ -76,6 +82,7 @@ public class FlipFitGymCustomerController {
      */
     @RequestMapping(value = "/validate-membership/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<Boolean> validateMembership(@PathVariable Long customerId) {
+        logger.info("Received request to validate membership for customer ID: {}", customerId);
         if (customerId == null) {
             throw new InvalidInputException("Customer ID cannot be empty");
         }
@@ -93,6 +100,7 @@ public class FlipFitGymCustomerController {
      */
     @RequestMapping(value = "/bookings/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymBooking>> getCustomerBookings(@PathVariable Long customerId) {
+        logger.info("Received request to get bookings for customer ID: {}", customerId);
         if (customerId == null) {
             throw new InvalidInputException("Customer ID cannot be empty");
         }

@@ -14,13 +14,16 @@ import com.lti.flipfit.exceptions.center.InvalidCenterLocationException;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymCenterServiceImpl.class);
 
     private final FlipFitGymCenterRepository centerRepo;
     private final FlipFitGymSlotRepository slotRepo;
@@ -42,14 +45,13 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      */
     @Override
     public List<GymSlot> getSlotsByDate(Long centerId, String date) {
+        logger.info("Fetching slots for center ID: {} on date: {}", centerId, date);
 
         if (date == null || date.isBlank()) {
             throw new InvalidInputException("Date cannot be empty");
         }
 
-        LocalDate parsedDate;
         try {
-            parsedDate = LocalDate.parse(date);
         } catch (Exception e) {
             throw new InvalidInputException("Invalid date format. Expected yyyy-MM-dd");
         }
@@ -82,6 +84,7 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      */
     @Override
     public List<GymSlot> getSlotsByCenterId(Long centerId) {
+        logger.info("Fetching all slots for center ID: {}", centerId);
         if (!centerRepo.existsById(centerId)) {
             throw new CenterNotFoundException("Center " + centerId + " not found");
         }
@@ -101,6 +104,7 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      */
     @Override
     public boolean updateCenterInfo(Long centerId, GymCenter updatedCenter) {
+        logger.info("Updating center info for center ID: {}", centerId);
 
         GymCenter existingCenter = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));

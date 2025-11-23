@@ -11,6 +11,8 @@ import com.lti.flipfit.repository.FlipFitGymBookingRepository;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.List;
  */
 @Service
 public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymOwnerServiceImpl.class);
 
     private final FlipFitGymOwnerRepository ownerRepo;
     private final FlipFitGymCenterRepository centerRepo;
@@ -40,6 +44,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public boolean approveBooking(Long bookingId) {
+        logger.info("Approving booking with ID: {}", bookingId);
         GymBooking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
@@ -50,6 +55,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public GymCenter addCenter(GymCenter center, Long ownerId) {
+        logger.info("Adding center for owner ID: {}", ownerId);
         GymOwner owner = ownerRepo.findById(ownerId)
                 .orElseThrow(() -> new UserNotFoundException("Owner not found"));
 
@@ -59,6 +65,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public GymCenter updateCenter(GymCenter center) {
+        logger.info("Updating center with ID: {}", center.getCenterId());
         if (center.getCenterId() == null) {
             throw new CenterNotFoundException("Center ID is required for update");
         }
@@ -80,6 +87,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public List<GymBooking> viewAllBookings(Long centerId) {
+        logger.info("Fetching all bookings for center ID: {}", centerId);
         if (!centerRepo.existsById(centerId)) {
             throw new CenterNotFoundException("Center not found");
         }
@@ -88,6 +96,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public List<GymCenter> getCentersByOwner(Long ownerId) {
+        logger.info("Fetching centers for owner ID: {}", ownerId);
         if (!ownerRepo.existsById(ownerId)) {
             throw new UserNotFoundException("Owner not found");
         }
@@ -96,6 +105,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     @Override
     public void addSlot(GymSlot slot, Long centerId) {
+        logger.info("Adding slot to center ID: {}", centerId);
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center not found"));
 

@@ -1,6 +1,8 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.services.FlipFitGymNotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/notification")
 public class FlipFitGymNotificationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymNotificationController.class);
+
     private final FlipFitGymNotificationService service;
 
     public FlipFitGymNotificationController(FlipFitGymNotificationService service) {
@@ -22,6 +26,7 @@ public class FlipFitGymNotificationController {
     public boolean sendNotification(@RequestParam String receiverId,
             @RequestParam String message,
             @RequestParam String type) {
+        logger.info("Received request to send notification to: {}, Type: {}", receiverId, type);
 
         return service.sendNotification(receiverId, message, type);
     }

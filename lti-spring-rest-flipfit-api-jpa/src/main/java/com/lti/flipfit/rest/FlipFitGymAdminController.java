@@ -1,9 +1,12 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.entity.*;
+import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymOwner;
+import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymAdminService;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +22,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class FlipFitGymAdminController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymAdminController.class);
 
     private final FlipFitGymAdminService adminService;
 
@@ -37,6 +42,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/approve-slot/{slotId}", method = RequestMethod.PUT)
     public ResponseEntity<String> approveSlot(@PathVariable Long slotId) {
+        logger.info("Received request to approve slot with ID: {}", slotId);
         return ResponseEntity.ok(adminService.approveSlot(slotId));
     }
 
@@ -51,6 +57,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/pending-slots/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymSlot>> getPendingSlots(@PathVariable Long centerId) {
+        logger.info("Received request to get pending slots for center ID: {}", centerId);
         return ResponseEntity.ok(adminService.getPendingSlots(centerId));
     }
 
@@ -65,6 +72,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/centers", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getAllCenters() {
+        logger.info("Received request to get all centers");
         return ResponseEntity.ok(adminService.getAllCenters());
     }
 
@@ -79,6 +87,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/center/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<GymCenter> getCenterById(@PathVariable Long centerId) {
+        logger.info("Received request to get center with ID: {}", centerId);
 
         if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
@@ -98,6 +107,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/approve-owner/{ownerId}", method = RequestMethod.PUT)
     public ResponseEntity<String> approveOwner(@PathVariable Long ownerId) {
+        logger.info("Received request to approve owner with ID: {}", ownerId);
         return ResponseEntity.ok(adminService.approveOwner(ownerId));
     }
 
@@ -112,6 +122,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/pending-owners", method = RequestMethod.GET)
     public ResponseEntity<List<GymOwner>> getPendingOwners() {
+        logger.info("Received request to get pending owners");
         return ResponseEntity.ok(adminService.getPendingOwners());
     }
 
@@ -126,6 +137,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/approve-center/{centerId}", method = RequestMethod.PUT)
     public ResponseEntity<String> approveCenter(@PathVariable Long centerId) {
+        logger.info("Received request to approve center with ID: {}", centerId);
         return ResponseEntity.ok(adminService.approveCenter(centerId));
     }
 
@@ -140,6 +152,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/pending-centers", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getPendingCenters() {
+        logger.info("Received request to get pending centers");
         return ResponseEntity.ok(adminService.getPendingCenters());
     }
 
@@ -154,6 +167,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/delete-center/{centerId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteCenter(@PathVariable Long centerId) {
+        logger.info("Received request to delete center with ID: {}", centerId);
         adminService.deleteCenter(centerId);
         return ResponseEntity.ok("Center deleted successfully");
     }
@@ -169,6 +183,7 @@ public class FlipFitGymAdminController {
      */
     @RequestMapping(value = "/delete-slot/{slotId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSlot(@PathVariable Long slotId) {
+        logger.info("Received request to delete slot with ID: {}", slotId);
         adminService.deleteSlot(slotId);
         return ResponseEntity.ok("Slot deleted successfully");
     }

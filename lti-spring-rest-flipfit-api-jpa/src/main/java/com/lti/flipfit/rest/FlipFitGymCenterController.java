@@ -4,6 +4,8 @@ import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymCenterService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/gym-center")
 public class FlipFitGymCenterController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymCenterController.class);
 
     private final FlipFitGymCenterService service;
 
@@ -37,6 +41,7 @@ public class FlipFitGymCenterController {
     @RequestMapping(value = "/slots", method = RequestMethod.GET)
     public Object getSlotsByDate(@RequestParam Long centerId,
             @RequestParam String date) {
+        logger.info("Received request to get slots for center ID: {} on date: {}", centerId, date);
         return service.getSlotsByDate(centerId, date);
     }
 
@@ -51,6 +56,7 @@ public class FlipFitGymCenterController {
      */
     @RequestMapping(value = "/slots/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymSlot>> getSlotsByCenterId(@PathVariable Long centerId) {
+        logger.info("Received request to get slots for center ID: {}", centerId);
         if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
         }
@@ -69,6 +75,7 @@ public class FlipFitGymCenterController {
     @RequestMapping(value = "/update-center/{centerId}", method = RequestMethod.PUT)
     public boolean updateCenterInfo(@PathVariable Long centerId,
             @RequestBody GymCenter center) {
+        logger.info("Received request to update center info for center ID: {}", centerId);
 
         return service.updateCenterInfo(centerId, center);
     }

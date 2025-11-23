@@ -10,6 +10,8 @@ import com.lti.flipfit.repository.FlipFitGymBookingRepository;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +24,8 @@ import java.time.LocalDateTime;
 
 @Service
 public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymBookingServiceImpl.class);
 
     private final FlipFitGymBookingRepository bookingRepo;
     private final FlipFitGymCustomerRepository customerRepo;
@@ -57,6 +61,8 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         Long slotId = booking.getSlot().getSlotId();
         Long centerId = booking.getCenter().getCenterId();
 
+        logger.info("Attempting to book slot {} at center {} for customer {}", slotId, centerId, customerId);
+
         GymCustomer customer = customerRepo.findById(customerId)
                 .orElseThrow(() -> new InvalidBookingException("Invalid customerId"));
 
@@ -89,6 +95,8 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
         GymBooking saved = bookingRepo.save(booking);
 
+        logger.info("Booking successful. Booking ID: {}", saved.getBookingId());
+
         return "Booking successful with ID: " + saved.getBookingId();
     }
 
@@ -105,6 +113,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      */
     @Override
     public String cancelBooking(Long bookingId) {
+        logger.info("Attempting to cancel booking with ID: {}", bookingId);
 
         GymBooking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
@@ -119,6 +128,8 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         slotRepo.save(slot);
 
         bookingRepo.delete(booking);
+
+        logger.info("Booking cancelled successfully. Booking ID: {}", bookingId);
 
         return "Booking cancelled with ID: " + bookingId;
     }

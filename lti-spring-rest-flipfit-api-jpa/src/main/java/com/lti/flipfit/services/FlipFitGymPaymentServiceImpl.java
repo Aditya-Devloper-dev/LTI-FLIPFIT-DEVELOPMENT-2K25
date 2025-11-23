@@ -6,6 +6,8 @@ package com.lti.flipfit.services;
  * Description : Implementation of the FlipFitGymPaymentService interface.
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.UUID;
 @Service
 public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymPaymentServiceImpl.class);
+
     private final Map<String, String> paymentStore = new HashMap<>();
 
     @Override
@@ -22,6 +26,8 @@ public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
 
         String paymentId = UUID.randomUUID().toString();
         paymentStore.put(paymentId, "SUCCESS");
+
+        logger.info("Payment processed. Booking ID: {}, Amount: {}, Payment ID: {}", bookingId, amount, paymentId);
 
         System.out.println("Dummy payment processed:");
         System.out.println("Booking ID: " + bookingId);
@@ -35,6 +41,7 @@ public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
     public boolean refund(String paymentId) {
         if (paymentStore.containsKey(paymentId)) {
             paymentStore.put(paymentId, "REFUNDED");
+            logger.info("Refund processed for paymentId: {}", paymentId);
             System.out.println("Refund processed for paymentId: " + paymentId);
             return true;
         }

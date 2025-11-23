@@ -2,8 +2,9 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.*;
 import com.lti.flipfit.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymSchedulerServiceImpl.class);
 
     private final FlipFitGymSlotRepository slotRepo;
     private final FlipFitGymWaitlistRepository waitlistRepo;
@@ -32,6 +35,7 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
 
     @Override
     public void runWaitlistPromotionJob() {
+        logger.info("Running Waitlist Promotion Job...");
         System.out.println("Running Waitlist Promotion Job...");
 
         // 1. Find all slots that have available seats (> 0)
@@ -45,6 +49,8 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
 
             if (nextInLine.isPresent()) {
                 GymWaitlist waitlistEntry = nextInLine.get();
+                logger.info("Promoting user {} for slot {}", waitlistEntry.getCustomer().getCustomerId(),
+                        slot.getSlotId());
                 System.out.println("Promoting user " + waitlistEntry.getCustomer().getCustomerId() + " for slot "
                         + slot.getSlotId());
 
@@ -68,11 +74,13 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
                 slotRepo.save(slot);
             }
         }
+        logger.info("Waitlist Promotion Job Completed.");
         System.out.println("Waitlist Promotion Job Completed.");
     }
 
     @Override
     public void sendDailyReminders() {
+        logger.info("Dummy: Daily reminder job executed.");
         System.out.println("Dummy: Daily reminder job executed.");
     }
 }

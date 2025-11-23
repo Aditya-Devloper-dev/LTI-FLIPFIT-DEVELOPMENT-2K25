@@ -11,12 +11,16 @@ import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.exceptions.user.UserNotFoundException;
 import com.lti.flipfit.repository.FlipFitGymBookingRepository;
 import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymCustomerServiceImpl.class);
 
     private final FlipFitGymCustomerRepository customerRepo;
     private final FlipFitGymBookingRepository bookingRepo;
@@ -29,6 +33,7 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
 
     @Override
     public List<Map<String, Object>> viewAvailability(String centerId, String date) {
+        logger.info("Checking availability for center ID: {} on date: {}", centerId, date);
 
         Map<String, Object> s1 = new HashMap<>();
         s1.put("slotId", "SLOT-1");
@@ -47,12 +52,14 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
 
     @Override
     public GymCustomer getProfile(Long customerId) {
+        logger.info("Fetching profile for customer ID: {}", customerId);
         return customerRepo.findById(customerId)
                 .orElseThrow(() -> new UserNotFoundException("Customer not found"));
     }
 
     @Override
     public boolean validateMembership(Long customerId) {
+        logger.info("Validating membership for customer ID: {}", customerId);
         GymCustomer customer = getProfile(customerId);
         // Simple validation: check if status is not "EXPIRED" or "INACTIVE"
         // You can add more complex logic here
@@ -62,6 +69,7 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
 
     @Override
     public List<GymBooking> getCustomerBookings(Long customerId) {
+        logger.info("Fetching bookings for customer ID: {}", customerId);
         GymCustomer customer = getProfile(customerId);
         return bookingRepo.findByCustomer(customer);
     }

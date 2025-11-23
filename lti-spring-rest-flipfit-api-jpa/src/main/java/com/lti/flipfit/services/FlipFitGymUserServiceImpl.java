@@ -11,6 +11,8 @@ import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymUserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.*;
 
 @Service
 public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymUserServiceImpl.class);
 
     @Autowired
     private FlipFitGymUserRepository userRepo;
@@ -51,6 +55,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @Override
     @Transactional
     public String register(User user) {
+        logger.info("Attempting to register user with email: {}", user.getEmail());
 
         if (user.getFullName() == null || user.getFullName().isBlank()) {
             throw new InvalidInputException("Full name is required");
@@ -111,6 +116,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
      */
     @Override
     public Map<String, Object> login(String email, String password) {
+        logger.info("Attempting login for email: {}", email);
 
         if (email == null || email.isBlank()) {
             throw new InvalidInputException("Email cannot be empty");
@@ -149,6 +155,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @Override
     @Transactional
     public String updateProfile(Long userId, User updatedData) {
+        logger.info("Updating profile for user ID: {}", userId);
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
@@ -181,6 +188,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
      * @Exception: None
      */
     public List<User> getAllUsers() {
+        logger.info("Fetching all users");
         return userRepo.findAll();
     }
 }

@@ -3,10 +3,10 @@ package com.lti.flipfit.rest;
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.services.FlipFitGymBookingService;
 import com.lti.flipfit.exceptions.InvalidInputException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Author :
@@ -19,6 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/booking")
 public class FlipFitGymBookingController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymBookingController.class);
 
     private final FlipFitGymBookingService bookingService;
 
@@ -40,6 +42,7 @@ public class FlipFitGymBookingController {
 
     @RequestMapping(value = "/book", method = RequestMethod.POST)
     public ResponseEntity<String> bookSlot(@RequestBody GymBooking booking) {
+        logger.info("Received request to book slot");
 
         if (booking.getCustomer() == null ||
                 booking.getSlot() == null ||
@@ -62,6 +65,7 @@ public class FlipFitGymBookingController {
      */
     @RequestMapping(value = "/cancel/{bookingId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> cancelBooking(@PathVariable Long bookingId) {
+        logger.info("Received request to cancel booking with ID: {}", bookingId);
         return ResponseEntity.ok(bookingService.cancelBooking(bookingId));
     }
 

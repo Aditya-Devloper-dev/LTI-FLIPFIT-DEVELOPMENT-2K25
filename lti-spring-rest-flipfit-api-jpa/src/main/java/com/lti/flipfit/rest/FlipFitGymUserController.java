@@ -2,6 +2,8 @@ package com.lti.flipfit.rest;
 
 import com.lti.flipfit.services.FlipFitGymUserService;
 import com.lti.flipfit.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class FlipFitGymUserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymUserController.class);
 
     private final FlipFitGymUserService service;
 
@@ -36,6 +40,7 @@ public class FlipFitGymUserController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestBody User user) {
+        logger.info("Received request to register user with email: {}", user.getEmail());
         return service.register(user);
     }
 
@@ -52,6 +57,7 @@ public class FlipFitGymUserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(@RequestParam String email,
             @RequestParam String password) {
+        logger.info("Received request to login user with email: {}", email);
         return service.login(email, password);
     }
 
@@ -69,6 +75,7 @@ public class FlipFitGymUserController {
     public String updateProfile(
             @PathVariable Long userId,
             @RequestBody User userData) {
+        logger.info("Received request to update profile for user ID: {}", userId);
         return service.updateProfile(userId, userData);
     }
 
@@ -83,6 +90,7 @@ public class FlipFitGymUserController {
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<User> getAllUsers() {
+        logger.info("Received request to get all users");
         return service.getAllUsers();
     }
 }

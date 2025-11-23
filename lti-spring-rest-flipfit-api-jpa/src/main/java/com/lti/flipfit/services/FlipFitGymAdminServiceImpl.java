@@ -24,16 +24,11 @@ import java.util.*;
 public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     private static final Logger logger = LoggerFactory.getLogger(FlipFitGymAdminServiceImpl.class);
-    private static final String SLOT_STATUS_AVAILABLE = "AVAILABLE";
-
     @Autowired
     private FlipFitGymCenterRepository centerRepo;
 
     @Autowired
     private FlipFitGymSlotRepository slotRepo;
-
-    @Autowired
-    private FlipFitGymAdminRepository adminRepo;
 
     @Autowired
     private FlipFitGymOwnerRepository ownerRepo;
@@ -69,16 +64,19 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     @Override
     public List<GymSlot> getPendingSlots(Long centerId) {
+        logger.info("Fetching pending slots for center ID: {}", centerId);
         return slotRepo.findByCenterCenterIdAndIsActive(centerId, false);
     }
 
     @Override
     public List<GymCenter> getAllCenters() {
+        logger.info("Fetching all centers");
         return centerRepo.findAll();
     }
 
     @Override
     public GymCenter getCenterById(Long centerId) {
+        logger.info("Fetching center with ID: {}", centerId);
         return centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException(
                         "Center " + centerId + " not found"));
@@ -106,6 +104,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     @Override
     public List<GymOwner> getPendingOwners() {
+        logger.info("Fetching pending owners");
         return ownerRepo.findAll().stream()
                 .filter(owner -> !owner.isApproved())
                 .toList();
@@ -129,6 +128,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
     @Override
     public List<GymCenter> getPendingCenters() {
+        logger.info("Fetching pending centers");
         return centerRepo.findByIsActive(false);
     }
 

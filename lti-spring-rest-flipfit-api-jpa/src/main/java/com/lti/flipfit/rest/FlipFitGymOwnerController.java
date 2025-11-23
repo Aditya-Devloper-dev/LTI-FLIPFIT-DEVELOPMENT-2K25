@@ -5,6 +5,8 @@ import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymOwnerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/owner")
 public class FlipFitGymOwnerController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymOwnerController.class);
 
     private final FlipFitGymOwnerService service;
 
@@ -36,6 +40,7 @@ public class FlipFitGymOwnerController {
      */
     @RequestMapping(value = "/approve-booking/{bookingId}", method = RequestMethod.POST)
     public ResponseEntity<String> approveBooking(@PathVariable Long bookingId) {
+        logger.info("Received request to approve booking with ID: {}", bookingId);
         if (bookingId == null) {
             throw new InvalidInputException("Booking ID cannot be empty");
         }
@@ -56,6 +61,7 @@ public class FlipFitGymOwnerController {
     public ResponseEntity<GymCenter> addCenter(
             @PathVariable Long ownerId,
             @RequestBody GymCenter center) {
+        logger.info("Received request to add center for owner ID: {}", ownerId);
 
         if (ownerId == null) {
             throw new InvalidInputException("Owner ID cannot be empty");
@@ -76,6 +82,7 @@ public class FlipFitGymOwnerController {
     public ResponseEntity<GymCenter> updateCenter(
             @PathVariable Long centerId,
             @RequestBody GymCenter center) {
+        logger.info("Received request to update center with ID: {}", centerId);
 
         if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
@@ -95,6 +102,7 @@ public class FlipFitGymOwnerController {
      */
     @RequestMapping(value = "/all-bookings/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymBooking>> viewAllBookings(@PathVariable Long centerId) {
+        logger.info("Received request to view all bookings for center ID: {}", centerId);
         if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
         }
@@ -112,6 +120,7 @@ public class FlipFitGymOwnerController {
      */
     @RequestMapping(value = "/centers/{ownerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getCentersByOwner(@PathVariable Long ownerId) {
+        logger.info("Received request to get centers for owner ID: {}", ownerId);
         if (ownerId == null) {
             throw new InvalidInputException("Owner ID cannot be empty");
         }
@@ -129,6 +138,7 @@ public class FlipFitGymOwnerController {
      */
     @RequestMapping(value = "/add-slot/{centerId}", method = RequestMethod.POST)
     public ResponseEntity<String> addSlot(@PathVariable Long centerId, @RequestBody GymSlot slot) {
+        logger.info("Received request to add slot to center ID: {}", centerId);
         if (centerId == null) {
             throw new InvalidInputException("Center ID cannot be empty");
         }

@@ -1,6 +1,8 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.services.FlipFitGymSchedulerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/scheduler")
 public class FlipFitGymSchedulerController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymSchedulerController.class);
 
     private final FlipFitGymSchedulerService service;
 
@@ -32,6 +36,7 @@ public class FlipFitGymSchedulerController {
 
     @RequestMapping(value = "/run-waitlist-job", method = RequestMethod.POST)
     public String runWaitlistPromotionJob() {
+        logger.info("Received request to manually run waitlist promotion job");
         service.runWaitlistPromotionJob();
         return "Waitlist promotion job executed.";
     }
@@ -49,6 +54,7 @@ public class FlipFitGymSchedulerController {
 
     @RequestMapping(value = "/send-reminders", method = RequestMethod.POST)
     public String sendDailyReminders() {
+        logger.info("Received request to manually send daily reminders");
         service.sendDailyReminders();
         return "Daily reminders sent.";
     }
