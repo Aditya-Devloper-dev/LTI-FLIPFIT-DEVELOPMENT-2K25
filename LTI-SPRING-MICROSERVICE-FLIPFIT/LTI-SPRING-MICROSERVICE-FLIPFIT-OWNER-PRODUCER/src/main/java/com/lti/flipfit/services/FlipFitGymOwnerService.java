@@ -17,12 +17,12 @@ public interface FlipFitGymOwnerService {
 
     GymCenter addCenter(GymCenter center, Long ownerId);
 
-    GymCenter updateCenter(GymCenter center);
+    GymCenter updateCenter(GymCenter center, Long ownerId);
 
     List<GymBooking> viewAllBookings(Long centerId);
 
     List<GymCenter> getCentersByOwner(Long ownerId);
 
-    void addSlot(GymSlot slot, Long centerId);
+    void addSlot(GymSlot slot, Long centerId, Long ownerId);
 
 }
