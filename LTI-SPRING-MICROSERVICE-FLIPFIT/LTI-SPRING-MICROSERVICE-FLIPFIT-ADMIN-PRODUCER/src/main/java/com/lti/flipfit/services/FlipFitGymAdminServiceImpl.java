@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Author : Shiny Sunaina
- * Version : 1.0
+ * Version : 1.1
  * Description : Implementation of the FlipFitGymAdminService interface.
  * Handles business logic for admin operations.
  */

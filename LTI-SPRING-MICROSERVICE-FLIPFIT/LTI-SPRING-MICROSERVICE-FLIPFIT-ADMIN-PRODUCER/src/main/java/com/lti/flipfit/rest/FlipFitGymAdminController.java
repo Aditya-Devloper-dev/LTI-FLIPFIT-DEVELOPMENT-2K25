@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author :
+ * Author : Shiny Sunaina
  * Version : 1.0
  * Description : Controller for admin operations such as creating centers,
  * adding slots, updating center details, and retrieving center information.
