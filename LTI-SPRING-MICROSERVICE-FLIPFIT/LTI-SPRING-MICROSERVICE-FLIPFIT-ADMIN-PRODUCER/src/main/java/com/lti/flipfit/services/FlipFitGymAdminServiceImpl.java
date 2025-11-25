@@ -19,7 +19,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 /**
- * Author :
+ * Author : Shiny Sunaina
  * Version : 1.0
  * Description : Implementation of the FlipFitGymAdminService interface.
  * Handles business logic for admin operations.

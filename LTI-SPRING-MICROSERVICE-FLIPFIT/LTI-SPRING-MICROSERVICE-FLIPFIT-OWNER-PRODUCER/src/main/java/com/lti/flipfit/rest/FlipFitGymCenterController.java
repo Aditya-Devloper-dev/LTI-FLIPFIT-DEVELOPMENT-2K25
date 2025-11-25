@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author :
+ * Author : Shiny Sunaina
  * Version : 1.0
  * Description : Controller for gym center slot and information management.
  */
