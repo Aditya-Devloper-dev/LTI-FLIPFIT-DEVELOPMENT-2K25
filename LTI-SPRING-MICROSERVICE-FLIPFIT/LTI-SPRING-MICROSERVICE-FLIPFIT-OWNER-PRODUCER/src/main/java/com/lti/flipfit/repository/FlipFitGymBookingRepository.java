@@ -1,7 +1,7 @@
 package com.lti.flipfit.repository;
 
 /**
- * Author :
+ * Author : Shiny Sunaina
  * Version : 1.0
  * Description : JPA repository for Gym Booking operations.
  */

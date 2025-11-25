@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Author : <Your Name>
+ * Author : Shiny Sunaina
  * Version : 1.0
  * Repository : GymCenterRepository
  * Description : JPA repository for managing CRUD operations on GymCenter.

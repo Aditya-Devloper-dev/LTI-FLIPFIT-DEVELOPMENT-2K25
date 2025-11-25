@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author :
+ * Author: Shiny Sunaina
  * Version : 1.0
  * Description : Controller for gym owners to manage bookings and centers.
  */
