@@ -3,6 +3,11 @@ package com.lti.flipfit.rest;
 import com.lti.flipfit.services.FlipFitGymSchedulerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
  * Description : Controller for scheduler operations triggered manually for
  * testing.
  */
-@RestController
-@RequestMapping("/scheduler")
+@SpringBootApplication
+@EnableDiscoveryClient
+@ComponentScan("com.lti.flipfit")
+@EntityScan("com.lti.flipfit.entity")
+@EnableJpaRepositories("com.lti.flipfit.repository")
 public class FlipFitGymSchedulerController {
 
     private static final Logger logger = LoggerFactory.getLogger(FlipFitGymSchedulerController.class);

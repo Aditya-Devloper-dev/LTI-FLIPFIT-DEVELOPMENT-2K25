@@ -1,13 +1,10 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.entity.GymCenter;
-import com.lti.flipfit.entity.GymOwner;
-import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.entity.*;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymAdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,17 +26,16 @@ public class FlipFitGymAdminController {
 
     private final FlipFitGymAdminService adminService;
 
-    @Autowired
     public FlipFitGymAdminController(FlipFitGymAdminService adminService) {
         this.adminService = adminService;
     }
 
     /**
-     * Approves a pending gym slot.
-     * 
+     * @method Approves a pending gym slot.
      * @param slotId Unique identifier of the slot.
      * @return ResponseEntity containing the result of the operation.
      */
+
     @RequestMapping(value = "/approve-slot/{slotId}", method = RequestMethod.PUT)
     public ResponseEntity<String> approveSlot(@PathVariable Long slotId) {
         logger.info("Received request to approve slot with ID: {}", slotId);
@@ -47,11 +43,11 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Retrieves a list of all pending gym slots for a center.
-     * 
+     * @method Retrieves a list of all pending gym slots for a center.
      * @param centerId Unique identifier of the center.
      * @return ResponseEntity containing a list of pending GymSlot objects.
      */
+
     @RequestMapping(value = "/pending-slots/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymSlot>> getPendingSlots(@PathVariable Long centerId) {
         logger.info("Received request to get pending slots for center ID: {}", centerId);
@@ -59,10 +55,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Retrieves the complete list of registered gym centers.
-     * 
+     * @method Retrieves the complete list of registered gym centers.
      * @return ResponseEntity containing a list of all GymCenter objects.
      */
+
     @RequestMapping(value = "/centers", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getAllCenters() {
         logger.info("Received request to get all centers");
@@ -70,12 +66,12 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Fetches information for a specific center using its ID.
-     * 
+     * @method Fetches information for a specific center using its ID.
      * @param centerId Unique identifier for the center.
      * @return ResponseEntity containing the GymCenter object.
      * @throws InvalidInputException if centerId is null.
      */
+
     @RequestMapping(value = "/center/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<GymCenter> getCenterById(@PathVariable Long centerId) {
         logger.info("Received request to get center with ID: {}", centerId);
@@ -88,11 +84,11 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Approves a pending gym owner.
-     * 
+     * @method Approves a pending gym owner.
      * @param ownerId Unique identifier of the owner.
      * @return ResponseEntity containing the result of the operation.
      */
+
     @RequestMapping(value = "/approve-owner/{ownerId}", method = RequestMethod.PUT)
     public ResponseEntity<String> approveOwner(@PathVariable Long ownerId) {
         logger.info("Received request to approve owner with ID: {}", ownerId);
@@ -100,10 +96,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Retrieves a list of all pending gym owners.
-     * 
+     * @method Retrieves a list of all pending gym owners.
      * @return ResponseEntity containing a list of pending GymOwner objects.
      */
+
     @RequestMapping(value = "/pending-owners", method = RequestMethod.GET)
     public ResponseEntity<List<GymOwner>> getPendingOwners() {
         logger.info("Received request to get pending owners");
@@ -111,11 +107,11 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Approves a pending gym center.
-     * 
+     * @method Approves a pending gym center.
      * @param centerId Unique identifier of the center.
      * @return ResponseEntity containing the result of the operation.
      */
+
     @RequestMapping(value = "/approve-center/{centerId}", method = RequestMethod.PUT)
     public ResponseEntity<String> approveCenter(@PathVariable Long centerId) {
         logger.info("Received request to approve center with ID: {}", centerId);
@@ -123,10 +119,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Retrieves a list of all pending gym centers.
-     * 
+     * @method Retrieves a list of all pending gym centers.
      * @return ResponseEntity containing a list of pending GymCenter objects.
      */
+
     @RequestMapping(value = "/pending-centers", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getPendingCenters() {
         logger.info("Received request to get pending centers");
@@ -134,11 +130,11 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Deletes a gym center.
-     * 
+     * @method Deletes a gym center.
      * @param centerId Unique identifier of the center.
      * @return ResponseEntity containing the result of the operation.
      */
+
     @RequestMapping(value = "/delete-center/{centerId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteCenter(@PathVariable Long centerId) {
         logger.info("Received request to delete center with ID: {}", centerId);
@@ -147,11 +143,11 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * Deletes a gym slot.
-     * 
+     * @method Deletes a gym slot.
      * @param slotId Unique identifier of the slot.
      * @return ResponseEntity containing the result of the operation.
      */
+
     @RequestMapping(value = "/delete-slot/{slotId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSlot(@PathVariable Long slotId) {
         logger.info("Received request to delete slot with ID: {}", slotId);
