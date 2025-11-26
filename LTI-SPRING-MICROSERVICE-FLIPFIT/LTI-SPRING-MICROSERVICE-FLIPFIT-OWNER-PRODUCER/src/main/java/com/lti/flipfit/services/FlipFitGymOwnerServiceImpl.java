@@ -11,6 +11,9 @@ import com.lti.flipfit.repository.FlipFitGymBookingRepository;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+
+import com.lti.flipfit.exceptions.InvalidInputException;
+import com.lti.flipfit.exceptions.UnauthorizedAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -72,6 +75,10 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         GymOwner owner = ownerRepo.findById(ownerId)
                 .orElseThrow(() -> new UserNotFoundException("Owner not found"));
 
+        if (!owner.isApproved()) {
+            throw new UnauthorizedAccessException("Owner approval is pending from Admin Side");
+        }
+
         center.setOwner(owner);
         return centerRepo.save(center);
     }
@@ -83,7 +90,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return The updated GymCenter object.
      */
     @Override
-    public GymCenter updateCenter(GymCenter center) {
+    public GymCenter updateCenter(GymCenter center, Long ownerId) {
         logger.info("Updating center with ID: {}", center.getCenterId());
         if (center.getCenterId() == null) {
             throw new CenterNotFoundException("Center ID is required for update");
@@ -91,6 +98,10 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
         GymCenter existingCenter = centerRepo.findById(center.getCenterId())
                 .orElseThrow(() -> new CenterNotFoundException("Center not found"));
+
+        if (!existingCenter.getOwner().getOwnerId().equals(ownerId)) {
+            throw new UnauthorizedAccessException("You do not own this center");
+        }
 
         // Update fields (only non-null)
         if (center.getCenterName() != null)
@@ -141,10 +152,23 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @param centerId The ID of the center.
      */
     @Override
-    public void addSlot(GymSlot slot, Long centerId) {
+    public void addSlot(GymSlot slot, Long centerId, Long ownerId) {
         logger.info("Adding slot to center ID: {}", centerId);
+
+        if (slot.getStartTime().isAfter(slot.getEndTime()) || slot.getStartTime().equals(slot.getEndTime())) {
+            throw new InvalidInputException("Start time must be before end time");
+        }
+
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center not found"));
+
+        if (!center.getOwner().getOwnerId().equals(ownerId)) {
+            throw new UnauthorizedAccessException("You do not own this center");
+        }
+
+        if (!center.getIsActive()) {
+            throw new UnauthorizedAccessException("Center is not active yet");
+        }
 
         slot.setCenter(center);
         slot.setIsActive(false); // Default to inactive until approved

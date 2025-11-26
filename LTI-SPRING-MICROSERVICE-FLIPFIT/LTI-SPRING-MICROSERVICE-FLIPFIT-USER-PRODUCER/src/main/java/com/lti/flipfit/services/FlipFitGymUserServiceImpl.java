@@ -89,12 +89,6 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
         userRepo.save(user);
 
-        if ("CUSTOMER".equals(user.getRole().getRoleId())) {
-            GymCustomer customer = new GymCustomer();
-            customer.setUser(user);
-            customerRepo.save(customer);
-        }
-
         if ("ADMIN".equals(user.getRole().getRoleId())) {
             GymAdmin admin = new GymAdmin();
             admin.setUser(user);
@@ -109,7 +103,6 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
             GymOwner owner = new GymOwner();
             owner.setUser(user);
             owner.setApproved(false);
-            // businessName, gstNumber, panNumber are null initially
             ownerRepo.save(owner);
         }
 

@@ -71,17 +71,18 @@ public class FlipFitGymOwnerController {
      * @param center   The GymCenter object containing updated details.
      * @return The updated GymCenter object.
      */
-    @RequestMapping(value = "/update-center/{centerId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update-center/{centerId}/{ownerId}", method = RequestMethod.PUT)
     public ResponseEntity<GymCenter> updateCenter(
             @PathVariable Long centerId,
+            @PathVariable Long ownerId,
             @RequestBody GymCenter center) {
-        logger.info("Received request to update center with ID: {}", centerId);
+        logger.info("Received request to update center with ID: {} for owner ID: {}", centerId, ownerId);
 
-        if (centerId == null) {
-            throw new InvalidInputException("Center ID cannot be empty");
+        if (centerId == null || ownerId == null) {
+            throw new InvalidInputException("Center ID and Owner ID cannot be empty");
         }
         center.setCenterId(centerId); // Ensure ID is set from path
-        return ResponseEntity.ok(service.updateCenter(center));
+        return ResponseEntity.ok(service.updateCenter(center, ownerId));
     }
 
     /**
@@ -121,13 +122,14 @@ public class FlipFitGymOwnerController {
      * @param slot     The GymSlot object containing slot details.
      * @return A success message.
      */
-    @RequestMapping(value = "/add-slot/{centerId}", method = RequestMethod.POST)
-    public ResponseEntity<String> addSlot(@PathVariable Long centerId, @RequestBody GymSlot slot) {
-        logger.info("Received request to add slot to center ID: {}", centerId);
-        if (centerId == null) {
-            throw new InvalidInputException("Center ID cannot be empty");
+    @RequestMapping(value = "/add-slot/{centerId}/{ownerId}", method = RequestMethod.POST)
+    public ResponseEntity<String> addSlot(@PathVariable Long centerId, @PathVariable Long ownerId,
+            @RequestBody GymSlot slot) {
+        logger.info("Received request to add slot to center ID: {} for owner ID: {}", centerId, ownerId);
+        if (centerId == null || ownerId == null) {
+            throw new InvalidInputException("Center ID and Owner ID cannot be empty");
         }
-        service.addSlot(slot, centerId);
+        service.addSlot(slot, centerId, ownerId);
         return ResponseEntity.ok("Slot added successfully. Waiting for Admin approval.");
     }
 }

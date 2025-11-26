@@ -67,6 +67,11 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new InvalidBookingException("Invalid centerId"));
 
+        // Validate that the slot belongs to the center
+        if (!slot.getCenter().getCenterId().equals(centerId)) {
+            throw new InvalidBookingException("Slot " + slotId + " does not belong to center " + centerId);
+        }
+
         // Check duplicate booking
         if (bookingRepo.existsByCustomerAndSlot(customer, slot)) {
             throw new BookingAlreadyExistsException("User already booked this slot");
