@@ -1,14 +1,13 @@
 package com.lti.flipfit.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 /**
  * Author :
  * Version : 1.0
  * Description : Entity class representing Role.
  */
-
-import jakarta.persistence.*;
-import lombok.Data;
-
 @Entity
 @Table(name = "gymrole")
 @Data

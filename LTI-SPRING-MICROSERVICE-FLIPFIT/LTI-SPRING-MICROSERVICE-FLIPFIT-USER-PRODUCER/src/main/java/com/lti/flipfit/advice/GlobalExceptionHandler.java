@@ -12,10 +12,10 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
 
 /**
- * Author      :
- * Version     : 1.0
+ * Author :
+ * Version : 1.0
  * Description : Global exception handler for FlipFit application. Handles all
- *               custom exceptions and returns structured error responses.
+ * custom exceptions and returns structured error responses.
  */
 
 @ControllerAdvice
@@ -26,8 +26,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 ex.getMessage(),
                 errorCode,
-                request.getDescription(false)
-        );
+                request.getDescription(false));
     }
 
     // ------------------------- USER EXCEPTIONS -------------------------
@@ -38,8 +37,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 ex.getMessage(),
                 ex.getErrorCode(),
-                request.getDescription(false)
-        );
+                request.getDescription(false));
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
 
@@ -49,8 +47,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 ex.getMessage(),
                 ex.getErrorCode(),
-                request.getDescription(false)
-        );
+                request.getDescription(false));
         return new ResponseEntity<>(res, HttpStatus.CONFLICT);
     }
 
@@ -60,19 +57,18 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 ex.getMessage(),
                 ex.getErrorCode(),
-                request.getDescription(false)
-        );
+                request.getDescription(false));
         return new ResponseEntity<>(res, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AuthenticationFailedException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationFailed(AuthenticationFailedException ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationFailed(AuthenticationFailedException ex,
+            WebRequest request) {
         ErrorResponse res = new ErrorResponse(
                 LocalDateTime.now(),
                 ex.getMessage(),
                 ex.getErrorCode(),
-                request.getDescription(false)
-        );
+                request.getDescription(false));
         return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
     }
 
@@ -90,11 +86,9 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 ex.getMessage(),
-                "INTERNAL_SERVER_ERROR"
-        );
+                "INTERNAL_SERVER_ERROR");
 
         return ResponseEntity.status(500).body(error);
     }
-
 
 }

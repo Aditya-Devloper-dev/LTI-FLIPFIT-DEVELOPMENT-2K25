@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Author : FlipFit Development Team
+ * Author :
  * Version : 1.0
  * Description : Controller for user registration, login, and profile updates
  * across admin, owner, and customer roles. Includes validation and exception
@@ -29,10 +29,10 @@ public class FlipFitGymUserController {
     }
 
     /**
-     * Registers a new user (admin/owner/customer) into the system.
-     *
-     * @param user The user object containing registration details.
-     * @return A success message with the registered user ID.
+     * @methodname - register
+     * @description - Registers a new user (admin/owner/customer) into the system.
+     * @param - user The user object containing registration details.
+     * @return - A success message with the registered user ID.
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestBody User user) {
@@ -41,11 +41,11 @@ public class FlipFitGymUserController {
     }
 
     /**
-     * Authenticates user using email and password.
-     *
-     * @param email    The user's email address.
-     * @param password The user's password.
-     * @return A map containing user details and login status.
+     * @methodname - login
+     * @description - Authenticates user using email and password.
+     * @param - email The user's email address.
+     * @param - password The user's password.
+     * @return - A map containing user details and login status.
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(@RequestParam String email,
@@ -55,11 +55,11 @@ public class FlipFitGymUserController {
     }
 
     /**
-     * Updates user profile information for a given user ID.
-     *
-     * @param userId   The unique identifier of the user.
-     * @param userData The updated user data.
-     * @return A success message confirming the profile update.
+     * @methodname - updateProfile
+     * @description - Updates user profile information for a given user ID.
+     * @param - userId The unique identifier of the user.
+     * @param - userData The updated user data.
+     * @return - A success message confirming the profile update.
      */
     @RequestMapping(value = "/update/{userId}", method = RequestMethod.PUT)
     public String updateProfile(
@@ -70,9 +70,9 @@ public class FlipFitGymUserController {
     }
 
     /**
-     * Returns a list of all registered users in the system.
-     *
-     * @return A list of all users.
+     * @methodname - getAllUsers
+     * @description - Returns a list of all registered users in the system.
+     * @return - A list of all users.
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<User> getAllUsers() {
