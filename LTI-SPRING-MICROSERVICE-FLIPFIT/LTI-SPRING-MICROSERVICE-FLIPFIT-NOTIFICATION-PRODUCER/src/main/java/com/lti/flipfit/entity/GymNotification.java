@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing Gym Notification.
+ */
 @Entity
 @Table(name = "gymnotification")
 @Data

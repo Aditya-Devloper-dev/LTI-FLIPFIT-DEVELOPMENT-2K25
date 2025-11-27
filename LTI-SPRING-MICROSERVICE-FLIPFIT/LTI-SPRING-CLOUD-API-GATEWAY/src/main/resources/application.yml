@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: SPRINGCLOUD-API-GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: booking-service
+          uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-BOOKING-PRODUCER
+          predicates:
+            - Path=/booking/**
+        - id: customer-service
+          uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-CUSTOMER-PRODUCER
+          predicates:
+            - Path=/customer/**, /payment/**
+        - id: admin-service
+          uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-ADMIN-PRODUCER
+          predicates:
+            - Path=/admin/**
+        - id: owner-service
+          uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-OWNER-PRODUCER
+          predicates:
+            - Path=/owner/**
+        - id: user-service
+          uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-USER-PRODUCER
+          predicates:
+            - Path=/user/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost

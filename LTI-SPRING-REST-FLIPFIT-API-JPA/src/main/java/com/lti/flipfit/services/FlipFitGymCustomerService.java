@@ -23,8 +23,6 @@ public interface FlipFitGymCustomerService {
 
     GymCustomer getProfile(Long customerId);
 
-    boolean validateMembership(Long customerId);
-
     List<GymBooking> getCustomerBookings(Long customerId);
 
 }

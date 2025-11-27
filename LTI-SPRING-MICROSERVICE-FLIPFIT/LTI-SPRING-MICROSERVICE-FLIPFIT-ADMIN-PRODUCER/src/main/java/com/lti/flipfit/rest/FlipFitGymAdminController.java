@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author : Shiny Sunaina
+ * Author :
  * Version : 1.0
  * Description : Controller for admin operations such as creating centers,
  * adding slots, updating center details, and retrieving center information.
@@ -31,9 +31,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Approves a pending gym slot.
-     * @param slotId Unique identifier of the slot.
-     * @return ResponseEntity containing the result of the operation.
+     * @methodname - approveSlot
+     * @description - Approves a pending gym slot.
+     * @param - slotId Unique identifier of the slot.
+     * @return - ResponseEntity containing the result of the operation.
      */
 
     @RequestMapping(value = "/approve-slot/{slotId}", method = RequestMethod.PUT)
@@ -43,9 +44,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Retrieves a list of all pending gym slots for a center.
-     * @param centerId Unique identifier of the center.
-     * @return ResponseEntity containing a list of pending GymSlot objects.
+     * @methodname - getPendingSlots
+     * @description - Retrieves a list of all pending gym slots for a center.
+     * @param - centerId Unique identifier of the center.
+     * @return - ResponseEntity containing a list of pending GymSlot objects.
      */
 
     @RequestMapping(value = "/pending-slots/{centerId}", method = RequestMethod.GET)
@@ -55,8 +57,9 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Retrieves the complete list of registered gym centers.
-     * @return ResponseEntity containing a list of all GymCenter objects.
+     * @methodname - getAllCenters
+     * @description - Retrieves the complete list of registered gym centers.
+     * @return - ResponseEntity containing a list of all GymCenter objects.
      */
 
     @RequestMapping(value = "/centers", method = RequestMethod.GET)
@@ -66,10 +69,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Fetches information for a specific center using its ID.
-     * @param centerId Unique identifier for the center.
-     * @return ResponseEntity containing the GymCenter object.
-     * @throws InvalidInputException if centerId is null.
+     * @methodname - getCenterById
+     * @description - Fetches information for a specific center using its ID.
+     * @param - centerId Unique identifier for the center.
+     * @return - ResponseEntity containing the GymCenter object.
      */
 
     @RequestMapping(value = "/center/{centerId}", method = RequestMethod.GET)
@@ -84,9 +87,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Approves a pending gym owner.
-     * @param ownerId Unique identifier of the owner.
-     * @return ResponseEntity containing the result of the operation.
+     * @methodname - approveOwner
+     * @description - Approves a pending gym owner.
+     * @param - ownerId Unique identifier of the owner.
+     * @return - ResponseEntity containing the result of the operation.
      */
 
     @RequestMapping(value = "/approve-owner/{ownerId}", method = RequestMethod.PUT)
@@ -96,8 +100,9 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Retrieves a list of all pending gym owners.
-     * @return ResponseEntity containing a list of pending GymOwner objects.
+     * @methodname - getPendingOwners
+     * @description - Retrieves a list of all pending gym owners.
+     * @return - ResponseEntity containing a list of pending GymOwner objects.
      */
 
     @RequestMapping(value = "/pending-owners", method = RequestMethod.GET)
@@ -107,9 +112,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Approves a pending gym center.
-     * @param centerId Unique identifier of the center.
-     * @return ResponseEntity containing the result of the operation.
+     * @methodname - approveCenter
+     * @description - Approves a pending gym center.
+     * @param - centerId Unique identifier of the center.
+     * @return - ResponseEntity containing the result of the operation.
      */
 
     @RequestMapping(value = "/approve-center/{centerId}", method = RequestMethod.PUT)
@@ -119,8 +125,9 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Retrieves a list of all pending gym centers.
-     * @return ResponseEntity containing a list of pending GymCenter objects.
+     * @methodname - getPendingCenters
+     * @description - Retrieves a list of all pending gym centers.
+     * @return - ResponseEntity containing a list of pending GymCenter objects.
      */
 
     @RequestMapping(value = "/pending-centers", method = RequestMethod.GET)
@@ -130,9 +137,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Deletes a gym center.
-     * @param centerId Unique identifier of the center.
-     * @return ResponseEntity containing the result of the operation.
+     * @methodname - deleteCenter
+     * @description - Deletes a gym center.
+     * @param - centerId Unique identifier of the center.
+     * @return - ResponseEntity containing the result of the operation.
      */
 
     @RequestMapping(value = "/delete-center/{centerId}", method = RequestMethod.DELETE)
@@ -143,9 +151,10 @@ public class FlipFitGymAdminController {
     }
 
     /**
-     * @method Deletes a gym slot.
-     * @param slotId Unique identifier of the slot.
-     * @return ResponseEntity containing the result of the operation.
+     * @methodname - deleteSlot
+     * @description - Deletes a gym slot.
+     * @param - slotId Unique identifier of the slot.
+     * @return - ResponseEntity containing the result of the operation.
      */
 
     @RequestMapping(value = "/delete-slot/{slotId}", method = RequestMethod.DELETE)
@@ -153,5 +162,20 @@ public class FlipFitGymAdminController {
         logger.info("Received request to delete slot with ID: {}", slotId);
         adminService.deleteSlot(slotId);
         return ResponseEntity.ok("Slot deleted successfully");
+    }
+
+    /**
+     * @methodname - viewPayments
+     * @description - Retrieves payments based on filter type and date.
+     * @param - filterType The type of filter (ALL, MONTHLY, WEEKLY, DAILY).
+     * @param - date The specific date for DAILY filter (YYYY-MM-DD).
+     * @return - ResponseEntity containing a list of GymPayment objects.
+     */
+    @RequestMapping(value = "/payments", method = RequestMethod.GET)
+    public ResponseEntity<List<GymPayment>> viewPayments(
+            @RequestParam(defaultValue = "ALL") String filterType,
+            @RequestParam(required = false) String date) {
+        logger.info("Received request to view payments with filter: {} and date: {}", filterType, date);
+        return ResponseEntity.ok(adminService.viewPayments(filterType, date));
     }
 }

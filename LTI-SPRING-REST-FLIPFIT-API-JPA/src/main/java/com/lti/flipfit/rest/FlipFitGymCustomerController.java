@@ -72,24 +72,6 @@ public class FlipFitGymCustomerController {
     }
 
     /*
-     * @Method: validateMembership
-     * 
-     * @Description: Checks if the customer's membership is active
-     * 
-     * @MethodParameters: customerId -> unique customer ID
-     * 
-     * @Exception: Throws UserNotFoundException if customer not found
-     */
-    @RequestMapping(value = "/validate-membership/{customerId}", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> validateMembership(@PathVariable Long customerId) {
-        logger.info("Received request to validate membership for customer ID: {}", customerId);
-        if (customerId == null) {
-            throw new InvalidInputException("Customer ID cannot be empty");
-        }
-        return ResponseEntity.ok(customerService.validateMembership(customerId));
-    }
-
-    /*
      * @Method: getCustomerBookings
      * 
      * @Description: Fetches all bookings made by the customer

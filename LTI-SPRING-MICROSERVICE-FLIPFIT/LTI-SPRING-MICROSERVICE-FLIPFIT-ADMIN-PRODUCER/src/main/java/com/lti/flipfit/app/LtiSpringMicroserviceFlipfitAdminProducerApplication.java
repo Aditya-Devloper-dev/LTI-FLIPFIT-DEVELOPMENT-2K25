@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@org.springframework.cloud.openfeign.EnableFeignClients(basePackages = "com.lti.flipfit")
 @ComponentScan("com.lti.flipfit")
 @EntityScan("com.lti.flipfit.entity")
 @EnableJpaRepositories("com.lti.flipfit.repository")
