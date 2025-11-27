@@ -15,18 +15,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.lti.flipfit.constants.RoleType;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Author : FlipFit Development Team
+ * Author :
  * Version : 1.0
  * Description : Service implementation for user account management including
- * registration,
- * authentication, and profile updates. Handles validation, role-based user
- * creation,
- * and exception handling for all user operations.
+ * registration, authentication, and profile updates. Handles validation,
+ * role-based user
+ * creation, and exception handling for all user operations.
  */
 
 @Service
@@ -46,14 +47,17 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @Autowired
     private FlipFitGymOwnerRepository ownerRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
-     * Registers a new user in the system after validating email and duplicate
-     * accounts.
-     * Creates role-specific entries (Admin, Customer, or Owner) based on the user's
-     * role.
-     *
-     * @param user The user object containing registration details.
-     * @return A success message with the registered user ID.
+     * @methodname - register
+     * @description - Registers a new user in the system after validating email and
+     *              duplicate accounts.
+     *              Creates role-specific entries (Admin, Customer, or Owner) based
+     *              on the user's role.
+     * @param - user The user object containing registration details.
+     * @return - A success message with the registered user ID.
      * @throws InvalidInputException      if required fields are missing or invalid.
      * @throws DuplicateEmailException    if the email is already registered.
      * @throws UserAlreadyExistsException if a user with the same email and phone
@@ -68,9 +72,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
             throw new InvalidInputException("Full name is required");
         }
 
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new InvalidInputException("Email is required");
-        }
+        validateEmail(user.getEmail());
 
         if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw new InvalidInputException("Password is required");
@@ -84,22 +86,22 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
                 user.getEmail(), user.getPhoneNumber())) {
             throw new UserAlreadyExistsException("User already exists with this email and phone");
         }
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         // createdAt & updatedAt handled by @PrePersist / @PreUpdate
 
         userRepo.save(user);
 
-        if ("ADMIN".equals(user.getRole().getRoleId())) {
+        if (RoleType.ADMIN.name().equals(user.getRole().getRoleId())) {
             GymAdmin admin = new GymAdmin();
             admin.setUser(user);
             adminRepo.save(admin);
         }
-        if ("CUSTOMER".equals(user.getRole().getRoleId())) {
+        if (RoleType.CUSTOMER.name().equals(user.getRole().getRoleId())) {
             GymCustomer customer = new GymCustomer();
             customer.setUser(user);
             customerRepo.save(customer);
         }
-        if ("OWNER".equals(user.getRole().getRoleId())) {
+        if (RoleType.OWNER.name().equals(user.getRole().getRoleId())) {
             GymOwner owner = new GymOwner();
             owner.setUser(user);
             owner.setApproved(false);
@@ -110,11 +112,11 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     }
 
     /**
-     * Authenticates a user based on email and password.
-     *
-     * @param email    The user's email address.
-     * @param password The user's password.
-     * @return A map containing user details (userId, email, roleId) and login
+     * @methodname - login
+     * @description - Authenticates a user based on email and password.
+     * @param - email The user's email address.
+     * @param - password The user's password.
+     * @return - A map containing user details (userId, email, roleId) and login
      *         status.
      * @throws InvalidInputException         if email or password is empty.
      * @throws UserNotFoundException         if no user is found with the given
@@ -136,8 +138,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
         User foundUser = Optional.ofNullable(userRepo.findByEmailIgnoreCase(email))
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
 
-        // Plain text comparison (temporary)
-        if (!foundUser.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
             throw new AuthenticationFailedException("Incorrect email or password");
         }
 
@@ -151,11 +152,11 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     }
 
     /**
-     * Updates user profile information for the given user ID.
-     *
-     * @param userId      The unique identifier of the user.
-     * @param updatedData The updated user data containing fields to be modified.
-     * @return A success message confirming the profile update.
+     * @methodname - updateProfile
+     * @description - Updates user profile information for the given user ID.
+     * @param - userId The unique identifier of the user.
+     * @param - updatedData The updated user data containing fields to be modified.
+     * @return - A success message confirming the profile update.
      * @throws UserNotFoundException if no user is found with the given ID.
      */
     @Override
@@ -174,8 +175,8 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
             user.setPhoneNumber(updatedData.getPhoneNumber());
         }
 
-        if (updatedData.getPassword() != null) {
-            user.setPassword(updatedData.getPassword());
+        if (updatedData.getPassword() != null && !updatedData.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(updatedData.getPassword()));
         }
 
         if (updatedData.getRole() != null) {
@@ -189,13 +190,22 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     }
 
     /**
-     * Retrieves all registered users in the system.
-     *
-     * @return A list of all users.
+     * @methodname - getAllUsers
+     * @description - Retrieves all registered users in the system.
+     * @return - A list of all users.
      */
     @Override
     public List<User> getAllUsers() {
         logger.info("Fetching all users");
         return userRepo.findAll();
+    }
+
+    private void validateEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new InvalidInputException("Email is required");
+        }
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new InvalidInputException("Invalid email format");
+        }
     }
 }

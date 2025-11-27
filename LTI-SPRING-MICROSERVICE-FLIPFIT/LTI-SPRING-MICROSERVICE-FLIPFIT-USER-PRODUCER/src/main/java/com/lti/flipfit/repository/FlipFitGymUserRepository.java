@@ -1,7 +1,7 @@
 package com.lti.flipfit.repository;
 
 /**
- * Author : FlipFit Development Team
+ * Author : 
  * Version : 1.0
  * Description : JPA repository for Gym User operations.
  */

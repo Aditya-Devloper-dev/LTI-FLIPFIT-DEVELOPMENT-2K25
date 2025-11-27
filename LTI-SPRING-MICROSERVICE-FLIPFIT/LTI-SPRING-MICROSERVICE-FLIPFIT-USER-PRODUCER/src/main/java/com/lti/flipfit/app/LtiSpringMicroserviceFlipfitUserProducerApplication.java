@@ -7,6 +7,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Main application class for User Microservice.
+ */
+
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan("com.lti.flipfit")
