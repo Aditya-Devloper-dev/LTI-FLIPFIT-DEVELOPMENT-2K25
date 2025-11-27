@@ -1,15 +1,14 @@
 package com.lti.flipfit.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+
 /**
  * Author :
  * Version : 1.0
  * Description : Entity class representing Gym Booking.
  */
-
-import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "gymbooking")
 @Data
@@ -42,4 +41,7 @@ public class GymBooking {
 
     @Column(name = "approved_by_owner")
     private Boolean approvedByOwner = false;
+
+    @Column(name = "booking_date")
+    private java.time.LocalDate bookingDate;
 }

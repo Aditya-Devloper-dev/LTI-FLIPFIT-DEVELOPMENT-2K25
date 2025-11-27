@@ -1,7 +1,7 @@
 package com.lti.flipfit.services;
 
 /**
- * Author :
+ * Author : 
  * Version : 1.0
  * Description : Service interface for managing Gym Centers.
  */
@@ -13,9 +13,29 @@ import java.util.List;
 
 public interface FlipFitGymCenterService {
 
+    /**
+     * @methodname - getSlotsByDate
+     * @description - Fetches all slots for a given center on a specific date.
+     * @param - centerId The ID of the gym center.
+     * @param - date The date to check availability for.
+     * @return - A list of GymSlot entities.
+     */
     List<GymSlot> getSlotsByDate(Long centerId, String date);
 
+    /**
+     * @methodname - getSlotsByCenterId
+     * @description - Fetches all slots for a given center.
+     * @param - centerId The ID of the gym center.
+     * @return - A list of GymSlot entities.
+     */
     List<GymSlot> getSlotsByCenterId(Long centerId);
 
+    /**
+     * @methodname - updateCenterInfo
+     * @description - Updates gym center details after validating allowed fields.
+     * @param - centerId The ID of the center.
+     * @param - updatedCenter The updated center payload.
+     * @return - True if update is successful.
+     */
     boolean updateCenterInfo(Long centerId, GymCenter updatedCenter);
 }

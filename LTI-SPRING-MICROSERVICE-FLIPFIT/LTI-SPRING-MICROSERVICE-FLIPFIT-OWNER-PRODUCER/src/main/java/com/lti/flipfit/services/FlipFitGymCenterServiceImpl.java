@@ -1,7 +1,7 @@
 package com.lti.flipfit.services;
 
 /**
- * Author :
+ * Author : 
  * Version : 1.0
  * Description : Implementation of the FlipFitGymCenterService interface.
  */
@@ -34,14 +34,13 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
         this.slotRepo = slotRepo;
     }
 
-    /*
-     * @Method: getSlotsByDate
-     * 
-     * @Description: Fetches all slots for a given center on a specific date.
-     * 
-     * @MethodParameters: centerId -> ID of the gym center, date -> selected date.
-     * 
-     * @Exception: Throws CenterNotFoundException if center does not exist.
+    /**
+     * @methodname - getSlotsByDate
+     * @description - Fetches all slots for a given center on a specific date.
+     * @param - centerId The ID of the gym center.
+     * @param - date The date to check availability for.
+     * @return - A list of GymSlot entities.
+     * @throws CenterNotFoundException if center does not exist.
      */
     @Override
     public List<GymSlot> getSlotsByDate(Long centerId, String date) {
@@ -73,14 +72,12 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
         return slots;
     }
 
-    /*
-     * @Method: getSlotsByCenterId
-     * 
-     * @Description: Fetches all slots for a given center.
-     * 
-     * @MethodParameters: centerId -> ID of the gym center.
-     * 
-     * @Exception: Throws CenterNotFoundException if center does not exist.
+    /**
+     * @methodname - getSlotsByCenterId
+     * @description - Fetches all slots for a given center.
+     * @param - centerId The ID of the gym center.
+     * @return - A list of GymSlot entities.
+     * @throws CenterNotFoundException if center does not exist.
      */
     @Override
     public List<GymSlot> getSlotsByCenterId(Long centerId) {
@@ -91,16 +88,14 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
         return slotRepo.findByCenterCenterId(centerId);
     }
 
-    /*
-     * @Method: updateCenterInfo
-     * 
-     * @Description: Updates gym center details after validating allowed fields.
-     * 
-     * @MethodParameters: centerId -> ID of the center, updatedCenter -> updated
-     * center payload
-     * 
-     * @Exception: Throws CenterNotFoundException, InvalidCenterLocationException,
-     * CenterUpdateNotAllowedException
+    /**
+     * @methodname - updateCenterInfo
+     * @description - Updates gym center details after validating allowed fields.
+     * @param - centerId The ID of the center.
+     * @param - updatedCenter The updated center payload.
+     * @return - True if update is successful.
+     * @throws CenterNotFoundException, InvalidCenterLocationException,
+     *                                  CenterUpdateNotAllowedException
      */
     @Override
     public boolean updateCenterInfo(Long centerId, GymCenter updatedCenter) {

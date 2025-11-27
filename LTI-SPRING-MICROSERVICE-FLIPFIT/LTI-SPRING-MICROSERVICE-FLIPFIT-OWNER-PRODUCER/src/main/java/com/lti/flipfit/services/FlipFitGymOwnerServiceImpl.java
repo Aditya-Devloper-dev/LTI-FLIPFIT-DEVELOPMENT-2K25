@@ -46,10 +46,10 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * Approves a booking by its ID.
-     *
-     * @param bookingId The ID of the booking to approve.
-     * @return True if approval was successful.
+     * @methodname - approveBooking
+     * @description - Approves a booking by its ID.
+     * @param - bookingId The ID of the booking to approve.
+     * @return - True if approval was successful.
      */
     @Override
     public boolean approveBooking(Long bookingId) {
@@ -63,11 +63,11 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * Adds a new center for a specific owner.
-     *
-     * @param center  The GymCenter object to add.
-     * @param ownerId The ID of the owner.
-     * @return The added GymCenter object.
+     * @methodname - addCenter
+     * @description - Adds a new center for a specific owner.
+     * @param - center The GymCenter object to add.
+     * @param - ownerId The ID of the owner.
+     * @return - The added GymCenter object.
      */
     @Override
     public GymCenter addCenter(GymCenter center, Long ownerId) {
@@ -84,10 +84,11 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * Updates an existing center's details.
-     *
-     * @param center The GymCenter object with updated details.
-     * @return The updated GymCenter object.
+     * @methodname - updateCenter
+     * @description - Updates an existing center's details.
+     * @param - center The GymCenter object with updated details.
+     * @param - ownerId The ID of the owner.
+     * @return - The updated GymCenter object.
      */
     @Override
     public GymCenter updateCenter(GymCenter center, Long ownerId) {
@@ -116,10 +117,10 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * Retrieves all bookings for a specific center.
-     *
-     * @param centerId The ID of the center.
-     * @return A list of GymBooking objects.
+     * @methodname - viewAllBookings
+     * @description - Retrieves all bookings for a specific center.
+     * @param - centerId The ID of the center.
+     * @return - A list of GymBooking objects.
      */
     @Override
     public List<GymBooking> viewAllBookings(Long centerId) {
@@ -131,10 +132,10 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * Retrieves all centers owned by a specific owner.
-     *
-     * @param ownerId The ID of the owner.
-     * @return A list of GymCenter objects.
+     * @methodname - getCentersByOwner
+     * @description - Retrieves all centers owned by a specific owner.
+     * @param - ownerId The ID of the owner.
+     * @return - A list of GymCenter objects.
      */
     @Override
     public List<GymCenter> getCentersByOwner(Long ownerId) {
@@ -146,10 +147,11 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * Adds a new slot to a center.
-     *
-     * @param slot     The GymSlot object to add.
-     * @param centerId The ID of the center.
+     * @methodname - addSlot
+     * @description - Adds a new slot to a center.
+     * @param - slot The GymSlot object to add.
+     * @param - centerId The ID of the center.
+     * @param - ownerId The ID of the owner.
      */
     @Override
     public void addSlot(GymSlot slot, Long centerId, Long ownerId) {

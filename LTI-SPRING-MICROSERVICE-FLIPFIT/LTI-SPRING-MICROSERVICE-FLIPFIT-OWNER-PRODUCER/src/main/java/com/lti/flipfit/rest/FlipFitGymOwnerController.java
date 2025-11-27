@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author: Shiny Sunaina
+ * Author :
  * Version : 1.0
  * Description : Controller for gym owners to manage bookings and centers.
  */
@@ -30,10 +30,10 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * Marks a pending booking as approved by the gym owner.
-     *
-     * @param bookingId The ID of the booking to approve.
-     * @return A success message.
+     * @methodname - approveBooking
+     * @description - Marks a pending booking as approved by the gym owner.
+     * @param - bookingId The ID of the booking to approve.
+     * @return - A success message.
      */
     @RequestMapping(value = "/approve-booking/{bookingId}", method = RequestMethod.POST)
     public ResponseEntity<String> approveBooking(@PathVariable Long bookingId) {
@@ -46,11 +46,11 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * Creates a new center linked to the specified owner.
-     *
-     * @param ownerId The ID of the owner adding the center.
-     * @param center  The GymCenter object containing center details.
-     * @return The created GymCenter object.
+     * @methodname - addCenter
+     * @description - Creates a new center linked to the specified owner.
+     * @param - ownerId The ID of the owner adding the center.
+     * @param - center The GymCenter object containing center details.
+     * @return - The created GymCenter object.
      */
     @RequestMapping(value = "/add-center/{ownerId}", method = RequestMethod.POST)
     public ResponseEntity<GymCenter> addCenter(
@@ -65,11 +65,12 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * Updates information of a center managed by the owner.
-     *
-     * @param centerId The ID of the center to update.
-     * @param center   The GymCenter object containing updated details.
-     * @return The updated GymCenter object.
+     * @methodname - updateCenter
+     * @description - Updates information of a center managed by the owner.
+     * @param - centerId The ID of the center to update.
+     * @param - ownerId The ID of the owner.
+     * @param - center The GymCenter object containing updated details.
+     * @return - The updated GymCenter object.
      */
     @RequestMapping(value = "/update-center/{centerId}/{ownerId}", method = RequestMethod.PUT)
     public ResponseEntity<GymCenter> updateCenter(
@@ -86,10 +87,10 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * Retrieves every booking associated with the given centerId.
-     *
-     * @param centerId The ID of the center to view bookings for.
-     * @return A list of GymBooking objects.
+     * @methodname - viewAllBookings
+     * @description - Retrieves every booking associated with the given centerId.
+     * @param - centerId The ID of the center to view bookings for.
+     * @return - A list of GymBooking objects.
      */
     @RequestMapping(value = "/all-bookings/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymBooking>> viewAllBookings(@PathVariable Long centerId) {
@@ -101,10 +102,10 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * Retrieves all centers owned by a specific owner.
-     *
-     * @param ownerId The ID of the owner.
-     * @return A list of GymCenter objects owned by the user.
+     * @methodname - getCentersByOwner
+     * @description - Retrieves all centers owned by a specific owner.
+     * @param - ownerId The ID of the owner.
+     * @return - A list of GymCenter objects owned by the user.
      */
     @RequestMapping(value = "/centers/{ownerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getCentersByOwner(@PathVariable Long ownerId) {
@@ -116,11 +117,12 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * Adds a new slot to a center (Pending Approval).
-     *
-     * @param centerId The ID of the center to add the slot to.
-     * @param slot     The GymSlot object containing slot details.
-     * @return A success message.
+     * @methodname - addSlot
+     * @description - Adds a new slot to a center (Pending Approval).
+     * @param - centerId The ID of the center to add the slot to.
+     * @param - ownerId The ID of the owner.
+     * @param - slot The GymSlot object containing slot details.
+     * @return - A success message.
      */
     @RequestMapping(value = "/add-slot/{centerId}/{ownerId}", method = RequestMethod.POST)
     public ResponseEntity<String> addSlot(@PathVariable Long centerId, @PathVariable Long ownerId,

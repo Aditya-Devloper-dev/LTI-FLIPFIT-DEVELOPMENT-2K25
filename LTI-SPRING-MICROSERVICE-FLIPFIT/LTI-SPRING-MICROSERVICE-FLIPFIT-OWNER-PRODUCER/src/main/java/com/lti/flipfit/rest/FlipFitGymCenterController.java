@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Author: Shiny Sunaina
+ * Author :
  * Version : 1.0
  * Description : Controller for gym center slot and information management.
  */
@@ -28,15 +28,13 @@ public class FlipFitGymCenterController {
         this.service = service;
     }
 
-    /*
-     * @Method: getSlotsByDate
-     * 
-     * @Description: Retrieves all slots available for the given center on the
-     * selected date
-     * 
-     * @MethodParameters: centerId -> unique center ID, date -> yyyy-MM-dd
-     * 
-     * @Exception: Throws InvalidInputException for blank centerId/date
+    /**
+     * @methodname - getSlotsByDate
+     * @description - Retrieves all slots available for the given center on the
+     *              selected date.
+     * @param - centerId The ID of the gym center.
+     * @param - date The date to check availability for.
+     * @return - A list of GymSlot entities.
      */
     @RequestMapping(value = "/slots", method = RequestMethod.GET)
     public Object getSlotsByDate(@RequestParam Long centerId,
@@ -45,14 +43,11 @@ public class FlipFitGymCenterController {
         return service.getSlotsByDate(centerId, date);
     }
 
-    /*
-     * @Method: getSlotsByCenterId
-     * 
-     * @Description: Retrieves all slots for the given center
-     * 
-     * @MethodParameters: centerId -> unique center ID
-     * 
-     * @Exception: Throws InvalidInputException for blank centerId
+    /**
+     * @methodname - getSlotsByCenterId
+     * @description - Retrieves all slots for the given center.
+     * @param - centerId The ID of the gym center.
+     * @return - A list of GymSlot entities.
      */
     @RequestMapping(value = "/slots/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymSlot>> getSlotsByCenterId(@PathVariable Long centerId) {
@@ -63,14 +58,13 @@ public class FlipFitGymCenterController {
         return ResponseEntity.ok(service.getSlotsByCenterId(centerId));
     }
 
-    /*
-     * @Method: updateCenterInfo
-     * 
-     * @Description: Updates the provided center information for the given centerId
-     * 
-     * @MethodParameters: centerId -> unique center ID, GymCenter center -> new data
-     * 
-     * @Exception: Throws InvalidInputException for blank ID or missing data
+    /**
+     * @methodname - updateCenterInfo
+     * @description - Updates the provided center information for the given
+     *              centerId.
+     * @param - centerId The ID of the gym center.
+     * @param - center The updated GymCenter object.
+     * @return - True if update is successful, false otherwise.
      */
     @RequestMapping(value = "/update-center/{centerId}", method = RequestMethod.PUT)
     public boolean updateCenterInfo(@PathVariable Long centerId,
