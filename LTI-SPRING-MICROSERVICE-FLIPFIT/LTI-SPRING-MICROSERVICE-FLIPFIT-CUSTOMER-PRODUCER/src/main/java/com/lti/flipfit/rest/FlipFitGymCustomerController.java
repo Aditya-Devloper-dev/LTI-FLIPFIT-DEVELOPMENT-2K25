@@ -31,11 +31,12 @@ public class FlipFitGymCustomerController {
     }
 
     /**
-     * Fetches availability details for a given center on a specific date.
-     *
-     * @param centerId The ID of the gym center.
-     * @param date     The date to check availability for.
-     * @return A list of maps containing slot details and availability.
+     * @methodname - viewAvailability
+     * @description - Fetches availability details for a given center on a specific
+     *              date.
+     * @param - centerId The ID of the gym center.
+     * @param - date The date to check availability for.
+     * @return - A list of maps containing slot details and availability.
      */
     @RequestMapping(value = "/availability", method = RequestMethod.GET)
     public List<Map<String, Object>> viewAvailability(
@@ -46,10 +47,10 @@ public class FlipFitGymCustomerController {
     }
 
     /**
-     * Fetches customer profile details.
-     *
-     * @param customerId The unique ID of the customer.
-     * @return The GymCustomer entity.
+     * @methodname - getProfile
+     * @description - Fetches customer profile details.
+     * @param - customerId The unique ID of the customer.
+     * @return - The GymCustomer entity.
      * @throws InvalidInputException if the customer ID is null.
      */
     @RequestMapping(value = "/profile/{customerId}", method = RequestMethod.GET)
@@ -62,26 +63,10 @@ public class FlipFitGymCustomerController {
     }
 
     /**
-     * Checks if the customer's membership is active.
-     *
-     * @param customerId The unique ID of the customer.
-     * @return true if the membership is active, false otherwise.
-     * @throws InvalidInputException if the customer ID is null.
-     */
-    @RequestMapping(value = "/validate-membership/{customerId}", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> validateMembership(@PathVariable Long customerId) {
-        logger.info("Received request to validate membership for customer ID: {}", customerId);
-        if (customerId == null) {
-            throw new InvalidInputException("Customer ID cannot be empty");
-        }
-        return ResponseEntity.ok(customerService.validateMembership(customerId));
-    }
-
-    /**
-     * Fetches all bookings made by the customer.
-     *
-     * @param customerId The unique ID of the customer.
-     * @return A list of GymBooking entities.
+     * @methodname - getCustomerBookings
+     * @description - Fetches all bookings made by the customer.
+     * @param - customerId The unique ID of the customer.
+     * @return - A list of GymBooking entities.
      * @throws InvalidInputException if the customer ID is null.
      */
     @RequestMapping(value = "/bookings/{customerId}", method = RequestMethod.GET)
@@ -94,9 +79,9 @@ public class FlipFitGymCustomerController {
     }
 
     /**
-     * Fetches all active gym centers.
-     *
-     * @return A list of active GymCenter entities.
+     * @methodname - viewAllGyms
+     * @description - Fetches all active gym centers.
+     * @return - A list of active GymCenter entities.
      */
     @RequestMapping(value = "/view-gyms", method = RequestMethod.GET)
     public ResponseEntity<List<com.lti.flipfit.entity.GymCenter>> viewAllGyms() {

@@ -34,8 +34,9 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
     }
 
     /**
-     * Runs the waitlist promotion job to promote users from waitlist to confirmed
-     * bookings.
+     * @methodname - runWaitlistPromotionJob
+     * @description - Runs the waitlist promotion job to promote users from waitlist
+     *              to confirmed bookings.
      */
     @Override
     public void runWaitlistPromotionJob() {
@@ -83,7 +84,8 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
     }
 
     /**
-     * Sends daily reminders to users.
+     * @methodname - sendDailyReminders
+     * @description - Sends daily reminders to users.
      */
     @Override
     public void sendDailyReminders() {

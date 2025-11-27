@@ -36,11 +36,11 @@ public class FlipFitGymWaitlistServiceImpl implements FlipFitGymWaitlistService 
         private FlipFitGymCustomerRepository customerRepo;
 
         /**
-         * Adds a customer to the waitlist for a specific slot.
-         *
-         * @param customerId The ID of the customer.
-         * @param slotId     The ID of the slot.
-         * @return A success message with the waitlist ID.
+         * @methodname - joinWaitlist
+         * @description - Adds a customer to the waitlist for a specific slot.
+         * @param - customerId The ID of the customer.
+         * @param - slotId The ID of the slot.
+         * @return - A success message with the waitlist ID.
          */
         @Override
         public String joinWaitlist(Long customerId, Long slotId) {
@@ -66,10 +66,10 @@ public class FlipFitGymWaitlistServiceImpl implements FlipFitGymWaitlistService 
         }
 
         /**
-         * Cancels a waitlist entry.
-         *
-         * @param waitlistId The unique identifier of the waitlist entry.
-         * @return A success message.
+         * @methodname - cancelWaitlist
+         * @description - Cancels a waitlist entry.
+         * @param - waitlistId The unique identifier of the waitlist entry.
+         * @return - A success message.
          */
         @Override
         public String cancelWaitlist(String waitlistId) {
@@ -82,10 +82,10 @@ public class FlipFitGymWaitlistServiceImpl implements FlipFitGymWaitlistService 
         }
 
         /**
-         * Retrieves the waitlist entries for a specific customer.
-         *
-         * @param customerId The ID of the customer.
-         * @return A list of waitlist entries for the customer.
+         * @methodname - getWaitlistByCustomer
+         * @description - Retrieves the waitlist entries for a specific customer.
+         * @param - customerId The ID of the customer.
+         * @return - A list of waitlist entries for the customer.
          */
         @Override
         public List<GymWaitlist> getWaitlistByCustomer(Long customerId) {

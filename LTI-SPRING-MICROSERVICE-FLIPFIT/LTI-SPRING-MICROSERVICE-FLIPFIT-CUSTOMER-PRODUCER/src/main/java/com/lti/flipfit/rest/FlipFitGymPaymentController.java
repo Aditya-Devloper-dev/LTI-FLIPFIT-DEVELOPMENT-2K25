@@ -1,43 +1,58 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.services.FlipFitGymPaymentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * Author :
  * Version : 1.0
- * Description : Controller for processing payments and refunds.
+ * Description : Controller for handling payment-related operations.
  */
 @RestController
 @RequestMapping("/payment")
 public class FlipFitGymPaymentController {
 
-    private static final Logger logger = LoggerFactory.getLogger(FlipFitGymPaymentController.class);
+    @Autowired
+    private FlipFitGymPaymentService paymentService;
 
-    private final FlipFitGymPaymentService service;
-
-    public FlipFitGymPaymentController(FlipFitGymPaymentService service) {
-        this.service = service;
+    /**
+     * @methodname - processPayment
+     * @description - Endpoint to process a payment.
+     * @param - customerId The ID of the customer
+     * @param - amount The amount to pay
+     * @param - paymentMode The mode of payment
+     * @return - ResponseEntity containing the transaction ID
+     */
+    @PostMapping("/process")
+    public ResponseEntity<String> processPayment(
+            @RequestParam String customerId,
+            @RequestParam Double amount,
+            @RequestParam String paymentMode,
+            @RequestParam Long bookingId) {
+        try {
+            String transactionId = paymentService.processPayment(customerId, amount, paymentMode, bookingId);
+            return new ResponseEntity<>(transactionId, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Payment Failed: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @RequestMapping(value = "/process", method = RequestMethod.POST)
-    public boolean processPayment(@RequestParam String bookingId,
-            @RequestParam double amount) {
-        logger.info("Received request to process payment for booking ID: {}, Amount: {}", bookingId, amount);
-        return service.processPayment(bookingId, amount);
-    }
-
-    @RequestMapping(value = "/refund/{paymentId}", method = RequestMethod.POST)
-    public boolean refund(@PathVariable String paymentId) {
-        logger.info("Received request to refund payment ID: {}", paymentId);
-        return service.refund(paymentId);
-    }
-
-    @RequestMapping(value = "/status/{paymentId}", method = RequestMethod.GET)
-    public String checkStatus(@PathVariable String paymentId) {
-        logger.info("Received request to check status for payment ID: {}", paymentId);
-        return service.checkStatus(paymentId);
+    /**
+     * @methodname - refundPayment
+     * @description - Endpoint to refund a payment.
+     * @param - paymentId The ID of the payment to refund
+     * @return - ResponseEntity with status message
+     */
+    @PostMapping("/refund")
+    public ResponseEntity<String> refundPayment(@RequestParam String paymentId) {
+        boolean success = paymentService.refundPayment(paymentId);
+        if (success) {
+            return new ResponseEntity<>("Refund Processed Successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Refund Failed: Payment not found", HttpStatus.NOT_FOUND);
+        }
     }
 }
