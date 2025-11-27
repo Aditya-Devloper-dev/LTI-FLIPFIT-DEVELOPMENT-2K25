@@ -32,10 +32,10 @@ public class FlipFitGymSchedulerController {
     }
 
     /**
-     * Manually runs the job that promotes users from the waitlist when slots free
-     * up.
-     *
-     * @return A success message.
+     * @methodname - runWaitlistPromotionJob
+     * @description - Manually runs the job that promotes users from the waitlist
+     *              when slots free up.
+     * @return - A success message.
      */
     @RequestMapping(value = "/run-waitlist-job", method = RequestMethod.POST)
     public String runWaitlistPromotionJob() {
@@ -45,9 +45,10 @@ public class FlipFitGymSchedulerController {
     }
 
     /**
-     * Manually triggers the scheduler to send daily reminders to users.
-     *
-     * @return A success message.
+     * @methodname - sendDailyReminders
+     * @description - Manually triggers the scheduler to send daily reminders to
+     *              users.
+     * @return - A success message.
      */
     @RequestMapping(value = "/send-reminders", method = RequestMethod.POST)
     public String sendDailyReminders() {

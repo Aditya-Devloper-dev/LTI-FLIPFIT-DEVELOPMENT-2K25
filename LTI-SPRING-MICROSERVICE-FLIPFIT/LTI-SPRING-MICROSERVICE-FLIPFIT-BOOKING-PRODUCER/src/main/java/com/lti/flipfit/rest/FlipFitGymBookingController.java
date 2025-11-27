@@ -29,10 +29,11 @@ public class FlipFitGymBookingController {
     }
 
     /**
-     * Accepts booking details, validates them, then forwards to service layer.
-     *
-     * @param booking The booking request payload.
-     * @return A response entity containing the booking status.
+     * @methodname - bookSlot
+     * @description - Accepts booking details, validates them, then forwards to
+     *              service layer.
+     * @param - booking The booking request payload.
+     * @return - A response entity containing the booking status.
      */
     @RequestMapping(value = "/book", method = RequestMethod.POST)
     public ResponseEntity<String> bookSlot(@RequestBody GymBooking booking) {
@@ -48,15 +49,30 @@ public class FlipFitGymBookingController {
     }
 
     /**
-     * Cancels a booking by its ID and updates availability.
-     *
-     * @param bookingId The unique booking ID.
-     * @return A response entity containing the cancellation status.
+     * @methodname - cancelBooking
+     * @description - Cancels a booking by its ID and updates availability.
+     * @param - bookingId The unique booking ID.
+     * @return - A response entity containing the cancellation status.
      */
     @RequestMapping(value = "/cancel/{bookingId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> cancelBooking(@PathVariable Long bookingId) {
         logger.info("Received request to cancel booking with ID: {}", bookingId);
         return ResponseEntity.ok(bookingService.cancelBooking(bookingId));
+    }
+
+    /**
+     * @methodname - viewPayments
+     * @description - Retrieves payments based on filter type and date.
+     * @param - filterType The type of filter (ALL, MONTHLY, WEEKLY, DAILY).
+     * @param - date The specific date for DAILY filter (YYYY-MM-DD).
+     * @return - ResponseEntity containing a list of GymPayment objects.
+     */
+    @RequestMapping(value = "/payments", method = RequestMethod.GET)
+    public ResponseEntity<java.util.List<com.lti.flipfit.entity.GymPayment>> viewPayments(
+            @RequestParam(defaultValue = "ALL") String filterType,
+            @RequestParam(required = false) String date) {
+        logger.info("Received request to view payments with filter: {} and date: {}", filterType, date);
+        return ResponseEntity.ok(bookingService.viewPayments(filterType, date));
     }
 
 }

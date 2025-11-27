@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * Implementation of the FlipFitGymCustomerService interface.
+ * Author :
+ * Version : 1.0
+ * Description : Implementation of the FlipFitGymCustomerService interface.
  * Handles business logic for customer-related operations.
  */
 @Service
@@ -34,37 +36,50 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
     }
 
     /**
-     * Checks the availability of slots for a given center on a specific date.
-     *
-     * @param centerId The ID of the gym center.
-     * @param date     The date to check availability for.
-     * @return A list of maps containing slot details and availability.
+     * @methodname - viewAvailability
+     * @description - Checks the availability of slots for a given center on a
+     *              specific date.
+     * @param - centerId The ID of the gym center.
+     * @param - date The date to check availability for.
+     * @return - A list of maps containing slot details and availability.
      */
     @Override
     public List<Map<String, Object>> viewAvailability(String centerId, String date) {
         logger.info("Checking availability for center ID: {} on date: {}", centerId, date);
 
-        // Mock implementation for demonstration purposes
-        Map<String, Object> s1 = new HashMap<>();
-        s1.put("slotId", "SLOT-1");
-        s1.put("startTime", "06:00");
-        s1.put("endTime", "07:00");
-        s1.put("availableSeats", 5);
+        Long cId = Long.parseLong(centerId);
+        java.time.LocalDate bookingDate = java.time.LocalDate.parse(date);
 
-        Map<String, Object> s2 = new HashMap<>();
-        s2.put("slotId", "SLOT-2");
-        s2.put("startTime", "07:00");
-        s2.put("endTime", "08:00");
-        s2.put("availableSeats", 0);
+        com.lti.flipfit.entity.GymCenter center = centerRepo.findById(cId)
+                .orElseThrow(() -> new com.lti.flipfit.exceptions.InvalidInputException("Center not found"));
 
-        return Arrays.asList(s1, s2);
+        List<Map<String, Object>> availabilityList = new ArrayList<>();
+
+        for (com.lti.flipfit.entity.GymSlot slot : center.getSlots()) {
+            if (!slot.getIsActive())
+                continue;
+
+            int bookedCount = bookingRepo.countBySlotAndBookingDate(slot, bookingDate);
+            int availableSeats = slot.getCapacity() - bookedCount;
+
+            Map<String, Object> slotDetails = new HashMap<>();
+            slotDetails.put("slotId", slot.getSlotId());
+            slotDetails.put("startTime", slot.getStartTime());
+            slotDetails.put("endTime", slot.getEndTime());
+            slotDetails.put("availableSeats", Math.max(0, availableSeats));
+            slotDetails.put("price", slot.getPrice());
+
+            availabilityList.add(slotDetails);
+        }
+
+        return availabilityList;
     }
 
     /**
-     * Retrieves the profile of a customer.
-     *
-     * @param customerId The ID of the customer.
-     * @return The GymCustomer entity.
+     * @methodname - getProfile
+     * @description - Retrieves the profile of a customer.
+     * @param - customerId The ID of the customer.
+     * @return - The GymCustomer entity.
      * @throws UserNotFoundException if the customer is not found.
      */
     @Override
@@ -75,30 +90,10 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
     }
 
     /**
-     * Validates the membership status of a customer.
-     *
-     * @param customerId The ID of the customer.
-     * @return true if the membership is active, false otherwise.
-     */
-    @Override
-    public boolean validateMembership(Long customerId) {
-        logger.info("Validating membership for customer ID: {}", customerId);
-        GymCustomer customer = getProfile(customerId);
-
-        String status = customer.getMembershipStatus();
-        boolean isValid = status != null &&
-                !"EXPIRED".equalsIgnoreCase(status) &&
-                !"INACTIVE".equalsIgnoreCase(status);
-
-        logger.debug("Membership validity for customer ID {}: {}", customerId, isValid);
-        return isValid;
-    }
-
-    /**
-     * Retrieves all bookings made by a customer.
-     *
-     * @param customerId The ID of the customer.
-     * @return A list of GymBooking entities.
+     * @methodname - getCustomerBookings
+     * @description - Retrieves all bookings made by a customer.
+     * @param - customerId The ID of the customer.
+     * @return - A list of GymBooking entities.
      */
     @Override
     public List<GymBooking> getCustomerBookings(Long customerId) {
@@ -108,9 +103,9 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
     }
 
     /**
-     * Retrieves all active gym centers.
-     *
-     * @return A list of active GymCenter entities.
+     * @methodname - viewAllGyms
+     * @description - Retrieves all active gym centers.
+     * @return - A list of active GymCenter entities.
      */
     @Override
     public List<com.lti.flipfit.entity.GymCenter> viewAllGyms() {

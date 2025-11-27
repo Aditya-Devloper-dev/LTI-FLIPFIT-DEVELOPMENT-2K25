@@ -28,11 +28,11 @@ public class FlipFitGymWaitlistController {
     }
 
     /**
-     * Adds a customer to the waitlist for a specific slot.
-     *
-     * @param customerId The ID of the customer.
-     * @param slotId     The ID of the slot.
-     * @return A response entity containing the waitlist status.
+     * @methodname - joinWaitlist
+     * @description - Adds a customer to the waitlist for a specific slot.
+     * @param - customerId The ID of the customer.
+     * @param - slotId The ID of the slot.
+     * @return - A response entity containing the waitlist status.
      */
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     public ResponseEntity<String> joinWaitlist(
@@ -47,10 +47,10 @@ public class FlipFitGymWaitlistController {
     }
 
     /**
-     * Cancels a waitlist entry.
-     *
-     * @param waitlistId The unique identifier of the waitlist entry.
-     * @return A response entity containing the cancellation status.
+     * @methodname - cancelWaitlist
+     * @description - Cancels a waitlist entry.
+     * @param - waitlistId The unique identifier of the waitlist entry.
+     * @return - A response entity containing the cancellation status.
      */
     @RequestMapping(value = "/cancel/{waitlistId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> cancelWaitlist(@PathVariable String waitlistId) {
@@ -62,10 +62,10 @@ public class FlipFitGymWaitlistController {
     }
 
     /**
-     * Fetches all waitlist entries for a customer.
-     *
-     * @param customerId The ID of the customer.
-     * @return A response entity containing a list of waitlist entries.
+     * @methodname - getWaitlistByCustomer
+     * @description - Fetches all waitlist entries for a customer.
+     * @param - customerId The ID of the customer.
+     * @return - A response entity containing a list of waitlist entries.
      */
     @RequestMapping(value = "/view/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymWaitlist>> getWaitlistByCustomer(@PathVariable Long customerId) {

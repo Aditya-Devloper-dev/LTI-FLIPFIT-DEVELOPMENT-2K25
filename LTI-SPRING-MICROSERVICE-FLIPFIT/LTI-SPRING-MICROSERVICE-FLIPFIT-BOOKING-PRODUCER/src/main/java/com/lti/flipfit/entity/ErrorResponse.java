@@ -3,10 +3,9 @@ package com.lti.flipfit.entity;
 import java.time.LocalDateTime;
 
 /**
- * Author      :
- * Version     : 1.0
- * Description : DTO returned for all error responses. Ensures consistent structure
- *               containing message, errorCode, timestamp, and success flag.
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing Error Response.
  */
 public class ErrorResponse {
 
@@ -15,7 +14,8 @@ public class ErrorResponse {
     private String errorCode;
     private String details;
 
-    public ErrorResponse() { }
+    public ErrorResponse() {
+    }
 
     public ErrorResponse(LocalDateTime timestamp, String message, String errorCode, String details) {
         this.timestamp = timestamp;

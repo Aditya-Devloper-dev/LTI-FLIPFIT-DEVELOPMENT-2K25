@@ -3,6 +3,11 @@ package com.lti.flipfit.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing Gym Payment.
+ */
 @Entity
 @Table(name = "gympayment")
 @Data

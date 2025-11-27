@@ -1,15 +1,14 @@
 package com.lti.flipfit.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+
 /**
  * Author :
  * Version : 1.0
  * Description : Entity class representing Gym Waitlist.
  */
-
-import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "gymwaitlist")
 @Data
