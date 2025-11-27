@@ -22,6 +22,14 @@ public class FlipFitGymNotificationController {
         this.service = service;
     }
 
+    /**
+     * @methodname - sendNotification
+     * @description - Sends a notification to a user.
+     * @param - receiverId The ID of the receiver.
+     * @param - message The notification message.
+     * @param - type The type of notification.
+     * @return - True if notification is sent successfully, false otherwise.
+     */
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public boolean sendNotification(@RequestParam String receiverId,
             @RequestParam String message,

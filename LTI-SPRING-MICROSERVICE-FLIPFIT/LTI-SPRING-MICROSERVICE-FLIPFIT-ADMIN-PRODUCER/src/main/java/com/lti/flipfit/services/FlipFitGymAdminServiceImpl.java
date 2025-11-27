@@ -10,6 +10,7 @@ import com.lti.flipfit.exceptions.slots.SlotNotFoundException;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+import com.lti.flipfit.client.FlipFitGymBookingClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,13 +34,16 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
     private final FlipFitGymCenterRepository centerRepo;
     private final FlipFitGymSlotRepository slotRepo;
     private final FlipFitGymOwnerRepository ownerRepo;
+    private final FlipFitGymBookingClient bookingClient;
 
     public FlipFitGymAdminServiceImpl(FlipFitGymCenterRepository centerRepo,
             FlipFitGymSlotRepository slotRepo,
-            FlipFitGymOwnerRepository ownerRepo) {
+            FlipFitGymOwnerRepository ownerRepo,
+            FlipFitGymBookingClient bookingClient) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
         this.ownerRepo = ownerRepo;
+        this.bookingClient = bookingClient;
     }
 
     /**
@@ -226,5 +230,18 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         }
         slotRepo.deleteById(slotId);
         logger.info("Slot deleted with ID: {}", slotId);
+    }
+
+    /**
+     * Retrieves payments based on filter type.
+     *
+     * @param filterType The type of filter (ALL, MONTHLY, WEEKLY, DAILY).
+     * @param date       The specific date for DAILY filter (YYYY-MM-DD).
+     * @return List of GymPayment objects.
+     */
+    @Override
+    public List<com.lti.flipfit.entity.GymPayment> viewPayments(String filterType, String date) {
+        logger.info("Fetching payments via Feign Client with filter: {} and date: {}", filterType, date);
+        return bookingClient.viewPayments(filterType, date);
     }
 }

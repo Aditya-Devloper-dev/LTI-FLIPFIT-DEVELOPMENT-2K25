@@ -58,16 +58,6 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
     }
 
     @Override
-    public boolean validateMembership(Long customerId) {
-        logger.info("Validating membership for customer ID: {}", customerId);
-        GymCustomer customer = getProfile(customerId);
-        // Simple validation: check if status is not "EXPIRED" or "INACTIVE"
-        // You can add more complex logic here
-        String status = customer.getMembershipStatus();
-        return status != null && !"EXPIRED".equalsIgnoreCase(status) && !"INACTIVE".equalsIgnoreCase(status);
-    }
-
-    @Override
     public List<GymBooking> getCustomerBookings(Long customerId) {
         logger.info("Fetching bookings for customer ID: {}", customerId);
         GymCustomer customer = getProfile(customerId);

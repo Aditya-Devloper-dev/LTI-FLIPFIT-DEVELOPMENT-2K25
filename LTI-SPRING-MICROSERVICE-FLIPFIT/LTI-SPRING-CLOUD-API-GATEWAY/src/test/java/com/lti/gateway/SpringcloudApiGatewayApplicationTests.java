@@ -1,10 +1,10 @@
-package com.lti.flipfit.app;
+package com.lti.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LtiEurekaDemoProducerApplicationTests {
+class SpringcloudApiGatewayApplicationTests {
 
 	@Test
 	void contextLoads() {

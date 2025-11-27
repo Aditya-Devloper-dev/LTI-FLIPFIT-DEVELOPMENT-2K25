@@ -39,4 +39,7 @@ public class GymSlot {
     private String status;
     @Column(name = "is_active")
     private Boolean isActive = false;
+
+    @Column(name = "price")
+    private Double price;
 }
