@@ -26,7 +26,7 @@ spring:
         - id: owner-service
           uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-OWNER-PRODUCER
           predicates:
-            - Path=/owner/**
+            - Path=/owner/**, /gym-center/**
         - id: user-service
           uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-USER-PRODUCER
           predicates:

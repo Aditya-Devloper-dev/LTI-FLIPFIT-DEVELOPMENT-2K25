@@ -14,12 +14,22 @@ import java.util.List;
 public interface FlipFitGymOwnerService {
 
     /**
-     * @methodname - approveBooking
-     * @description - Approves a booking by its ID.
-     * @param - bookingId The ID of the booking to approve.
-     * @return - True if approval was successful.
+     * @methodname - toggleCenterActive
+     * @description - Toggles the active status of a center.
+     * @param - centerId The ID of the center.
+     * @param - ownerId The ID of the owner.
+     * @return - The new active status (true/false).
      */
-    boolean approveBooking(Long bookingId);
+    boolean toggleCenterActive(Long centerId, Long ownerId);
+
+    /**
+     * @methodname - toggleSlotActive
+     * @description - Toggles the active status of a slot.
+     * @param - slotId The ID of the slot.
+     * @param - ownerId The ID of the owner.
+     * @return - The new active status (true/false).
+     */
+    boolean toggleSlotActive(Long slotId, Long ownerId);
 
     /**
      * @methodname - addCenter

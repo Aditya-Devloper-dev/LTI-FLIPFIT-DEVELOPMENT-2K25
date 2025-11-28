@@ -1,11 +1,5 @@
 package com.lti.flipfit.entity;
 
-/**
- * Author :
- * Version : 1.0
- * Description : Entity class representing Gym Center.
- */
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,6 +8,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing Gym Center.
+ */
 @Entity
 @Table(name = "gymcenter")
 @Data
@@ -53,4 +52,7 @@ public class GymCenter {
 
     @Column(name = "is_active")
     private Boolean isActive = false;
+
+    @Column(name = "is_approved")
+    private Boolean isApproved = false;
 }

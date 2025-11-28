@@ -39,6 +39,9 @@ public class GymSlot {
     @Column(name = "is_active")
     private Boolean isActive = false;
 
+    @Column(name = "is_approved")
+    private Boolean isApproved = false;
+
     @Column(name = "price")
     private Double price;
 }
