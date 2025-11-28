@@ -16,15 +16,6 @@ import java.util.List;
 public interface FlipFitGymBookingRepository extends JpaRepository<GymBooking, Long> {
 
     /**
-     * Checks if a booking exists for a specific customer and slot.
-     *
-     * @param customer The customer entity.
-     * @param slot     The slot entity.
-     * @return True if a booking exists, false otherwise.
-     */
-    boolean existsByCustomerAndSlot(GymCustomer customer, GymSlot slot);
-
-    /**
      * Finds all bookings for a specific customer.
      *
      * @param customer The customer entity.

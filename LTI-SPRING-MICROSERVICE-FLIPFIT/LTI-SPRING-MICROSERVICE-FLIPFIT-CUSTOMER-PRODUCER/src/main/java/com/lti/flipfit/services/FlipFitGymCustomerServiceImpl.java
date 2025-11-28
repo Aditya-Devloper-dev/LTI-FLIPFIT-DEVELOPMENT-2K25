@@ -3,11 +3,11 @@ package com.lti.flipfit.services;
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.exceptions.user.UserNotFoundException;
-import com.lti.flipfit.repository.FlipFitGymBookingRepository;
 import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
-import com.lti.flipfit.repository.FlipFitGymCenterRepository;
+import com.lti.flipfit.dao.FlipFitGymCustomerDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,15 +24,12 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
     private static final Logger logger = LoggerFactory.getLogger(FlipFitGymCustomerServiceImpl.class);
 
     private final FlipFitGymCustomerRepository customerRepo;
-    private final FlipFitGymBookingRepository bookingRepo;
-    private final FlipFitGymCenterRepository centerRepo;
+    private final FlipFitGymCustomerDAO customerDAO;
 
     public FlipFitGymCustomerServiceImpl(FlipFitGymCustomerRepository customerRepo,
-            FlipFitGymBookingRepository bookingRepo,
-            FlipFitGymCenterRepository centerRepo) {
+            FlipFitGymCustomerDAO customerDAO) {
         this.customerRepo = customerRepo;
-        this.bookingRepo = bookingRepo;
-        this.centerRepo = centerRepo;
+        this.customerDAO = customerDAO;
     }
 
     /**
@@ -44,23 +41,20 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @return - A list of maps containing slot details and availability.
      */
     @Override
+    @Cacheable(value = "gymAvailability")
     public List<Map<String, Object>> viewAvailability(String centerId, String date) {
         logger.info("Checking availability for center ID: {} on date: {}", centerId, date);
 
         Long cId = Long.parseLong(centerId);
         java.time.LocalDate bookingDate = java.time.LocalDate.parse(date);
 
-        com.lti.flipfit.entity.GymCenter center = centerRepo.findById(cId)
-                .orElseThrow(() -> new com.lti.flipfit.exceptions.InvalidInputException("Center not found"));
-
+        List<Object[]> results = customerDAO.findSlotAvailability(cId, bookingDate);
         List<Map<String, Object>> availabilityList = new ArrayList<>();
 
-        for (com.lti.flipfit.entity.GymSlot slot : center.getSlots()) {
-            if (!slot.getIsActive())
-                continue;
-
-            int bookedCount = bookingRepo.countBySlotAndBookingDate(slot, bookingDate);
-            int availableSeats = slot.getCapacity() - bookedCount;
+        for (Object[] result : results) {
+            com.lti.flipfit.entity.GymSlot slot = (com.lti.flipfit.entity.GymSlot) result[0];
+            Long bookedCount = (Long) result[1];
+            int availableSeats = slot.getCapacity() - bookedCount.intValue();
 
             Map<String, Object> slotDetails = new HashMap<>();
             slotDetails.put("slotId", slot.getSlotId());
@@ -83,6 +77,7 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @throws UserNotFoundException if the customer is not found.
      */
     @Override
+    @Cacheable(value = "customerProfile", key = "#customerId")
     public GymCustomer getProfile(Long customerId) {
         logger.info("Fetching profile for customer ID: {}", customerId);
         return customerRepo.findById(customerId)
@@ -96,10 +91,10 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @return - A list of GymBooking entities.
      */
     @Override
+    @Cacheable(value = "customerBookings", key = "#customerId")
     public List<GymBooking> getCustomerBookings(Long customerId) {
         logger.info("Fetching bookings for customer ID: {}", customerId);
-        GymCustomer customer = getProfile(customerId);
-        return bookingRepo.findByCustomer(customer);
+        return customerDAO.findBookingsByCustomerId(customerId);
     }
 
     /**
@@ -108,9 +103,10 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @return - A list of active GymCenter entities.
      */
     @Override
+    @Cacheable(value = "gymCenters")
     public List<com.lti.flipfit.entity.GymCenter> viewAllGyms() {
         logger.info("Fetching all active gym centers");
-        return centerRepo.findByIsActiveTrue();
+        return customerDAO.findActiveGyms();
     }
 
 }

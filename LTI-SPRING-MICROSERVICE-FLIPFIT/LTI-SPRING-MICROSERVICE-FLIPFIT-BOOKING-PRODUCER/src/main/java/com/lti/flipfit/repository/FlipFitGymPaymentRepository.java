@@ -12,6 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FlipFitGymPaymentRepository extends JpaRepository<GymPayment, String> {
 
-    java.util.List<GymPayment> findByBookingCreatedAtBetween(java.time.LocalDateTime startDate,
-            java.time.LocalDateTime endDate);
 }

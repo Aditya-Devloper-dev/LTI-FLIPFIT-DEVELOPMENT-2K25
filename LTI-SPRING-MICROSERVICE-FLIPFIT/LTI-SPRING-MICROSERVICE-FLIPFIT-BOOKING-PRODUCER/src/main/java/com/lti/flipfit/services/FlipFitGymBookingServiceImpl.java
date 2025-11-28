@@ -1,19 +1,17 @@
 package com.lti.flipfit.services;
 
 import com.lti.flipfit.client.PaymentClient;
-import com.lti.flipfit.entity.GymBooking;
-import com.lti.flipfit.entity.GymCenter;
-import com.lti.flipfit.entity.GymCustomer;
-import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.dao.FlipFitGymBookingDAO;
+import com.lti.flipfit.entity.*;
+import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.exceptions.bookings.*;
-import com.lti.flipfit.exceptions.slots.SlotFullException;
-import com.lti.flipfit.repository.FlipFitGymBookingRepository;
-import com.lti.flipfit.repository.FlipFitGymCenterRepository;
-import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
-import com.lti.flipfit.repository.FlipFitGymSlotRepository;
-import com.lti.flipfit.repository.FlipFitGymPaymentRepository;
+import com.lti.flipfit.repository.*;
+import com.lti.flipfit.validator.BookingValidator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,15 +35,15 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
     @Autowired
     private FlipFitGymBookingRepository bookingRepo;
     @Autowired
-    private FlipFitGymCustomerRepository customerRepo;
-    @Autowired
     private FlipFitGymSlotRepository slotRepo;
-    @Autowired
-    private FlipFitGymCenterRepository centerRepo;
     @Autowired
     private FlipFitGymPaymentRepository paymentRepo;
     @Autowired
     private PaymentClient paymentClient;
+    @Autowired
+    private FlipFitGymBookingDAO bookingDAO;
+    @Autowired
+    private BookingValidator bookingValidator;
 
     /**
      * @methodname - bookSlot
@@ -55,6 +53,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      * @return - A success message with the booking ID.
      */
     @Override
+    @CacheEvict(value = "payments", allEntries = true)
     public String bookSlot(GymBooking booking) {
 
         // Extract IDs from incoming JSON
@@ -64,35 +63,14 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
         logger.info("Attempting to book slot {} at center {} for customer {}", slotId, centerId, customerId);
 
-        GymCustomer customer = customerRepo.findById(customerId)
-                .orElseThrow(() -> new InvalidBookingException("Invalid customerId"));
+        // Perform all validations
+        bookingValidator.validateBooking(booking);
 
-        GymSlot slot = slotRepo.findById(slotId)
-                .orElseThrow(() -> new InvalidBookingException("Invalid slotId"));
-
-        GymCenter center = centerRepo.findById(centerId)
-                .orElseThrow(() -> new InvalidBookingException("Invalid centerId"));
-
-        // Validate that the slot belongs to the center
-        if (!slot.getCenter().getCenterId().equals(centerId)) {
-            throw new InvalidBookingException("Slot " + slotId + " does not belong to center " + centerId);
-        }
-
-        // Check duplicate booking
-        if (bookingRepo.existsByCustomerAndSlot(customer, slot)) {
-            throw new BookingAlreadyExistsException("User already booked this slot");
-        }
-
-        // Check availability
-        if (slot.getAvailableSeats() <= 0) {
-            throw new SlotFullException("Slot is full");
-        }
+        // Entities are set in the validator
+        GymSlot slot = booking.getSlot();
 
         // Step 1: Initialize Booking with PENDING status
         // We do NOT decrement the seat yet.
-        booking.setCustomer(customer);
-        booking.setSlot(slot);
-        booking.setCenter(center);
         booking.setStatus("PENDING");
         booking.setCreatedAt(LocalDateTime.now());
         if (booking.getBookingDate() == null) {
@@ -106,11 +84,6 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         try {
             // Assuming default payment mode "CARD"
             String paymentMode = "CARD";
-
-            // Validate Slot Price
-            if (slot.getPrice() == null || slot.getPrice() <= 0) {
-                throw new InvalidBookingException("Slot price is not set or invalid.");
-            }
 
             ResponseEntity<String> response = paymentClient.processPayment(
                     String.valueOf(customerId),
@@ -155,6 +128,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "payments", allEntries = true)
     public String cancelBooking(Long bookingId) {
         logger.info("Attempting to cancel booking with ID: {}", bookingId);
 
@@ -206,12 +180,41 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      * @return - List of GymPayment objects.
      */
     @Override
+    @Cacheable(value = "payments", key = "{#filterType, #date}")
     public java.util.List<com.lti.flipfit.entity.GymPayment> viewPayments(String filterType, String date) {
-        // This method relies on paymentRepo which is now in Customer MS (conceptually).
-        // But the code still has paymentRepo injected.
-        // If we want to fully decouple, this should call Customer MS too.
-        // For now, I'll leave it as is if the DB is shared, otherwise it will fail.
-        // Given the task scope, I'll leave it but add a comment.
-        return paymentRepo.findAll();
+        if ("ALL".equalsIgnoreCase(filterType)) {
+            return paymentRepo.findAll();
+        }
+
+        LocalDate refDate;
+        try {
+            if (date != null && !date.isBlank()) {
+                refDate = LocalDate.parse(date);
+            } else {
+                refDate = LocalDate.now();
+            }
+        } catch (Exception e) {
+            throw new InvalidInputException("Invalid date format. Expected YYYY-MM-DD");
+        }
+
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime = refDate.atTime(23, 59, 59);
+
+        switch (filterType.toUpperCase()) {
+            case "DAILY":
+                startDateTime = refDate.atStartOfDay();
+                break;
+            case "WEEKLY":
+                startDateTime = refDate.minusDays(6).atStartOfDay();
+                break;
+            case "MONTHLY":
+                startDateTime = refDate.minusMonths(1).atStartOfDay();
+                break;
+            default:
+                throw new InvalidInputException("Invalid filter type. Allowed: ALL, DAILY, WEEKLY, MONTHLY");
+        }
+
+        logger.info("Fetching payments from {} to {}", startDateTime, endDateTime);
+        return bookingDAO.findPaymentsByDateRange(startDateTime, endDateTime);
     }
 }

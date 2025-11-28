@@ -18,6 +18,9 @@ import com.lti.flipfit.constants.PaymentModeType;
 @Service
 public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
+            .getLogger(FlipFitGymPaymentServiceImpl.class);
+
     @Autowired
     private FlipFitGymPaymentRepository paymentRepository;
 
@@ -37,6 +40,7 @@ public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
     @Override
     @Transactional
     public String processPayment(String customerId, Double amount, String paymentMode, Long bookingId) {
+        logger.info("Processing payment for bookingId: {} (Decoupled)", bookingId);
         // In a real scenario, we would validate the customerId against the User Service
         // here.
         // For now, we assume the Booking Service has already validated the user exists.
@@ -51,10 +55,8 @@ public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
         payment.setPaymentStatus("SUCCESS"); // Assuming immediate success for this demo
         payment.setTransactionId(UUID.randomUUID().toString());
 
-        // Set Booking
-        com.lti.flipfit.entity.GymBooking booking = new com.lti.flipfit.entity.GymBooking();
-        booking.setBookingId(bookingId);
-        payment.setBooking(booking);
+        // Set Booking ID directly
+        payment.setBookingId(bookingId);
 
         // We need to set the PaymentMode entity.
         // Ideally, we fetch it from a repository. For this implementation, we will
