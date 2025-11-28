@@ -5,10 +5,8 @@ import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.dao.FlipFitGymOwnerDAO;
-import com.lti.flipfit.exceptions.bookings.BookingNotFoundException;
 import com.lti.flipfit.exceptions.center.CenterNotFoundException;
 import com.lti.flipfit.exceptions.user.UserNotFoundException;
-import com.lti.flipfit.repository.FlipFitGymBookingRepository;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
@@ -35,38 +33,62 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
 
     private final FlipFitGymOwnerRepository ownerRepo;
     private final FlipFitGymCenterRepository centerRepo;
-    private final FlipFitGymBookingRepository bookingRepo;
     private final FlipFitGymSlotRepository slotRepo;
     private final FlipFitGymOwnerDAO ownerDAO;
 
     public FlipFitGymOwnerServiceImpl(FlipFitGymOwnerRepository ownerRepo,
-            FlipFitGymCenterRepository centerRepo,
-            FlipFitGymBookingRepository bookingRepo,
-            FlipFitGymSlotRepository slotRepo,
-            FlipFitGymOwnerDAO ownerDAO) {
+                                      FlipFitGymCenterRepository centerRepo,
+                                      FlipFitGymSlotRepository slotRepo,
+                                      FlipFitGymOwnerDAO ownerDAO) {
         this.ownerRepo = ownerRepo;
         this.centerRepo = centerRepo;
-        this.bookingRepo = bookingRepo;
         this.slotRepo = slotRepo;
         this.ownerDAO = ownerDAO;
     }
 
     /**
-     * @methodname - approveBooking
-     * @description - Approves a booking by its ID.
-     * @param - bookingId The ID of the booking to approve.
-     * @return - True if approval was successful.
+     * @methodname - toggleCenterActive
+     * @description - Toggles the active status of a center.
+     * @param - centerId The ID of the center.
+     * @param - ownerId The ID of the owner.
      */
     @Override
     @CacheEvict(value = "ownerCache", allEntries = true)
-    public boolean approveBooking(Long bookingId) {
-        logger.info("Approving booking with ID: {}", bookingId);
-        GymBooking booking = bookingRepo.findById(bookingId)
-                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+    public boolean toggleCenterActive(Long centerId, Long ownerId) {
+        logger.info("Toggling active status for center ID: {}", centerId);
+        GymCenter center = centerRepo.findById(centerId)
+                .orElseThrow(() -> new CenterNotFoundException("Center not found"));
 
-        booking.setApprovedByOwner(true);
-        bookingRepo.save(booking);
-        return true;
+        if (!center.getOwner().getOwnerId().equals(ownerId)) {
+            throw new UnauthorizedAccessException("You do not own this center");
+        }
+
+        center.setIsActive(!center.getIsActive());
+        centerRepo.save(center);
+        return center.getIsActive();
+    }
+
+    /**
+     * @methodname - toggleSlotActive
+     * @description - Toggles the active status of a slot.
+     * @param - slotId The ID of the slot.
+     * @param - ownerId The ID of the owner.
+     * @return - The new active status (true/false).
+     */
+    @Override
+    @CacheEvict(value = "centerSlots", allEntries = true)
+    public boolean toggleSlotActive(Long slotId, Long ownerId) {
+        logger.info("Toggling active status for slot ID: {}", slotId);
+        GymSlot slot = slotRepo.findById(slotId)
+                .orElseThrow(() -> new InvalidInputException("Slot not found"));
+
+        if (!slot.getCenter().getOwner().getOwnerId().equals(ownerId)) {
+            throw new UnauthorizedAccessException("You do not own this slot");
+        }
+
+        slot.setIsActive(!slot.getIsActive());
+        slotRepo.save(slot);
+        return slot.getIsActive();
     }
 
     /**
