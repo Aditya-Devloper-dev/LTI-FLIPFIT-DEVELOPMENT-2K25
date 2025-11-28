@@ -55,4 +55,7 @@ public class GymCenter implements Serializable {
 
     @Column(name = "is_active")
     private Boolean isActive = false;
+
+    @Column(name = "is_approved")
+    private Boolean isApproved = false;
 }

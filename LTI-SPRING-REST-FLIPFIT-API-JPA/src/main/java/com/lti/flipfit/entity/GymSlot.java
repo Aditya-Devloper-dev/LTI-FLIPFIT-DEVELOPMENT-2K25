@@ -1,15 +1,14 @@
 package com.lti.flipfit.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalTime;
+
 /**
  * Author :
  * Version : 1.0
  * Description : Entity class representing Gym Slot.
  */
-
-import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalTime;
-
 @Entity
 @Table(name = "gymslot")
 @Data
@@ -39,6 +38,9 @@ public class GymSlot {
     private String status;
     @Column(name = "is_active")
     private Boolean isActive = false;
+
+    @Column(name = "is_approved")
+    private Boolean isApproved = false;
 
     @Column(name = "price")
     private Double price;

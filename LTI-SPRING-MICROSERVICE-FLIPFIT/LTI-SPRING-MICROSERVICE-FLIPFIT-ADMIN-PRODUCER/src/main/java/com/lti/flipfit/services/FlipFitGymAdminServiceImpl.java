@@ -11,13 +11,17 @@ import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import com.lti.flipfit.client.FlipFitGymBookingClient;
+import com.lti.flipfit.dao.FlipFitGymAdminDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
 import java.util.List;
+
+import static com.lti.flipfit.utils.TimeUtils.timesOverlap;
 
 /**
  * Author : Shiny Sunaina
@@ -35,15 +39,18 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
     private final FlipFitGymSlotRepository slotRepo;
     private final FlipFitGymOwnerRepository ownerRepo;
     private final FlipFitGymBookingClient bookingClient;
+    private final FlipFitGymAdminDAO adminDAO;
 
     public FlipFitGymAdminServiceImpl(FlipFitGymCenterRepository centerRepo,
             FlipFitGymSlotRepository slotRepo,
             FlipFitGymOwnerRepository ownerRepo,
-            FlipFitGymBookingClient bookingClient) {
+            FlipFitGymBookingClient bookingClient,
+            FlipFitGymAdminDAO adminDAO) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
         this.ownerRepo = ownerRepo;
         this.bookingClient = bookingClient;
+        this.adminDAO = adminDAO;
     }
 
     /**
@@ -54,12 +61,13 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "pendingSlots", allEntries = true)
     public String approveSlot(Long slotId) {
         GymSlot slot = slotRepo.findById(slotId)
                 .orElseThrow(() -> new SlotNotFoundException("Slot not found with ID: " + slotId));
 
-        if (slot.getIsActive()) {
-            return "Slot is already active.";
+        if (Boolean.TRUE.equals(slot.getIsApproved())) {
+            return "Slot is already approved.";
         }
 
         // Validate time overlap with other ACTIVE slots
@@ -74,9 +82,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
             throw new SlotAlreadyExistsException("An active slot already exists in this time range");
         }
 
-        slot.setIsActive(true);
-        slot.setStatus("AVAILABLE");
-        slotRepo.save(slot);
+        adminDAO.approveSlot(slotId);
         logger.info("Slot approved with ID: {}", slotId);
         return "Slot approved successfully.";
     }
@@ -88,9 +94,10 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of pending GymSlot objects.
      */
     @Override
+    @Cacheable(value = "pendingSlots", key = "#centerId")
     public List<GymSlot> getPendingSlots(Long centerId) {
         logger.info("Fetching pending slots for center ID: {}", centerId);
-        return slotRepo.findByCenterCenterIdAndIsActive(centerId, false);
+        return adminDAO.findPendingSlots(centerId);
     }
 
     /**
@@ -99,6 +106,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of all GymCenter objects.
      */
     @Override
+    @Cacheable(value = "gymCenters")
     public List<GymCenter> getAllCenters() {
         logger.info("Fetching all centers");
         return centerRepo.findAll();
@@ -112,24 +120,12 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @throws CenterNotFoundException if the center is not found.
      */
     @Override
+    @Cacheable(value = "gymCenter", key = "#centerId")
     public GymCenter getCenterById(Long centerId) {
         logger.info("Fetching center with ID: {}", centerId);
         return centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException(
                         "Center " + centerId + " not found"));
-    }
-
-    /**
-     * Helper method to check if two time ranges overlap.
-     * 
-     * @param s1 Start time of first range.
-     * @param e1 End time of first range.
-     * @param s2 Start time of second range.
-     * @param e2 End time of second range.
-     * @return true if they overlap, false otherwise.
-     */
-    private boolean timesOverlap(LocalTime s1, LocalTime e1, LocalTime s2, LocalTime e2) {
-        return s1.isBefore(e2) && s2.isBefore(e1);
     }
 
     /**
@@ -140,6 +136,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "pendingOwners", allEntries = true)
     public String approveOwner(Long ownerId) {
         GymOwner owner = ownerRepo.findById(ownerId)
                 .orElseThrow(() -> new InvalidInputException("Owner not found with ID: " + ownerId));
@@ -148,8 +145,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
             return "Owner is already approved.";
         }
 
-        owner.setApproved(true);
-        ownerRepo.save(owner);
+        adminDAO.approveOwner(ownerId);
         logger.info("Owner approved with ID: {}", ownerId);
         return "Owner approved successfully.";
     }
@@ -160,11 +156,10 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of pending GymOwner objects.
      */
     @Override
+    @Cacheable(value = "pendingOwners")
     public List<GymOwner> getPendingOwners() {
         logger.info("Fetching pending owners");
-        return ownerRepo.findAll().stream()
-                .filter(owner -> !owner.isApproved())
-                .toList();
+        return adminDAO.findPendingOwners();
     }
 
     /**
@@ -175,16 +170,16 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = { "pendingCenters", "gymCenters" }, allEntries = true)
     public String approveCenter(Long centerId) {
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center not found with ID: " + centerId));
 
-        if (center.getIsActive()) {
-            return "Center is already active.";
+        if (Boolean.TRUE.equals(center.getIsApproved())) {
+            return "Center is already approved.";
         }
 
-        center.setIsActive(true);
-        centerRepo.save(center);
+        adminDAO.approveCenter(centerId);
         logger.info("Center approved with ID: {}", centerId);
         return "Center approved successfully.";
     }
@@ -195,9 +190,10 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of pending GymCenter objects.
      */
     @Override
+    @Cacheable(value = "pendingCenters")
     public List<GymCenter> getPendingCenters() {
         logger.info("Fetching pending centers");
-        return centerRepo.findByIsActive(false);
+        return adminDAO.findPendingCenters();
     }
 
     /**
@@ -208,6 +204,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = { "gymCenters", "gymCenter" }, allEntries = true, key = "#centerId")
     public void deleteCenter(Long centerId) {
         if (!centerRepo.existsById(centerId)) {
             throw new CenterNotFoundException("Center not found with ID: " + centerId);
@@ -224,6 +221,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "pendingSlots", allEntries = true)
     public void deleteSlot(Long slotId) {
         if (!slotRepo.existsById(slotId)) {
             throw new SlotNotFoundException("Slot not found with ID: " + slotId);
@@ -240,6 +238,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of GymPayment objects.
      */
     @Override
+    @Cacheable(value = "adminPayments", key = "{#filterType, #date}")
     public List<com.lti.flipfit.entity.GymPayment> viewPayments(String filterType, String date) {
         logger.info("Fetching payments via Feign Client with filter: {} and date: {}", filterType, date);
         return bookingClient.viewPayments(filterType, date);

@@ -30,19 +30,39 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * @methodname - approveBooking
-     * @description - Marks a pending booking as approved by the gym owner.
-     * @param - bookingId The ID of the booking to approve.
+     * @methodname - toggleCenterActive
+     * @description - Toggles the active status of a center.
+     * @param - centerId The ID of the center.
+     * @param - ownerId The ID of the owner.
      * @return - A success message.
      */
-    @RequestMapping(value = "/approve-booking/{bookingId}", method = RequestMethod.POST)
-    public ResponseEntity<String> approveBooking(@PathVariable Long bookingId) {
-        logger.info("Received request to approve booking with ID: {}", bookingId);
-        if (bookingId == null) {
-            throw new InvalidInputException("Booking ID cannot be empty");
+    @RequestMapping(value = "/toggle-center-active/{centerId}/{ownerId}", method = RequestMethod.PUT)
+    public ResponseEntity<String> toggleCenterActive(@PathVariable Long centerId, @PathVariable Long ownerId) {
+        logger.info("Received request to toggle active status for center ID: {} by owner ID: {}", centerId, ownerId);
+        if (centerId == null || ownerId == null) {
+            throw new InvalidInputException("Center ID and Owner ID cannot be empty");
         }
-        service.approveBooking(bookingId);
-        return ResponseEntity.ok("Booking approved successfully");
+        boolean isActive = service.toggleCenterActive(centerId, ownerId);
+        String status = isActive ? "ACTIVE" : "INACTIVE";
+        return ResponseEntity.ok("Center is now " + status);
+    }
+
+    /**
+     * @methodname - toggleSlotActive
+     * @description - Toggles the active status of a slot.
+     * @param - slotId The ID of the slot.
+     * @param - ownerId The ID of the owner.
+     * @return - A success message.
+     */
+    @RequestMapping(value = "/toggle-slot-active/{slotId}/{ownerId}", method = RequestMethod.PUT)
+    public ResponseEntity<String> toggleSlotActive(@PathVariable Long slotId, @PathVariable Long ownerId) {
+        logger.info("Received request to toggle active status for slot ID: {} by owner ID: {}", slotId, ownerId);
+        if (slotId == null || ownerId == null) {
+            throw new InvalidInputException("Slot ID and Owner ID cannot be empty");
+        }
+        boolean isActive = service.toggleSlotActive(slotId, ownerId);
+        String status = isActive ? "ACTIVE" : "INACTIVE";
+        return ResponseEntity.ok("Slot is now " + status);
     }
 
     /**

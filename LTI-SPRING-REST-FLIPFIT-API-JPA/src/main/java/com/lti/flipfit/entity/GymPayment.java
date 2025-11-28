@@ -3,10 +3,19 @@ package com.lti.flipfit.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+
+/**
+ * Author :
+ * Version : 1.0
+ * Description : Entity class representing Gym Payment.
+ */
 @Entity
 @Table(name = "gympayment")
 @Data
-public class GymPayment {
+public class GymPayment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "payment_id")
