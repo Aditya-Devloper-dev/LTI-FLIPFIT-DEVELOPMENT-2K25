@@ -3,6 +3,8 @@ package com.lti.flipfit.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Author :
  * Version : 1.0
@@ -11,7 +13,9 @@ import lombok.Data;
 @Entity
 @Table(name = "gymowner")
 @Data
-public class GymOwner {
+public class GymOwner implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
