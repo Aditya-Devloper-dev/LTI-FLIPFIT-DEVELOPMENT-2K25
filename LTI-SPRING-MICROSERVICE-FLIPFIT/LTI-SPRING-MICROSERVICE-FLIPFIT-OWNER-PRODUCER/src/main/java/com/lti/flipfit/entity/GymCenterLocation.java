@@ -9,10 +9,14 @@ package com.lti.flipfit.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "gymcenterlocation")
 @Data
-public class GymCenterLocation {
+public class GymCenterLocation implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "address_id")

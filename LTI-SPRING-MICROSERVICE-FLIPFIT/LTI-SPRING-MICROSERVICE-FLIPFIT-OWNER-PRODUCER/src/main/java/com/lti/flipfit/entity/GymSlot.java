@@ -2,6 +2,8 @@ package com.lti.flipfit.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.io.Serializable;
 import java.time.LocalTime;
 
 /**
@@ -12,7 +14,8 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "gymslot")
 @Data
-public class GymSlot {
+public class GymSlot implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

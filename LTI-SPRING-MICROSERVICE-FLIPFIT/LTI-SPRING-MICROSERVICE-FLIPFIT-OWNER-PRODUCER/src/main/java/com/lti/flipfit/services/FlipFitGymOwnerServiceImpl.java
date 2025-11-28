@@ -4,6 +4,7 @@ import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.dao.FlipFitGymOwnerDAO;
 import com.lti.flipfit.exceptions.bookings.BookingNotFoundException;
 import com.lti.flipfit.exceptions.center.CenterNotFoundException;
 import com.lti.flipfit.exceptions.user.UserNotFoundException;
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 /**
  * Author :
@@ -34,15 +37,18 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     private final FlipFitGymCenterRepository centerRepo;
     private final FlipFitGymBookingRepository bookingRepo;
     private final FlipFitGymSlotRepository slotRepo;
+    private final FlipFitGymOwnerDAO ownerDAO;
 
     public FlipFitGymOwnerServiceImpl(FlipFitGymOwnerRepository ownerRepo,
             FlipFitGymCenterRepository centerRepo,
             FlipFitGymBookingRepository bookingRepo,
-            FlipFitGymSlotRepository slotRepo) {
+            FlipFitGymSlotRepository slotRepo,
+            FlipFitGymOwnerDAO ownerDAO) {
         this.ownerRepo = ownerRepo;
         this.centerRepo = centerRepo;
         this.bookingRepo = bookingRepo;
         this.slotRepo = slotRepo;
+        this.ownerDAO = ownerDAO;
     }
 
     /**
@@ -52,6 +58,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - True if approval was successful.
      */
     @Override
+    @CacheEvict(value = "ownerCache", allEntries = true)
     public boolean approveBooking(Long bookingId) {
         logger.info("Approving booking with ID: {}", bookingId);
         GymBooking booking = bookingRepo.findById(bookingId)
@@ -70,6 +77,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - The added GymCenter object.
      */
     @Override
+    @CacheEvict(value = "ownerCache", key = "#ownerId.toString()")
     public GymCenter addCenter(GymCenter center, Long ownerId) {
         logger.info("Adding center for owner ID: {}", ownerId);
         GymOwner owner = ownerRepo.findById(ownerId)
@@ -91,6 +99,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - The updated GymCenter object.
      */
     @Override
+    @CacheEvict(value = "ownerCache", key = "#ownerId.toString()")
     public GymCenter updateCenter(GymCenter center, Long ownerId) {
         logger.info("Updating center with ID: {}", center.getCenterId());
         if (center.getCenterId() == null) {
@@ -111,7 +120,6 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
             existingCenter.setCity(center.getCity());
         if (center.getContactNumber() != null)
             existingCenter.setContactNumber(center.getContactNumber());
-        // Don't update Owner or Admin unless explicitly needed logic is added
 
         return centerRepo.save(existingCenter);
     }
@@ -123,12 +131,13 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - A list of GymBooking objects.
      */
     @Override
+    @Cacheable(value = "ownerCache", key = "'bookings-' + #centerId")
     public List<GymBooking> viewAllBookings(Long centerId) {
         logger.info("Fetching all bookings for center ID: {}", centerId);
         if (!centerRepo.existsById(centerId)) {
             throw new CenterNotFoundException("Center not found");
         }
-        return bookingRepo.findByCenterCenterId(centerId);
+        return ownerDAO.findBookingsByCenterId(centerId);
     }
 
     /**
@@ -138,12 +147,13 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - A list of GymCenter objects.
      */
     @Override
+    @Cacheable(value = "ownerCache", key = "#ownerId.toString()")
     public List<GymCenter> getCentersByOwner(Long ownerId) {
         logger.info("Fetching centers for owner ID: {}", ownerId);
         if (!ownerRepo.existsById(ownerId)) {
             throw new UserNotFoundException("Owner not found");
         }
-        return centerRepo.findByOwnerOwnerId(ownerId);
+        return ownerDAO.findCentersByOwnerId(ownerId);
     }
 
     /**
@@ -154,6 +164,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @param - ownerId The ID of the owner.
      */
     @Override
+    @CacheEvict(value = "centerSlots", allEntries = true)
     public void addSlot(GymSlot slot, Long centerId, Long ownerId) {
         logger.info("Adding slot to center ID: {}", centerId);
 

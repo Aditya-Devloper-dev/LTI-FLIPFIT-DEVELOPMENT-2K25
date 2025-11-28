@@ -37,10 +37,10 @@ public class FlipFitGymCenterController {
      * @return - A list of GymSlot entities.
      */
     @RequestMapping(value = "/slots", method = RequestMethod.GET)
-    public Object getSlotsByDate(@RequestParam Long centerId,
+    public ResponseEntity<List<GymSlot>> getSlotsByDate(@RequestParam Long centerId,
             @RequestParam String date) {
         logger.info("Received request to get slots for center ID: {} on date: {}", centerId, date);
-        return service.getSlotsByDate(centerId, date);
+        return ResponseEntity.ok(service.getSlotsByDate(centerId, date));
     }
 
     /**
@@ -56,21 +56,5 @@ public class FlipFitGymCenterController {
             throw new InvalidInputException("Center ID cannot be empty");
         }
         return ResponseEntity.ok(service.getSlotsByCenterId(centerId));
-    }
-
-    /**
-     * @methodname - updateCenterInfo
-     * @description - Updates the provided center information for the given
-     *              centerId.
-     * @param - centerId The ID of the gym center.
-     * @param - center The updated GymCenter object.
-     * @return - True if update is successful, false otherwise.
-     */
-    @RequestMapping(value = "/update-center/{centerId}", method = RequestMethod.PUT)
-    public boolean updateCenterInfo(@PathVariable Long centerId,
-            @RequestBody GymCenter center) {
-        logger.info("Received request to update center info for center ID: {}", centerId);
-
-        return service.updateCenterInfo(centerId, center);
     }
 }

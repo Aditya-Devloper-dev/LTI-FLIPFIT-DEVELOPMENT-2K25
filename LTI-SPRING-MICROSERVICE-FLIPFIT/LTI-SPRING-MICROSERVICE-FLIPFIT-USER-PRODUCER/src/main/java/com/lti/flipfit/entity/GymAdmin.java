@@ -2,6 +2,7 @@ package com.lti.flipfit.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.io.Serializable;
 
 /**
  * Author :
@@ -11,7 +12,7 @@ import lombok.Data;
 @Entity
 @Table(name = "gymadmin")
 @Data
-public class GymAdmin {
+public class GymAdmin implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

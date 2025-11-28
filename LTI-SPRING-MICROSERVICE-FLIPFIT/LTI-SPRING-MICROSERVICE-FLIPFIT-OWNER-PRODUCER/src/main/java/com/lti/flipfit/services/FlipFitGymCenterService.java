@@ -6,7 +6,6 @@ package com.lti.flipfit.services;
  * Description : Service interface for managing Gym Centers.
  */
 
-import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 
 import java.util.List;
@@ -30,12 +29,4 @@ public interface FlipFitGymCenterService {
      */
     List<GymSlot> getSlotsByCenterId(Long centerId);
 
-    /**
-     * @methodname - updateCenterInfo
-     * @description - Updates gym center details after validating allowed fields.
-     * @param - centerId The ID of the center.
-     * @param - updatedCenter The updated center payload.
-     * @return - True if update is successful.
-     */
-    boolean updateCenterInfo(Long centerId, GymCenter updatedCenter);
 }
