@@ -4,9 +4,7 @@ import com.lti.flipfit.dao.FlipFitGymUserDAO;
 import com.lti.flipfit.entity.*;
 import com.lti.flipfit.exceptions.user.*;
 import com.lti.flipfit.exceptions.InvalidInputException;
-import com.lti.flipfit.repository.FlipFitGymAdminRepository;
-import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
-import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
+import com.lti.flipfit.repository.FlipFitGymRoleRepository;
 import com.lti.flipfit.repository.FlipFitGymUserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -14,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.lti.flipfit.constants.RoleType;
 import org.springframework.cache.annotation.*;
+import com.lti.flipfit.utils.UserNotificationHelper;
+import com.lti.flipfit.utils.UserRoleHelper;
+import com.lti.flipfit.validator.UserValidator;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -29,8 +29,6 @@ import java.util.*;
  * creation, and exception handling for all user operations.
  */
 
-import com.lti.flipfit.utils.ValidationUtils;
-
 @Service
 public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
@@ -43,16 +41,19 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     private FlipFitGymUserRepository userRepo;
 
     @Autowired
-    private FlipFitGymAdminRepository adminRepo;
-
-    @Autowired
-    private FlipFitGymCustomerRepository customerRepo;
-
-    @Autowired
-    private FlipFitGymOwnerRepository ownerRepo;
+    private FlipFitGymRoleRepository roleRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserValidator userValidator;
+
+    @Autowired
+    private UserRoleHelper userRoleHelper;
+
+    @Autowired
+    private UserNotificationHelper userNotificationHelper;
 
     /**
      * @methodname - register
@@ -73,44 +74,18 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     public String register(User user) {
         logger.info("Attempting to register user with email: {}", user.getEmail());
 
-        if (user.getFullName() == null || user.getFullName().isBlank()) {
-            throw new InvalidInputException("Full name is required");
-        }
+        userValidator.validateRegistration(user);
 
-        ValidationUtils.validateEmail(user.getEmail());
-
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new InvalidInputException("Password is required");
-        }
-
-        if (userDAO.checkUserExists(user.getEmail())) {
-            throw new DuplicateEmailException("Email already registered: " + user.getEmail());
-        }
-
-        if (userDAO.checkUserExistsByEmailAndPhone(
-                user.getEmail(), user.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("User already exists with this email and phone");
-        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // createdAt & updatedAt handled by @PrePersist / @PreUpdate
+
+        Role role = roleRepo.findById(user.getRole().getRoleId()).get();
+        user.setRole(role);
 
         userRepo.save(user);
 
-        if (RoleType.ADMIN.name().equals(user.getRole().getRoleId())) {
-            GymAdmin admin = new GymAdmin();
-            admin.setUser(user);
-            adminRepo.save(admin);
-        }
-        if (RoleType.CUSTOMER.name().equals(user.getRole().getRoleId())) {
-            GymCustomer customer = new GymCustomer();
-            customer.setUser(user);
-            customerRepo.save(customer);
-        }
-        if (RoleType.OWNER.name().equals(user.getRole().getRoleId())) {
-            GymOwner owner = new GymOwner();
-            owner.setUser(user);
-            ownerRepo.save(owner);
-        }
+        userRoleHelper.createUserRoleEntity(user);
+
+        userNotificationHelper.sendWelcomeNotification(user);
 
         return "User registered with ID: " + user.getUserId();
     }
@@ -131,13 +106,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     public Map<String, Object> login(String email, String password) {
         logger.info("Attempting login for email: {}", email);
 
-        if (email == null || email.isBlank()) {
-            throw new InvalidInputException("Email cannot be empty");
-        }
-
-        if (password == null || password.isBlank()) {
-            throw new InvalidInputException("Password cannot be empty");
-        }
+        userValidator.validateLogin(email, password);
 
         User foundUser = Optional.ofNullable(userDAO.findUserByEmail(email))
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
@@ -168,6 +137,8 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @CacheEvict(value = "allUsers", allEntries = true)
     public String updateProfile(Long userId, User updatedData) {
         logger.info("Updating profile for user ID: {}", userId);
+
+        userValidator.validateUpdateProfile(userId, updatedData);
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
