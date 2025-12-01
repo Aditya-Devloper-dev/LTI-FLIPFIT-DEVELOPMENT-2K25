@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlipFitGymPaymentRepository extends JpaRepository<GymPayment, String> {
+    java.util.Optional<GymPayment> findByBookingId(Long bookingId);
 }

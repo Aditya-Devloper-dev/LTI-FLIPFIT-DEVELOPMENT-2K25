@@ -8,8 +8,8 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.*;
 import com.lti.flipfit.exceptions.center.*;
-import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.repository.*;
+import com.lti.flipfit.validator.CenterValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,11 +26,14 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
 
     private final FlipFitGymCenterRepository centerRepo;
     private final FlipFitGymSlotRepository slotRepo;
+    private final CenterValidator centerValidator;
 
     public FlipFitGymCenterServiceImpl(FlipFitGymCenterRepository centerRepo,
-            FlipFitGymSlotRepository slotRepo) {
+            FlipFitGymSlotRepository slotRepo,
+            CenterValidator centerValidator) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
+        this.centerValidator = centerValidator;
     }
 
     /**
@@ -46,21 +49,10 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
     public List<GymSlot> getSlotsByDate(Long centerId, String date) {
         logger.info("Fetching slots for center ID: {} on date: {}", centerId, date);
 
-        if (date == null || date.isBlank()) {
-            throw new InvalidInputException("Date cannot be empty");
-        }
-
-        try {
-        } catch (Exception e) {
-            throw new InvalidInputException("Invalid date format. Expected yyyy-MM-dd");
-        }
-
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));
 
-        if (!Boolean.TRUE.equals(center.getIsActive())) {
-            throw new CenterUpdateNotAllowedException("Center is inactive");
-        }
+        centerValidator.validateGetSlotsByDate(date, center);
 
         List<GymSlot> slots = slotRepo.findByCenterCenterId(centerId);
 

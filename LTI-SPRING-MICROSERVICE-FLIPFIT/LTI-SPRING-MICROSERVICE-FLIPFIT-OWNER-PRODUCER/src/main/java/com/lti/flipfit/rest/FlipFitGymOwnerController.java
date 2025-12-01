@@ -3,7 +3,6 @@ package com.lti.flipfit.rest;
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
-import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymOwnerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +38,6 @@ public class FlipFitGymOwnerController {
     @RequestMapping(value = "/toggle-center-active/{centerId}/{ownerId}", method = RequestMethod.PUT)
     public ResponseEntity<String> toggleCenterActive(@PathVariable Long centerId, @PathVariable Long ownerId) {
         logger.info("Received request to toggle active status for center ID: {} by owner ID: {}", centerId, ownerId);
-        if (centerId == null || ownerId == null) {
-            throw new InvalidInputException("Center ID and Owner ID cannot be empty");
-        }
         boolean isActive = service.toggleCenterActive(centerId, ownerId);
         String status = isActive ? "ACTIVE" : "INACTIVE";
         return ResponseEntity.ok("Center is now " + status);
@@ -57,9 +53,6 @@ public class FlipFitGymOwnerController {
     @RequestMapping(value = "/toggle-slot-active/{slotId}/{ownerId}", method = RequestMethod.PUT)
     public ResponseEntity<String> toggleSlotActive(@PathVariable Long slotId, @PathVariable Long ownerId) {
         logger.info("Received request to toggle active status for slot ID: {} by owner ID: {}", slotId, ownerId);
-        if (slotId == null || ownerId == null) {
-            throw new InvalidInputException("Slot ID and Owner ID cannot be empty");
-        }
         boolean isActive = service.toggleSlotActive(slotId, ownerId);
         String status = isActive ? "ACTIVE" : "INACTIVE";
         return ResponseEntity.ok("Slot is now " + status);
@@ -77,10 +70,6 @@ public class FlipFitGymOwnerController {
             @PathVariable Long ownerId,
             @RequestBody GymCenter center) {
         logger.info("Received request to add center for owner ID: {}", ownerId);
-
-        if (ownerId == null) {
-            throw new InvalidInputException("Owner ID cannot be empty");
-        }
         return ResponseEntity.ok(service.addCenter(center, ownerId));
     }
 
@@ -98,10 +87,6 @@ public class FlipFitGymOwnerController {
             @PathVariable Long ownerId,
             @RequestBody GymCenter center) {
         logger.info("Received request to update center with ID: {} for owner ID: {}", centerId, ownerId);
-
-        if (centerId == null || ownerId == null) {
-            throw new InvalidInputException("Center ID and Owner ID cannot be empty");
-        }
         center.setCenterId(centerId); // Ensure ID is set from path
         return ResponseEntity.ok(service.updateCenter(center, ownerId));
     }
@@ -115,9 +100,6 @@ public class FlipFitGymOwnerController {
     @RequestMapping(value = "/all-bookings/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymBooking>> viewAllBookings(@PathVariable Long centerId) {
         logger.info("Received request to view all bookings for center ID: {}", centerId);
-        if (centerId == null) {
-            throw new InvalidInputException("Center ID cannot be empty");
-        }
         return ResponseEntity.ok(service.viewAllBookings(centerId));
     }
 
@@ -130,9 +112,6 @@ public class FlipFitGymOwnerController {
     @RequestMapping(value = "/centers/{ownerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymCenter>> getCentersByOwner(@PathVariable Long ownerId) {
         logger.info("Received request to get centers for owner ID: {}", ownerId);
-        if (ownerId == null) {
-            throw new InvalidInputException("Owner ID cannot be empty");
-        }
         return ResponseEntity.ok(service.getCentersByOwner(ownerId));
     }
 
@@ -148,9 +127,6 @@ public class FlipFitGymOwnerController {
     public ResponseEntity<String> addSlot(@PathVariable Long centerId, @PathVariable Long ownerId,
             @RequestBody GymSlot slot) {
         logger.info("Received request to add slot to center ID: {} for owner ID: {}", centerId, ownerId);
-        if (centerId == null || ownerId == null) {
-            throw new InvalidInputException("Center ID and Owner ID cannot be empty");
-        }
         service.addSlot(slot, centerId, ownerId);
         return ResponseEntity.ok("Slot added successfully. Waiting for Admin approval.");
     }

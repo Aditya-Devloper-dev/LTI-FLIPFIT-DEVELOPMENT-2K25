@@ -2,7 +2,6 @@ package com.lti.flipfit.rest;
 
 import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
-import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymCenterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +51,6 @@ public class FlipFitGymCenterController {
     @RequestMapping(value = "/slots/{centerId}", method = RequestMethod.GET)
     public ResponseEntity<List<GymSlot>> getSlotsByCenterId(@PathVariable Long centerId) {
         logger.info("Received request to get slots for center ID: {}", centerId);
-        if (centerId == null) {
-            throw new InvalidInputException("Center ID cannot be empty");
-        }
         return ResponseEntity.ok(service.getSlotsByCenterId(centerId));
     }
 }

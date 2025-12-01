@@ -10,9 +10,10 @@ import com.lti.flipfit.exceptions.user.UserNotFoundException;
 import com.lti.flipfit.repository.FlipFitGymCenterRepository;
 import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
+import com.lti.flipfit.repository.FlipFitGymBookingRepository;
+import com.lti.flipfit.validator.OwnerValidator;
 
 import com.lti.flipfit.exceptions.InvalidInputException;
-import com.lti.flipfit.exceptions.UnauthorizedAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Author :
@@ -35,15 +37,21 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     private final FlipFitGymCenterRepository centerRepo;
     private final FlipFitGymSlotRepository slotRepo;
     private final FlipFitGymOwnerDAO ownerDAO;
+    private final OwnerValidator ownerValidator;
+    private final FlipFitGymBookingRepository bookingRepo;
 
     public FlipFitGymOwnerServiceImpl(FlipFitGymOwnerRepository ownerRepo,
-                                      FlipFitGymCenterRepository centerRepo,
-                                      FlipFitGymSlotRepository slotRepo,
-                                      FlipFitGymOwnerDAO ownerDAO) {
+            FlipFitGymCenterRepository centerRepo,
+            FlipFitGymSlotRepository slotRepo,
+            FlipFitGymOwnerDAO ownerDAO,
+            OwnerValidator ownerValidator,
+            FlipFitGymBookingRepository bookingRepo) {
         this.ownerRepo = ownerRepo;
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
         this.ownerDAO = ownerDAO;
+        this.ownerValidator = ownerValidator;
+        this.bookingRepo = bookingRepo;
     }
 
     /**
@@ -53,19 +61,22 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @param - ownerId The ID of the owner.
      */
     @Override
+    @Transactional
     @CacheEvict(value = "ownerCache", allEntries = true)
     public boolean toggleCenterActive(Long centerId, Long ownerId) {
         logger.info("Toggling active status for center ID: {}", centerId);
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center not found"));
 
-        if (!center.getOwner().getOwnerId().equals(ownerId)) {
-            throw new UnauthorizedAccessException("You do not own this center");
+        ownerValidator.validateToggleCenter(center, ownerId);
+
+        boolean updated = ownerDAO.toggleCenterStatus(centerId, ownerId);
+        if (!updated) {
+            throw new InvalidInputException("Failed to toggle center status");
         }
 
-        center.setIsActive(!center.getIsActive());
-        centerRepo.save(center);
-        return center.getIsActive();
+        // Fetch updated status to return correct value
+        return !center.getIsActive();
     }
 
     /**
@@ -76,19 +87,21 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - The new active status (true/false).
      */
     @Override
+    @Transactional
     @CacheEvict(value = "centerSlots", allEntries = true)
     public boolean toggleSlotActive(Long slotId, Long ownerId) {
         logger.info("Toggling active status for slot ID: {}", slotId);
         GymSlot slot = slotRepo.findById(slotId)
                 .orElseThrow(() -> new InvalidInputException("Slot not found"));
 
-        if (!slot.getCenter().getOwner().getOwnerId().equals(ownerId)) {
-            throw new UnauthorizedAccessException("You do not own this slot");
+        ownerValidator.validateToggleSlot(slot, ownerId);
+
+        boolean updated = ownerDAO.toggleSlotStatus(slotId, ownerId);
+        if (!updated) {
+            throw new InvalidInputException("Failed to toggle slot status");
         }
 
-        slot.setIsActive(!slot.getIsActive());
-        slotRepo.save(slot);
-        return slot.getIsActive();
+        return !slot.getIsActive();
     }
 
     /**
@@ -105,9 +118,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         GymOwner owner = ownerRepo.findById(ownerId)
                 .orElseThrow(() -> new UserNotFoundException("Owner not found"));
 
-        if (!owner.isApproved()) {
-            throw new UnauthorizedAccessException("Owner approval is pending from Admin Side");
-        }
+        ownerValidator.validateAddCenter(owner);
 
         center.setOwner(owner);
         return centerRepo.save(center);
@@ -131,9 +142,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         GymCenter existingCenter = centerRepo.findById(center.getCenterId())
                 .orElseThrow(() -> new CenterNotFoundException("Center not found"));
 
-        if (!existingCenter.getOwner().getOwnerId().equals(ownerId)) {
-            throw new UnauthorizedAccessException("You do not own this center");
-        }
+        ownerValidator.validateUpdateCenter(existingCenter, ownerId);
 
         // Update fields (only non-null)
         if (center.getCenterName() != null)
@@ -159,7 +168,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         if (!centerRepo.existsById(centerId)) {
             throw new CenterNotFoundException("Center not found");
         }
-        return ownerDAO.findBookingsByCenterId(centerId);
+        return bookingRepo.findByCenterCenterId(centerId);
     }
 
     /**
@@ -175,7 +184,7 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         if (!ownerRepo.existsById(ownerId)) {
             throw new UserNotFoundException("Owner not found");
         }
-        return ownerDAO.findCentersByOwnerId(ownerId);
+        return centerRepo.findByOwnerOwnerId(ownerId);
     }
 
     /**
@@ -190,20 +199,10 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     public void addSlot(GymSlot slot, Long centerId, Long ownerId) {
         logger.info("Adding slot to center ID: {}", centerId);
 
-        if (slot.getStartTime().isAfter(slot.getEndTime()) || slot.getStartTime().equals(slot.getEndTime())) {
-            throw new InvalidInputException("Start time must be before end time");
-        }
-
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center not found"));
 
-        if (!center.getOwner().getOwnerId().equals(ownerId)) {
-            throw new UnauthorizedAccessException("You do not own this center");
-        }
-
-        if (!center.getIsActive()) {
-            throw new UnauthorizedAccessException("Center is not active yet");
-        }
+        ownerValidator.validateAddSlot(slot, center, ownerId);
 
         slot.setCenter(center);
         slot.setIsActive(false); // Default to inactive until approved

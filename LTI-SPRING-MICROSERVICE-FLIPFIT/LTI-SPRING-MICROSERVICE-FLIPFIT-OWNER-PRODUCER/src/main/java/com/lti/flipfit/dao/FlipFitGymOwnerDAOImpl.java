@@ -1,13 +1,9 @@
 package com.lti.flipfit.dao;
 
 import com.lti.flipfit.constants.JPAQLConstants;
-import com.lti.flipfit.entity.GymBooking;
-import com.lti.flipfit.entity.GymCenter;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 /**
  * Author :
@@ -22,18 +18,20 @@ public class FlipFitGymOwnerDAOImpl implements FlipFitGymOwnerDAO {
     private EntityManager entityManager;
 
     @Override
-    public List<GymBooking> findBookingsByCenterId(Long centerId) {
-        TypedQuery<GymBooking> query = entityManager.createQuery(JPAQLConstants.JPQL_FIND_BOOKINGS_BY_CENTER_ID,
-                GymBooking.class);
-        query.setParameter("centerId", centerId);
-        return query.getResultList();
+    public boolean toggleCenterStatus(Long centerId, Long ownerId) {
+        int updatedCount = entityManager.createQuery(JPAQLConstants.JPQL_TOGGLE_CENTER_STATUS)
+                .setParameter("centerId", centerId)
+                .setParameter("ownerId", ownerId)
+                .executeUpdate();
+        return updatedCount > 0;
     }
 
     @Override
-    public List<GymCenter> findCentersByOwnerId(Long ownerId) {
-        TypedQuery<GymCenter> query = entityManager.createQuery(JPAQLConstants.JPQL_FIND_CENTERS_BY_OWNER_ID,
-                GymCenter.class);
-        query.setParameter("ownerId", ownerId);
-        return query.getResultList();
+    public boolean toggleSlotStatus(Long slotId, Long ownerId) {
+        int updatedCount = entityManager.createQuery(JPAQLConstants.JPQL_TOGGLE_SLOT_STATUS)
+                .setParameter("slotId", slotId)
+                .setParameter("ownerId", ownerId)
+                .executeUpdate();
+        return updatedCount > 0;
     }
 }
