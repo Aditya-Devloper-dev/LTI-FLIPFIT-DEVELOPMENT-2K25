@@ -1,9 +1,5 @@
 package com.lti.flipfit.dao;
 
-import com.lti.flipfit.entity.GymBooking;
-import com.lti.flipfit.entity.GymCenter;
-import java.util.List;
-
 /**
  * Author :
  * Version : 1.0
@@ -13,18 +9,20 @@ import java.util.List;
 public interface FlipFitGymOwnerDAO {
 
     /**
-     * Retrieves all bookings for a specific center.
+     * Toggles the active status of a center directly in the database.
      * 
      * @param centerId The ID of the center.
-     * @return List of GymBooking objects.
+     * @param ownerId  The ID of the owner.
+     * @return true if the status was updated, false otherwise.
      */
-    List<GymBooking> findBookingsByCenterId(Long centerId);
+    boolean toggleCenterStatus(Long centerId, Long ownerId);
 
     /**
-     * Retrieves all centers owned by a specific owner.
+     * Toggles the active status of a slot directly in the database.
      * 
+     * @param slotId  The ID of the slot.
      * @param ownerId The ID of the owner.
-     * @return List of GymCenter objects.
+     * @return true if the status was updated, false otherwise.
      */
-    List<GymCenter> findCentersByOwnerId(Long ownerId);
+    boolean toggleSlotStatus(Long slotId, Long ownerId);
 }
