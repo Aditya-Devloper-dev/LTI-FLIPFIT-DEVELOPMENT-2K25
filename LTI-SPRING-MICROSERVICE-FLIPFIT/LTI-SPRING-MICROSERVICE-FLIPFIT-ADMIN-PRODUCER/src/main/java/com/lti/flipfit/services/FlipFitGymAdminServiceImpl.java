@@ -12,6 +12,7 @@ import com.lti.flipfit.repository.FlipFitGymOwnerRepository;
 import com.lti.flipfit.repository.FlipFitGymSlotRepository;
 import com.lti.flipfit.client.FlipFitGymBookingClient;
 import com.lti.flipfit.dao.FlipFitGymAdminDAO;
+import com.lti.flipfit.dto.NotificationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,17 +41,20 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
     private final FlipFitGymOwnerRepository ownerRepo;
     private final FlipFitGymBookingClient bookingClient;
     private final FlipFitGymAdminDAO adminDAO;
+    private final NotificationProducer notificationProducer;
 
     public FlipFitGymAdminServiceImpl(FlipFitGymCenterRepository centerRepo,
             FlipFitGymSlotRepository slotRepo,
             FlipFitGymOwnerRepository ownerRepo,
             FlipFitGymBookingClient bookingClient,
-            FlipFitGymAdminDAO adminDAO) {
+            FlipFitGymAdminDAO adminDAO,
+            NotificationProducer notificationProducer) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
         this.ownerRepo = ownerRepo;
         this.bookingClient = bookingClient;
         this.adminDAO = adminDAO;
+        this.notificationProducer = notificationProducer;
     }
 
     /**
@@ -84,6 +88,13 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
         adminDAO.approveSlot(slotId);
         logger.info("Slot approved with ID: {}", slotId);
+
+        // Send Notification
+        String ownerEmail = slot.getCenter().getOwner().getUser().getEmail();
+        String message = "Congratulations! Your slot scheduled for " + slot.getStartTime() + " - " + slot.getEndTime()
+                + " has been approved.";
+        notificationProducer.sendNotification(new NotificationEvent(ownerEmail, message, "Slot Approved"));
+
         return "Slot approved successfully.";
     }
 
@@ -147,6 +158,12 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
         adminDAO.approveOwner(ownerId);
         logger.info("Owner approved with ID: {}", ownerId);
+
+        // Send Notification
+        String ownerEmail = owner.getUser().getEmail();
+        String message = "Congratulations! Your Gym Owner account has been approved. You can now add centers and slots.";
+        notificationProducer.sendNotification(new NotificationEvent(ownerEmail, message, "Account Approved"));
+
         return "Owner approved successfully.";
     }
 
@@ -181,6 +198,12 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
 
         adminDAO.approveCenter(centerId);
         logger.info("Center approved with ID: {}", centerId);
+
+        // Send Notification
+        String ownerEmail = center.getOwner().getUser().getEmail();
+        String message = "Congratulations! Your center '" + center.getCenterName() + "' has been approved.";
+        notificationProducer.sendNotification(new NotificationEvent(ownerEmail, message, "Center Approved"));
+
         return "Center approved successfully.";
     }
 

@@ -44,6 +44,10 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
     private FlipFitGymBookingDAO bookingDAO;
     @Autowired
     private BookingValidator bookingValidator;
+    @Autowired
+    private com.lti.flipfit.service.NotificationProducer notificationProducer;
+    @Autowired
+    private FlipFitGymCustomerRepository customerRepo;
 
     /**
      * @methodname - bookSlot
@@ -106,6 +110,23 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
             logger.info("Booking confirmed. Seat deducted. Booking ID: {}", savedBooking.getBookingId());
 
+            // Step 4: Send Notification
+            try {
+                GymCustomer customer = customerRepo.findById(customerId).orElse(null);
+                if (customer != null && customer.getUser() != null) {
+                    String email = customer.getUser().getEmail();
+                    String message = "Your booking for slot " + slotId + " at center " + centerId
+                            + " is confirmed. Booking ID: " + savedBooking.getBookingId();
+                    String subject = "Booking Confirmation - FlipFit";
+                    com.lti.flipfit.dto.NotificationEvent event = new com.lti.flipfit.dto.NotificationEvent(email,
+                            message, subject);
+                    notificationProducer.sendNotification(event);
+                }
+            } catch (Exception e) {
+                logger.error("Failed to send notification for Booking ID: {}", savedBooking.getBookingId(), e);
+                // Don't fail the booking if notification fails
+            }
+
             return "Booking successful with ID: " + savedBooking.getBookingId();
 
         } catch (Exception e) {
@@ -156,7 +177,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         if (hoursDifference >= 1) {
             // Trigger Refund
             try {
-                paymentClient.refundPayment(String.valueOf(bookingId));
+                paymentClient.refundPayment(bookingId);
                 logger.info("Refund initiated for Booking ID: {}", bookingId);
             } catch (Exception e) {
                 logger.error("Refund failed for Booking ID: {}", bookingId, e);

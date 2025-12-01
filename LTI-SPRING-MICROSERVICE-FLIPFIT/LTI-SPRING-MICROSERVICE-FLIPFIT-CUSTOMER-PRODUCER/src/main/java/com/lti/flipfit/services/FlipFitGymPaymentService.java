@@ -23,5 +23,5 @@ public interface FlipFitGymPaymentService {
      * @param - paymentId The ID of the payment
      * @return - true if successful
      */
-    boolean refundPayment(String paymentId);
+    boolean refundPayment(Long bookingId);
 }

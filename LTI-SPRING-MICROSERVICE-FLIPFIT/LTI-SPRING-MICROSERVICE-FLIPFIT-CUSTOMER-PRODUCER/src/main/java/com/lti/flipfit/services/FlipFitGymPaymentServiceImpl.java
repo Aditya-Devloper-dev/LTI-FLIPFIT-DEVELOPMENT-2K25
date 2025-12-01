@@ -98,8 +98,8 @@ public class FlipFitGymPaymentServiceImpl implements FlipFitGymPaymentService {
      */
     @Override
     @Transactional
-    public boolean refundPayment(String paymentId) {
-        GymPayment payment = paymentRepository.findById(paymentId).orElse(null);
+    public boolean refundPayment(Long bookingId) {
+        GymPayment payment = paymentRepository.findByBookingId(bookingId).orElse(null);
         if (payment != null) {
             payment.setPaymentStatus("REFUNDED");
             paymentRepository.save(payment);

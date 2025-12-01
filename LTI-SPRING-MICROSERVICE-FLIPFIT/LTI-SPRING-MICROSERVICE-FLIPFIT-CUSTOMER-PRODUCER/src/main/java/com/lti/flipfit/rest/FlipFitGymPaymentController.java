@@ -47,8 +47,8 @@ public class FlipFitGymPaymentController {
      * @return - ResponseEntity with status message
      */
     @PostMapping("/refund")
-    public ResponseEntity<String> refundPayment(@RequestParam String paymentId) {
-        boolean success = paymentService.refundPayment(paymentId);
+    public ResponseEntity<String> refundPayment(@RequestParam Long bookingId) {
+        boolean success = paymentService.refundPayment(bookingId);
         if (success) {
             return new ResponseEntity<>("Refund Processed Successfully", HttpStatus.OK);
         } else {

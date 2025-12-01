@@ -36,5 +36,5 @@ public interface PaymentClient {
      * @return - ResponseEntity with status message
      */
     @PostMapping("/payment/refund")
-    ResponseEntity<String> refundPayment(@RequestParam("paymentId") String paymentId);
+    ResponseEntity<String> refundPayment(@RequestParam("bookingId") Long bookingId);
 }
