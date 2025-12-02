@@ -1,6 +1,5 @@
 package com.lti.flipfit.rest;
 
-import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.services.FlipFitGymCenterService;
 import org.slf4j.Logger;

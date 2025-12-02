@@ -7,6 +7,7 @@ package com.lti.flipfit.utils;
  */
 
 import com.lti.flipfit.constants.RoleType;
+import com.lti.flipfit.dto.UserRegistrationDTO;
 import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.GymOwner;
@@ -35,7 +36,7 @@ public class UserRoleHelper {
      *              GymCustomer, GymOwner) based on the user's role.
      * @param - user The user for whom the role entity is to be created.
      */
-    public void createUserRoleEntity(User user) {
+    public void createUserRoleEntity(User user, UserRegistrationDTO userDto) {
         if (RoleType.ADMIN.name().equals(user.getRole().getRoleId())) {
             GymAdmin admin = new GymAdmin();
             admin.setUser(user);
@@ -47,6 +48,9 @@ public class UserRoleHelper {
         } else if (RoleType.OWNER.name().equals(user.getRole().getRoleId())) {
             GymOwner owner = new GymOwner();
             owner.setUser(user);
+            owner.setBusinessName(userDto.getBusinessName());
+            owner.setGstNumber(userDto.getGstNumber());
+            owner.setPanNumber(userDto.getPanNumber());
             ownerRepo.save(owner);
         }
     }
