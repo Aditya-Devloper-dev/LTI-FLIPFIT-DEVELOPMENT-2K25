@@ -1,5 +1,7 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.dto.UserRegistrationDTO;
+import com.lti.flipfit.dto.UserLoginDTO;
 import com.lti.flipfit.entity.User;
 
 import java.util.List;
@@ -19,16 +21,15 @@ public interface FlipFitGymUserService {
      * @param - user The user object containing registration details.
      * @return - A success message with the registered user ID.
      */
-    String register(User user);
+    String register(UserRegistrationDTO userDto);
 
     /**
      * @methodname - login
-     * @description - Authenticates a user based on email and password.
-     * @param - email The user's email address.
-     * @param - password The user's password.
+     * @description - Authenticates user using email and password.
+     * @param - loginDTO The login credentials.
      * @return - A map containing user details and login status.
      */
-    Map<String, Object> login(String email, String password);
+    Map<String, Object> login(UserLoginDTO loginDTO);
 
     /**
      * @methodname - updateProfile

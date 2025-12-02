@@ -33,6 +33,12 @@ spring:
           uri: lb://LTI-SPRING-MICROSERVICE-FLIPFIT-USER-PRODUCER
           predicates:
             - Path=/user/**
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
 
 # ************ Eureka Configuration ************
 eureka:

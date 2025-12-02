@@ -1,6 +1,8 @@
 package com.lti.flipfit.services;
 
 import com.lti.flipfit.dao.FlipFitGymUserDAO;
+import com.lti.flipfit.dto.UserRegistrationDTO;
+import com.lti.flipfit.dto.UserLoginDTO;
 import com.lti.flipfit.entity.*;
 import com.lti.flipfit.exceptions.user.*;
 import com.lti.flipfit.exceptions.InvalidInputException;
@@ -53,6 +55,9 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     private UserRoleHelper userRoleHelper;
 
     @Autowired
+    private com.lti.flipfit.mapper.UserMapper userMapper;
+
+    @Autowired
     private UserNotificationHelper userNotificationHelper;
 
     /**
@@ -71,19 +76,21 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     @Override
     @Transactional
     @CacheEvict(value = "allUsers", allEntries = true)
-    public String register(User user) {
-        logger.info("Attempting to register user with email: {}", user.getEmail());
+    public String register(UserRegistrationDTO userDto) {
+        logger.info("Attempting to register user with email: {}", userDto.getEmail());
+
+        User user = userMapper.toEntity(userDto);
+
+        Role role = roleRepo.findById(userDto.getRole()).orElseThrow(() -> new InvalidInputException("Invalid Role"));
+        user.setRole(role);
 
         userValidator.validateRegistration(user);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role role = roleRepo.findById(user.getRole().getRoleId()).get();
-        user.setRole(role);
-
         userRepo.save(user);
 
-        userRoleHelper.createUserRoleEntity(user);
+        userRoleHelper.createUserRoleEntity(user, userDto);
 
         userNotificationHelper.sendWelcomeNotification(user);
 
@@ -93,8 +100,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
     /**
      * @methodname - login
      * @description - Authenticates a user based on email and password.
-     * @param - email The user's email address.
-     * @param - password The user's password.
+     * @param - loginDTO The login credentials.
      * @return - A map containing user details (userId, email, roleId) and login
      *         status.
      * @throws InvalidInputException         if email or password is empty.
@@ -103,7 +109,10 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
      * @throws AuthenticationFailedException if the password is incorrect.
      */
     @Override
-    public Map<String, Object> login(String email, String password) {
+    public Map<String, Object> login(UserLoginDTO loginDTO) {
+        String email = loginDTO.getEmail();
+        String password = loginDTO.getPassword();
+
         logger.info("Attempting login for email: {}", email);
 
         userValidator.validateLogin(email, password);
@@ -119,6 +128,7 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
         response.put("userId", foundUser.getUserId());
         response.put("email", foundUser.getEmail());
         response.put("roleId", foundUser.getRole().getRoleId());
+        response.put("roleName", foundUser.getRole().getRoleName());
         response.put("loginStatus", "SUCCESS");
 
         return response;

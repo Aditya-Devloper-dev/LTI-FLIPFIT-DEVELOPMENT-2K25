@@ -1,6 +1,8 @@
 package com.lti.flipfit.rest;
 
 import com.lti.flipfit.services.FlipFitGymUserService;
+import com.lti.flipfit.dto.UserRegistrationDTO;
+import com.lti.flipfit.dto.UserLoginDTO;
 import com.lti.flipfit.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,23 +37,21 @@ public class FlipFitGymUserController {
      * @return - A success message with the registered user ID.
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@RequestBody User user) {
-        logger.info("Received request to register user with email: {}", user.getEmail());
-        return service.register(user);
+    public String register(@RequestBody UserRegistrationDTO userDto) {
+        logger.info("Received request to register user with email: {}", userDto.getEmail());
+        return service.register(userDto);
     }
 
     /**
      * @methodname - login
      * @description - Authenticates user using email and password.
-     * @param - email The user's email address.
-     * @param - password The user's password.
+     * @param - loginDTO The login credentials.
      * @return - A map containing user details and login status.
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Map<String, Object> login(@RequestParam String email,
-            @RequestParam String password) {
-        logger.info("Received request to login user with email: {}", email);
-        return service.login(email, password);
+    public Map<String, Object> login(@RequestBody UserLoginDTO loginDTO) {
+        logger.info("Received request to login user with email: {}", loginDTO.getEmail());
+        return service.login(loginDTO);
     }
 
     /**
