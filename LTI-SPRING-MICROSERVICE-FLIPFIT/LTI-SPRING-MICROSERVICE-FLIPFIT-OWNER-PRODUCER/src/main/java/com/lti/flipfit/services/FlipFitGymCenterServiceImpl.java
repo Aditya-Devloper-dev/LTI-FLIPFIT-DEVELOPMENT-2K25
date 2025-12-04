@@ -76,4 +76,19 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
         return slotRepo.findByCenterCenterId(centerId);
     }
 
+    /**
+     * @methodname - getCenterById
+     * @description - Fetches a gym center by its ID.
+     * @param - centerId The ID of the gym center.
+     * @return - The GymCenter entity.
+     * @throws CenterNotFoundException if center does not exist.
+     */
+    @Override
+    @Cacheable(value = "gymCenter", key = "#centerId")
+    public GymCenter getCenterById(Long centerId) {
+        logger.info("Fetching center details for center ID: {}", centerId);
+        return centerRepo.findById(centerId)
+                .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));
+    }
+
 }

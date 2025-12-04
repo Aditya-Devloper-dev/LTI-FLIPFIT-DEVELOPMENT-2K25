@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.cache.annotation.*;
 import com.lti.flipfit.utils.UserNotificationHelper;
 import com.lti.flipfit.utils.UserRoleHelper;
+import com.lti.flipfit.utils.UserLoginHelper;
 import com.lti.flipfit.validator.UserValidator;
 
 import java.time.LocalDateTime;
@@ -53,6 +54,9 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
 
     @Autowired
     private UserRoleHelper userRoleHelper;
+
+    @Autowired
+    private UserLoginHelper userLoginHelper;
 
     @Autowired
     private com.lti.flipfit.mapper.UserMapper userMapper;
@@ -124,14 +128,8 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
             throw new AuthenticationFailedException("Incorrect email or password");
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("userId", foundUser.getUserId());
-        response.put("email", foundUser.getEmail());
-        response.put("roleId", foundUser.getRole().getRoleId());
-        response.put("roleName", foundUser.getRole().getRoleName());
-        response.put("loginStatus", "SUCCESS");
+        return userLoginHelper.buildLoginResponse(foundUser);
 
-        return response;
     }
 
     /**

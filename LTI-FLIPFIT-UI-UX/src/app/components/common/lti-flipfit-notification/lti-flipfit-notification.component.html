@@ -1,0 +1,16 @@
+<mat-card class="notifications-card" *ngIf="notifications.length > 0">
+  <mat-card-header>
+    <mat-card-title>Notifications</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="notification-list">
+      <div class="notification-item" *ngFor="let notification of notifications">
+        <mat-icon color="primary">notifications</mat-icon>
+        <div class="notification-text">
+          <span class="message">{{notification.message}}</span>
+          <span class="time">{{notification.createdAt | date:'short'}}</span>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

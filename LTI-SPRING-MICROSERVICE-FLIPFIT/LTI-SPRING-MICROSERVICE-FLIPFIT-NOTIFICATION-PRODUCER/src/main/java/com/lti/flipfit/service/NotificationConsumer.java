@@ -1,6 +1,7 @@
 package com.lti.flipfit.service;
 
 import com.lti.flipfit.dto.NotificationEvent;
+import com.lti.flipfit.services.FlipFitGymNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,11 +18,23 @@ public class NotificationConsumer {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private FlipFitGymNotificationService notificationService;
+
     @KafkaListener(topics = "notification-topic", groupId = "notification-group")
     public void consume(NotificationEvent event) {
         logger.info("Received notification event: {}", event);
 
         try {
+            // Save notification to database
+            if (event.getUserId() != null) {
+                notificationService.sendNotification(
+                        String.valueOf(event.getUserId()),
+                        event.getMessage(),
+                        "GENERAL" // Default type, can be enhanced later
+                );
+            }
+
             sendEmail(event.getRecipientEmail(), event.getSubject(), event.getMessage());
             logger.info("Email sent successfully to: {}", event.getRecipientEmail());
         } catch (Exception e) {

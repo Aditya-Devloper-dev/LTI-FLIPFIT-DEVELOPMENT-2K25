@@ -1,0 +1,100 @@
+.slots-container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+  }
+
+  .add-slot-card {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 12px;
+
+    mat-card-header {
+      padding: 1.5rem 1.5rem 0.5rem;
+      
+      mat-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+    }
+
+    mat-card-content {
+      padding: 1.5rem;
+    }
+
+    .slot-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .full-width {
+        width: 100%;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 1rem;
+
+        mat-form-field {
+          flex: 1;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  .slots-list-container {
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+
+    .slots-table {
+      width: 100%;
+
+      th.mat-header-cell {
+        background-color: #f8f9fa;
+        color: #5f6368;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      td.mat-cell {
+        color: #333;
+      }
+    }
+  }
+}
+
+// Status Chips
+::ng-deep .mat-mdc-chip {
+  &.status-active {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    --mdc-chip-label-text-color: #2e7d32 !important;
+  }
+
+  &.status-full {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    --mdc-chip-label-text-color: #c62828 !important;
+  }
+}

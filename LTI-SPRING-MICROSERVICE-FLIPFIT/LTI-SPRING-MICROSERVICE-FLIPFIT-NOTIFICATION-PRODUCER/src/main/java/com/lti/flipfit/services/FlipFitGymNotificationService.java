@@ -1,5 +1,8 @@
 package com.lti.flipfit.services;
 
+import com.lti.flipfit.entity.GymNotification;
+import java.util.List;
+
 /**
  * Author :
  * Version : 1.0
@@ -16,5 +19,13 @@ public interface FlipFitGymNotificationService {
      * @return - True if notification is sent successfully, false otherwise.
      */
     boolean sendNotification(String receiverId, String message, String type);
+
+    /**
+     * @methodname - getNotifications
+     * @description - Retrieves notifications for a user.
+     * @param - userId The ID of the user.
+     * @return - List of notifications.
+     */
+    List<GymNotification> getNotifications(Long userId);
 
 }

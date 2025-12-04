@@ -4,12 +4,58 @@ import { LtiFlipFitSignUp } from './components/lti-flipfit-signup/lti-flipfit-si
 import { LtiFlipFitAdminDashboard } from './components/lti-flipfit-admin/lti-flipfit-admin-dashboard/lti-flipfit-admin-dashboard';
 import { LtiFlipFitGymOwnerDashboard } from './components/lti-flipfit-owner/lti-flipfit-owner-dashboard/lti-flipfit-owner-dashboard';
 import { LtiFlipFitCustomerDashboard } from './components/lti-flipfit-customer/lti-flipfit-customer-dashboard/lti-flipfit-customer-dashboard';
+import { LtiFlipFitAdminOverviewComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-overview/lti-flipfit-admin-overview.component';
+import { LtiFlipFitAdminGymsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-gyms/lti-flipfit-admin-gyms.component';
+import { LtiFlipFitAdminGymDetailsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-gym-details/lti-flipfit-admin-gym-details.component';
+import { LtiFlipFitAdminUsersComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-users/lti-flipfit-admin-users.component';
+import { LtiFlipFitAdminUserDetailsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-user-details/lti-flipfit-admin-user-details.component';
+import { LtiFlipFitOwnerGymsComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-gyms/lti-flipfit-owner-gyms.component';
+import { LtiFlipFitOwnerSlotsComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-slots/lti-flipfit-owner-slots.component';
+import { LtiFlipFitOwnerProfileComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-profile/lti-flipfit-owner-profile.component';
+import { LtiFlipFitOwnerAddGymComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-add-gym/lti-flipfit-owner-add-gym.component';
+import { LtiFlipFitOwnerOverviewComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-overview/lti-flipfit-owner-overview.component';
+import { LtiFlipFitOwnerGymDetailsComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-gym-details/lti-flipfit-owner-gym-details.component';
+import { LtiFlipFitCustomerLayoutComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-layout/lti-flipfit-customer-layout.component';
+import { LtiFlipFitCustomerHomeComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-home/lti-flipfit-customer-home.component';
+import { LtiFlipFitCustomerBookingComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-booking/lti-flipfit-customer-booking.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LtiFlipFitLogin },
   { path: 'register', component: LtiFlipFitSignUp },
-  { path: 'admin-dashboard', component: LtiFlipFitAdminDashboard },
-  { path: 'gym-owner-dashboard', component: LtiFlipFitGymOwnerDashboard },
-  { path: 'customer-dashboard', component: LtiFlipFitCustomerDashboard }
+  { 
+    path: 'admin-dashboard', 
+    component: LtiFlipFitAdminDashboard,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: LtiFlipFitAdminOverviewComponent },
+      { path: 'gyms', component: LtiFlipFitAdminGymsComponent },
+      { path: 'gyms/:id', component: LtiFlipFitAdminGymDetailsComponent },
+      { path: 'users', component: LtiFlipFitAdminUsersComponent },
+      { path: 'users/:id', component: LtiFlipFitAdminUserDetailsComponent },
+      { path: 'reports', redirectTo: 'overview' } // Placeholder for reports
+    ]
+  },
+  { 
+    path: 'gym-owner-dashboard', 
+    component: LtiFlipFitGymOwnerDashboard,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: LtiFlipFitOwnerOverviewComponent },
+      { path: 'my-gyms', component: LtiFlipFitOwnerGymsComponent },
+      { path: 'slots', component: LtiFlipFitOwnerSlotsComponent },
+      { path: 'profile', component: LtiFlipFitOwnerProfileComponent },
+      { path: 'add-gym', component: LtiFlipFitOwnerAddGymComponent },
+      { path: 'gym-details/:id', component: LtiFlipFitOwnerGymDetailsComponent }
+    ]
+  },
+  { 
+    path: 'customer-dashboard', 
+    component: LtiFlipFitCustomerLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: LtiFlipFitCustomerHomeComponent },
+      { path: 'workouts', component: LtiFlipFitCustomerBookingComponent }
+    ]
+  }
 ];

@@ -1,0 +1,48 @@
+<div class="my-gyms-container">
+  <div class="page-header">
+    <h2 class="mat-headline-4">My Gyms</h2>
+    <button mat-flat-button color="primary" (click)="addNewGym()">
+      Add New Gym
+    </button>
+  </div>
+
+  <div class="gyms-list">
+    <mat-card class="gym-card" *ngFor="let gym of gyms">
+      <div class="card-content-wrapper">
+        <div class="gym-image">
+          <!-- Placeholder for image if not available -->
+          <div class="placeholder-image">
+            <mat-icon>fitness_center</mat-icon>
+          </div>
+        </div>
+        
+        <div class="gym-details">
+          <div class="gym-header">
+            <h3 class="gym-name">{{gym.centerName}}</h3>
+            <mat-chip-set>
+              <mat-chip [class]="getStatus(gym) === 'Active' ? 'status-active' : 'status-pending'" selected>
+                {{getStatus(gym)}}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+          <p class="gym-location">{{gym.city}}</p>
+        </div>
+      </div>
+
+      <mat-card-actions class="card-actions">
+        <button mat-stroked-button color="primary" (click)="viewDetails(gym.centerId!)">
+          <mat-icon>visibility</mat-icon> View Details
+        </button>
+        <button mat-stroked-button color="warn" (click)="toggleStatus(gym)" *ngIf="gym.isActive">
+          <mat-icon>block</mat-icon> Deactivate
+        </button>
+        <button mat-stroked-button color="accent" (click)="toggleStatus(gym)" *ngIf="!gym.isActive">
+          <mat-icon>check_circle</mat-icon> Activate
+        </button>
+        <button mat-stroked-button color="primary" (click)="editGym(gym.centerId!)">
+          <mat-icon>edit</mat-icon> Edit
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

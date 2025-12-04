@@ -1,9 +1,11 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.entity.GymNotification;
 import com.lti.flipfit.services.FlipFitGymNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 /**
  * Author :
@@ -37,5 +39,17 @@ public class FlipFitGymNotificationController {
         logger.info("Received request to send notification to: {}, Type: {}", receiverId, type);
 
         return service.sendNotification(receiverId, message, type);
+    }
+
+    /**
+     * @methodname - getNotifications
+     * @description - Retrieves notifications for a user.
+     * @param - userId The ID of the user.
+     * @return - List of notifications.
+     */
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+    public List<GymNotification> getNotifications(@PathVariable Long userId) {
+        logger.info("Received request to get notifications for user ID: {}", userId);
+        return service.getNotifications(userId);
     }
 }

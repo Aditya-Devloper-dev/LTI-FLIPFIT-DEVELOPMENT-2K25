@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlipFitGymAdminRepository extends JpaRepository<GymAdmin, Long> {
-
+    GymAdmin findByUser_UserId(Long userId);
 }

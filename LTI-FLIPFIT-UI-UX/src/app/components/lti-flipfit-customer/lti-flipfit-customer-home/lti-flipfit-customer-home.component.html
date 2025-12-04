@@ -1,0 +1,58 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Your Fitness, Your Terms.</h1>
+      <p>Access hundreds of premium gyms and classes near you. No contracts, just sweat.</p>
+      <div class="hero-actions">
+        <button mat-flat-button color="primary" class="cta-btn" (click)="onFindGym()">Find Your Gym</button>
+        <button mat-stroked-button class="secondary-btn">How it Works</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <h2>Why FlipFit?</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="icon-wrapper">
+          <mat-icon>calendar_today</mat-icon>
+        </div>
+        <h3>Flexible Booking</h3>
+        <p>Prepare flexible booking with enjoyable routine classes.</p>
+      </div>
+      <div class="feature-item">
+        <div class="icon-wrapper">
+          <mat-icon>emoji_events</mat-icon>
+        </div>
+        <h3>Top-Tier Gyms</h3>
+        <p>Premium gyms and classes across locations, enough for doctrine.</p>
+      </div>
+      <div class="feature-item">
+        <div class="icon-wrapper">
+          <mat-icon>block</mat-icon>
+        </div>
+        <h3>Zero Commitment</h3>
+        <p>Zero commitment, with wind on contracts, just care.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Classes Section -->
+  <section class="classes-section">
+    <h2>Popular Classes Near You</h2>
+    <div class="classes-grid">
+      <mat-card class="class-card" *ngFor="let classItem of popularClasses">
+        <img mat-card-image [src]="classItem.image" alt="Class image" class="class-image"> <!-- Placeholder image handling needed -->
+        <mat-card-content>
+          <h3>{{classItem.title}}</h3>
+          <p>{{classItem.location}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-flat-button color="primary">Book</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+</div>

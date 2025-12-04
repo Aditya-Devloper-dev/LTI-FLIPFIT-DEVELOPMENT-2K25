@@ -1,0 +1,35 @@
+<mat-toolbar class="app-toolbar">
+  <div class="logo-container">
+    <span class="logo-icon">F</span>
+    <span class="logo-text">FlipFit</span>
+    <span class="welcome-text mat-body-2" *ngIf="userName">{{greeting}}, {{userName}} ({{userRole}})</span>
+  </div>
+  
+  <span class="spacer"></span>
+
+  <nav class="app-nav">
+    <ng-container *ngFor="let item of menuItems">
+      <a mat-button [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{exact: item.exact || false}">
+        {{item.label}}
+        <span class="badge" *ngIf="item.badge">{{item.badge}}</span>
+      </a>
+    </ng-container>
+  </nav>
+
+  <button mat-button [matMenuTriggerFor]="userMenu" class="profile-btn">
+    <mat-icon>account_circle</mat-icon>
+    {{userName || 'User'}}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="onProfileClick()">
+      <mat-icon>person</mat-icon>
+      <span>Manage Profile</span>
+    </button>
+    <button mat-menu-item (click)="onLogoutClick()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

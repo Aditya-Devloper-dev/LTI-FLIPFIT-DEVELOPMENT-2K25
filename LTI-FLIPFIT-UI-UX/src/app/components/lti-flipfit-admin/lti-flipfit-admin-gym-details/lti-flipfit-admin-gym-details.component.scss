@@ -1,0 +1,214 @@
+.gym-details-container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 64px - 50px);
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .back-btn {
+      color: #5f6368;
+      padding-left: 0;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+
+      .action-btn {
+        min-width: 100px;
+      }
+    }
+  }
+
+  .details-header {
+    margin-bottom: 2rem;
+
+    .title-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+
+      .gym-name {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+      }
+    }
+
+    .gym-id {
+      color: #757575;
+      font-size: 0.9rem;
+    }
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+
+    .info-card {
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #e0e0e0;
+      height: 100%;
+
+      mat-card-header {
+        padding: 1.5rem 1.5rem 0.5rem;
+        
+        mat-card-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #2c3e50;
+        }
+      }
+
+      mat-card-content {
+        padding: 1rem 1.5rem 1.5rem;
+      }
+
+      .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .info-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid #f0f0f0;
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+
+          .label {
+            color: #5f6368;
+            font-size: 0.9rem;
+            font-weight: 500;
+          }
+
+          .value {
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+          }
+        }
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+
+        .stat-box {
+          background: #f8f9fa;
+          padding: 1.5rem;
+          border-radius: 8px;
+          text-align: center;
+          border: 1px solid #eee;
+
+          .stat-value {
+            display: block;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+          }
+
+          .stat-label {
+            color: #5f6368;
+            font-size: 0.85rem;
+            font-weight: 500;
+          }
+
+          &.active {
+            background: #e8f5e9;
+            border-color: #c8e6c9;
+            
+            .stat-value {
+              color: #2e7d32;
+            }
+            
+            .stat-label {
+              color: #1b5e20;
+            }
+          }
+
+          &.revenue {
+            background: #e3f2fd;
+            border-color: #bbdefb;
+
+            .stat-value {
+              color: #1565c0;
+            }
+
+            .stat-label {
+              color: #0d47a1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .slots-section {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
+
+    mat-card-header {
+      padding: 1.5rem 1.5rem 0.5rem;
+      
+      mat-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+    }
+
+    mat-card-content {
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .slots-table {
+      width: 100%;
+    }
+  }
+}
+
+// Status Chip Styles
+::ng-deep .mat-mdc-chip {
+  &.status-active, &.status-open {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    --mdc-chip-label-text-color: #2e7d32 !important;
+  }
+
+  &.status-pending {
+    background-color: #fff3e0 !important;
+    color: #ef6c00 !important;
+    --mdc-chip-label-text-color: #ef6c00 !important;
+  }
+
+  &.status-rejected, &.status-full {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    --mdc-chip-label-text-color: #c62828 !important;
+  }
+}

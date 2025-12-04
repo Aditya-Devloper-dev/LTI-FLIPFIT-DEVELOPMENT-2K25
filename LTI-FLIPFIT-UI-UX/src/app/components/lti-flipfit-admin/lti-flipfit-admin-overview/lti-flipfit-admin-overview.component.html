@@ -1,0 +1,92 @@
+<div class="overview-container">
+  <div class="dashboard-header">
+    <h1 class="mat-headline-4">FlipFit Admin Dashboard</h1>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-header">
+          <span class="stat-label">Total Gyms</span>
+          <mat-icon class="stat-icon">store</mat-icon>
+        </div>
+        <div class="stat-value">150</div>
+        <div class="stat-sub text-warning">(12 Pending)</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-header">
+          <span class="stat-label">Total Users</span>
+          <mat-icon class="stat-icon">group</mat-icon>
+        </div>
+        <div class="stat-value">4,520</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-header">
+          <span class="stat-label">Today's Bookings</span>
+          <mat-icon class="stat-icon">calendar_today</mat-icon>
+        </div>
+        <div class="stat-value">315</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-header">
+          <span class="stat-label">Platform Revenue (Mo)</span>
+          <mat-icon class="stat-icon">attach_money</mat-icon>
+        </div>
+        <div class="stat-value">₹15,200</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="dashboard-sections">
+    <mat-card class="section pending-approvals">
+      <mat-card-header>
+        <mat-card-title>Pending Gym Approvals</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="approval-list">
+          <div class="approval-header">
+            <span class="col-name">Name</span>
+            <span class="col-actions">Actions</span>
+          </div>
+          <div *ngFor="let gym of pendingGyms" class="approval-item">
+            <div class="gym-info">
+              <span class="gym-name">{{gym.name}}</span>
+              <span class="gym-location">{{gym.location}}</span>
+            </div>
+            <div class="actions">
+              <button mat-stroked-button class="btn-view">View</button>
+              <button mat-flat-button color="primary" class="btn-approve">Approve</button>
+              <button mat-flat-button color="warn" class="btn-reject">Reject</button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="section recent-events">
+      <mat-card-header>
+        <mat-card-title>Recent System Events</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let event of recentEvents" class="event-item">
+            <mat-icon matListItemIcon class="event-icon">info</mat-icon>
+            <div class="event-details">
+              <span class="event-title">{{event.title}}</span>
+              <span class="event-time">{{event.time}}</span>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

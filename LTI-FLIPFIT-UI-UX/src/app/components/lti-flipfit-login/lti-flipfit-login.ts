@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user.service';
 import { RoleType } from '../../models/role.type';
+import { LoginResponse } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -45,7 +46,7 @@ export class LtiFlipFitLogin {
     console.log('Logging in user:', this.email);
     const credentials = { email: this.email, password: this.password };
     this.userService.login(credentials).subscribe({
-      next: (response) => {
+      next: (response: LoginResponse) => {
         console.log('Login successful', response);
         this.snackBar.open('Login successful!', 'Close', {
           duration: 3000,

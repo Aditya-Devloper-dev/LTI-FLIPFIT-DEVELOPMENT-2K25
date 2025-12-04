@@ -1,0 +1,31 @@
+<div class="add-gym-container">
+  <div class="page-header">
+    <h2 class="mat-headline-4">Add New Gym</h2>
+  </div>
+
+  <mat-card class="add-gym-card">
+    <mat-card-content>
+      <form class="gym-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Gym Name</mat-label>
+          <input matInput placeholder="Enter gym name" [(ngModel)]="gymCenter.centerName" name="centerName" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Location</mat-label>
+          <input matInput placeholder="Enter gym location" [(ngModel)]="gymCenter.city" name="city" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contact Number</mat-label>
+          <input matInput placeholder="Enter contact number" [(ngModel)]="gymCenter.contactNumber" name="contactNumber" required>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
+          <button mat-flat-button color="primary" type="button" (click)="onSave()">Save Gym</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

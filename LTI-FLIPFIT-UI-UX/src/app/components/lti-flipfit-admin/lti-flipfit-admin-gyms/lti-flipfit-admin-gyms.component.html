@@ -1,0 +1,76 @@
+<div class="gyms-container">
+  <div class="page-header">
+    <h2 class="page-title mat-headline-4">Gym Management</h2>
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="search-input">
+        <mat-label>Search gyms</mat-label>
+        <input matInput placeholder="Ex. FitZone">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Status</mat-label>
+        <mat-select value="all">
+          <mat-option value="all">All Status</mat-option>
+          <mat-option value="pending">Pending</mat-option>
+          <mat-option value="active">Active</mat-option>
+          <mat-option value="rejected">Rejected</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="gyms-table-container mat-elevation-z2">
+    <table mat-table [dataSource]="gyms" class="gyms-table">
+      
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Gym Name </th>
+        <td mat-cell *matCellDef="let gym">
+          <div class="gym-name-cell">
+            <span class="name">{{gym.name}}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Owner Column -->
+      <ng-container matColumnDef="owner">
+        <th mat-header-cell *matHeaderCellDef> Owner </th>
+        <td mat-cell *matCellDef="let gym"> {{gym.owner}} </td>
+      </ng-container>
+
+      <!-- Location Column -->
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let gym"> {{gym.location}} </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let gym">
+          <mat-chip-set>
+            <mat-chip [class]="'status-' + gym.status.toLowerCase()" selected>{{gym.status}}</mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let gym">
+          <div class="action-buttons">
+            <button mat-stroked-button color="primary" (click)="viewGym(gym.id)">View</button>
+            <ng-container *ngIf="gym.status === 'Pending'">
+              <button mat-flat-button color="primary">Approve</button>
+              <button mat-flat-button color="warn">Reject</button>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
