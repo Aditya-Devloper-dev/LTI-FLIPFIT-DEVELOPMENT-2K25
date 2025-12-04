@@ -2,7 +2,7 @@
   <div class="logo-container">
     <span class="logo-icon">F</span>
     <span class="logo-text">FlipFit</span>
-    <span class="welcome-text mat-body-2" *ngIf="userName">{{greeting}}, {{userName}} ({{userRole}})</span>
+    <span class="welcome-text mat-body-2" *ngIf="userName && !isLandingPage">{{greeting}}, {{userName}} ({{userRole}})</span>
   </div>
   
   <span class="spacer"></span>
@@ -16,11 +16,18 @@
     </ng-container>
   </nav>
 
-  <button mat-button [matMenuTriggerFor]="userMenu" class="profile-btn">
-    <mat-icon>account_circle</mat-icon>
-    {{userName || 'User'}}
-    <mat-icon>arrow_drop_down</mat-icon>
-  </button>
+  <div class="auth-buttons" *ngIf="isLandingPage; else userProfile">
+    <button mat-stroked-button color="primary" style="margin-right: 10px;" routerLink="/login">Login</button>
+    <button mat-flat-button color="primary" routerLink="/register">Sign Up</button>
+  </div>
+
+  <ng-template #userProfile>
+    <button mat-button [matMenuTriggerFor]="userMenu" class="profile-btn">
+      <mat-icon>account_circle</mat-icon>
+      {{userName || 'User'}}
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  </ng-template>
 
   <mat-menu #userMenu="matMenu">
     <button mat-menu-item (click)="onProfileClick()">

@@ -3,7 +3,6 @@ import { LtiFlipFitLogin } from './components/lti-flipfit-login/lti-flipfit-logi
 import { LtiFlipFitSignUp } from './components/lti-flipfit-signup/lti-flipfit-signup';
 import { LtiFlipFitAdminDashboard } from './components/lti-flipfit-admin/lti-flipfit-admin-dashboard/lti-flipfit-admin-dashboard';
 import { LtiFlipFitGymOwnerDashboard } from './components/lti-flipfit-owner/lti-flipfit-owner-dashboard/lti-flipfit-owner-dashboard';
-import { LtiFlipFitCustomerDashboard } from './components/lti-flipfit-customer/lti-flipfit-customer-dashboard/lti-flipfit-customer-dashboard';
 import { LtiFlipFitAdminOverviewComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-overview/lti-flipfit-admin-overview.component';
 import { LtiFlipFitAdminGymsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-gyms/lti-flipfit-admin-gyms.component';
 import { LtiFlipFitAdminGymDetailsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-gym-details/lti-flipfit-admin-gym-details.component';
@@ -19,12 +18,15 @@ import { LtiFlipFitCustomerLayoutComponent } from './components/lti-flipfit-cust
 import { LtiFlipFitCustomerHomeComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-home/lti-flipfit-customer-home.component';
 import { LtiFlipFitCustomerBookingComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-booking/lti-flipfit-customer-booking.component';
 
+import { LtiFlipfitLandingComponent } from './components/lti-flipfit-landing/lti-flipfit-landing.component';
+
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/flipfit', pathMatch: 'full' },
+  { path: 'flipfit', component: LtiFlipfitLandingComponent },
   { path: 'login', component: LtiFlipFitLogin },
   { path: 'register', component: LtiFlipFitSignUp },
-  { 
-    path: 'admin-dashboard', 
+  {
+    path: 'admin-dashboard',
     component: LtiFlipFitAdminDashboard,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -36,8 +38,8 @@ export const routes: Routes = [
       { path: 'reports', redirectTo: 'overview' } // Placeholder for reports
     ]
   },
-  { 
-    path: 'gym-owner-dashboard', 
+  {
+    path: 'gym-owner-dashboard',
     component: LtiFlipFitGymOwnerDashboard,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -49,8 +51,8 @@ export const routes: Routes = [
       { path: 'gym-details/:id', component: LtiFlipFitOwnerGymDetailsComponent }
     ]
   },
-  { 
-    path: 'customer-dashboard', 
+  {
+    path: 'customer-dashboard',
     component: LtiFlipFitCustomerLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
