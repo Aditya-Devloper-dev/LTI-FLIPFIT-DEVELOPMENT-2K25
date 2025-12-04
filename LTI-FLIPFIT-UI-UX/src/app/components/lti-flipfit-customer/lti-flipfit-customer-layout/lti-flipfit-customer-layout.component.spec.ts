@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LtiFlipFitGymOwnerDashboard } from './lti-flipfit-owner-dashboard';
+import { LtiFlipFitCustomerLayoutComponent } from './lti-flipfit-customer-layout.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UserService } from '../../../services/user-service/user.service';
 
-describe('LtiFlipFitGymOwnerDashboard', () => {
-  let component: LtiFlipFitGymOwnerDashboard;
-  let fixture: ComponentFixture<LtiFlipFitGymOwnerDashboard>;
+describe('LtiFlipFitCustomerLayoutComponent', () => {
+  let component: LtiFlipFitCustomerLayoutComponent;
+  let fixture: ComponentFixture<LtiFlipFitCustomerLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        LtiFlipFitGymOwnerDashboard,
+        LtiFlipFitCustomerLayoutComponent,
         RouterTestingModule,
         HttpClientTestingModule,
         NoopAnimationsModule
@@ -21,7 +21,7 @@ describe('LtiFlipFitGymOwnerDashboard', () => {
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LtiFlipFitGymOwnerDashboard);
+    fixture = TestBed.createComponent(LtiFlipFitCustomerLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
