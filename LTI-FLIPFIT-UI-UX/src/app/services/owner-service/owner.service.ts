@@ -15,6 +15,10 @@ export class OwnerService {
     return this.http.post<GymCenter>(`${this.apiUrl}/add-center/${ownerId}`, center);
   }
 
+  addSlot(slot: any, centerId: number, ownerId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/add-slot/${centerId}/${ownerId}`, slot, { responseType: 'text' });
+  }
+
   getGymsByOwnerId(ownerId: number): Observable<GymCenter[]> {
     return this.http.get<GymCenter[]>(`${this.apiUrl}/centers/${ownerId}`);
   }
@@ -25,6 +29,14 @@ export class OwnerService {
 
   getGymDetails(centerId: number): Observable<GymCenter> {
     return this.http.get<GymCenter>(`http://localhost:8080/gym-center/${centerId}`);
+  }
+
+  getSlotsByCenterId(centerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:8080/gym-center/slots/${centerId}`);
+  }
+
+  toggleSlotActive(slotId: number, ownerId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/toggle-slot-active/${slotId}/${ownerId}`, {}, { responseType: 'text' });
   }
 
 }
