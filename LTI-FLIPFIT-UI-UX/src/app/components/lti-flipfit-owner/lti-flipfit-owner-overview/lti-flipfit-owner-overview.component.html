@@ -44,7 +44,7 @@
           <mat-card-title>Quick Actions</mat-card-title>
         </mat-card-header>
         <mat-card-content class="actions-content">
-          <button mat-flat-button color="primary" class="action-btn">
+          <button mat-flat-button color="primary" class="action-btn" (click)="onAddSlot()">
             Add New Slot
           </button>
           <button mat-stroked-button color="primary" class="action-btn" (click)="onManageGymProfile()">
@@ -60,7 +60,7 @@
     <!-- Recent Activity -->
     <mat-card class="recent-activity-card">
       <mat-card-header>
-        <mat-card-title>Recent Activity</mat-card-title>
+        <mat-card-title>Recent Bookings</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="recentBookings" class="activity-table">
@@ -72,6 +72,11 @@
           <ng-container matColumnDef="time">
             <th mat-header-cell *matHeaderCellDef> Time </th>
             <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="gymCenter">
+            <th mat-header-cell *matHeaderCellDef> Gym Center </th>
+            <td mat-cell *matCellDef="let element"> {{element.gymCenter}} </td>
           </ng-container>
 
           <ng-container matColumnDef="status">

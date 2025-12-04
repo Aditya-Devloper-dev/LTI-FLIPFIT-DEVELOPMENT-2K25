@@ -22,4 +22,14 @@ public class FlipFitGymSlotDAOImpl implements FlipFitGymSlotDAO {
         entityManager.createQuery(JPAQLConstants.JPQL_RESET_SLOT_CAPACITY)
                 .executeUpdate();
     }
+
+    @Override
+    public boolean checkSlotOverlap(Long centerId, java.time.LocalTime startTime, java.time.LocalTime endTime) {
+        Long count = entityManager.createQuery(JPAQLConstants.JPQL_CHECK_SLOT_OVERLAP, Long.class)
+                .setParameter("centerId", centerId)
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", endTime)
+                .getSingleResult();
+        return count > 0;
+    }
 }

@@ -74,48 +74,6 @@ public class FlipFitGymOwnerController {
     }
 
     /**
-     * @methodname - updateCenter
-     * @description - Updates information of a center managed by the owner.
-     * @param - centerId The ID of the center to update.
-     * @param - ownerId The ID of the owner.
-     * @param - center The GymCenter object containing updated details.
-     * @return - The updated GymCenter object.
-     */
-    @RequestMapping(value = "/update-center/{centerId}/{ownerId}", method = RequestMethod.PUT)
-    public ResponseEntity<GymCenter> updateCenter(
-            @PathVariable Long centerId,
-            @PathVariable Long ownerId,
-            @RequestBody GymCenter center) {
-        logger.info("Received request to update center with ID: {} for owner ID: {}", centerId, ownerId);
-        center.setCenterId(centerId); // Ensure ID is set from path
-        return ResponseEntity.ok(service.updateCenter(center, ownerId));
-    }
-
-    /**
-     * @methodname - viewAllBookings
-     * @description - Retrieves every booking associated with the given centerId.
-     * @param - centerId The ID of the center to view bookings for.
-     * @return - A list of GymBooking objects.
-     */
-    @RequestMapping(value = "/all-bookings/{centerId}", method = RequestMethod.GET)
-    public ResponseEntity<List<GymBooking>> viewAllBookings(@PathVariable Long centerId) {
-        logger.info("Received request to view all bookings for center ID: {}", centerId);
-        return ResponseEntity.ok(service.viewAllBookings(centerId));
-    }
-
-    /**
-     * @methodname - getCentersByOwner
-     * @description - Retrieves all centers owned by a specific owner.
-     * @param - ownerId The ID of the owner.
-     * @return - A list of GymCenter objects owned by the user.
-     */
-    @RequestMapping(value = "/centers/{ownerId}", method = RequestMethod.GET)
-    public ResponseEntity<List<GymCenter>> getCentersByOwner(@PathVariable Long ownerId) {
-        logger.info("Received request to get centers for owner ID: {}", ownerId);
-        return ResponseEntity.ok(service.getCentersByOwner(ownerId));
-    }
-
-    /**
      * @methodname - addSlot
      * @description - Adds a new slot to a center (Pending Approval).
      * @param - centerId The ID of the center to add the slot to.
@@ -129,5 +87,18 @@ public class FlipFitGymOwnerController {
         logger.info("Received request to add slot to center ID: {} for owner ID: {}", centerId, ownerId);
         service.addSlot(slot, centerId, ownerId);
         return ResponseEntity.ok("Slot added successfully. Waiting for Admin approval.");
+    }
+
+    /**
+     * @methodname - getAllBookingsByOwner
+     * @description - Retrieves all bookings for all centers owned by a specific
+     *              owner.
+     * @param - ownerId The ID of the owner.
+     * @return - A list of GymBooking objects.
+     */
+    @RequestMapping(value = "/bookings/{ownerId}", method = RequestMethod.GET)
+    public ResponseEntity<List<GymBooking>> getAllBookingsByOwner(@PathVariable Long ownerId) {
+        logger.info("Received request to get all bookings for owner ID: {}", ownerId);
+        return ResponseEntity.ok(service.getAllBookingsByOwner(ownerId));
     }
 }

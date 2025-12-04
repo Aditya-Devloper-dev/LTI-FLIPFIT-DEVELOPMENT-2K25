@@ -20,7 +20,15 @@ export class OwnerService {
   }
 
   getGymsByOwnerId(ownerId: number): Observable<GymCenter[]> {
-    return this.http.get<GymCenter[]>(`${this.apiUrl}/centers/${ownerId}`);
+    return this.http.get<GymCenter[]>(`http://localhost:8080/gym-center/owner/${ownerId}`);
+  }
+
+  viewAllBookings(centerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:8080/gym-center/bookings/${centerId}`);
+  }
+
+  updateCenter(center: GymCenter, ownerId: number): Observable<GymCenter> {
+    return this.http.put<GymCenter>(`http://localhost:8080/gym-center/update/${center.centerId}/${ownerId}`, center);
   }
 
   toggleCenterActive(centerId: number, ownerId: number): Observable<any> {
@@ -37,6 +45,10 @@ export class OwnerService {
 
   toggleSlotActive(slotId: number, ownerId: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/toggle-slot-active/${slotId}/${ownerId}`, {}, { responseType: 'text' });
+  }
+
+  getAllBookingsByOwner(ownerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/bookings/${ownerId}`);
   }
 
 }

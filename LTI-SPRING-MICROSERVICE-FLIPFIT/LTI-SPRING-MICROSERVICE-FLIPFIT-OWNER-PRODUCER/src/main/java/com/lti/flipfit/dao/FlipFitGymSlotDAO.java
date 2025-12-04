@@ -7,4 +7,6 @@ package com.lti.flipfit.dao;
  */
 public interface FlipFitGymSlotDAO {
     void resetAvailableSeatsForActiveSlots();
+
+    boolean checkSlotOverlap(Long centerId, java.time.LocalTime startTime, java.time.LocalTime endTime);
 }
