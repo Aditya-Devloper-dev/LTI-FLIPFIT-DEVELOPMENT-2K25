@@ -6,8 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { OwnerService } from '../../../services/owner.service';
-import { GymCenter } from '../../../models/gym-center.model';
+import { GymCenter } from '../../../models/gym-center/gym-center.model';
+import { OwnerService } from '../../../services/owner-service/owner.service';
 
 @Component({
   selector: 'app-lti-flipfit-owner-gym-details',

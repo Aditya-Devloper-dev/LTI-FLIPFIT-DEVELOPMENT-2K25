@@ -52,4 +52,15 @@ public class FlipFitGymNotificationController {
         logger.info("Received request to get notifications for user ID: {}", userId);
         return service.getNotifications(userId);
     }
+
+    /**
+     * @methodname - clearAllNotifications
+     * @description - Deletes all notifications for a user.
+     * @param - userId The ID of the user.
+     */
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.DELETE)
+    public void clearAllNotifications(@PathVariable Long userId) {
+        logger.info("Received request to clear all notifications for user ID: {}", userId);
+        service.clearAllNotifications(userId);
+    }
 }

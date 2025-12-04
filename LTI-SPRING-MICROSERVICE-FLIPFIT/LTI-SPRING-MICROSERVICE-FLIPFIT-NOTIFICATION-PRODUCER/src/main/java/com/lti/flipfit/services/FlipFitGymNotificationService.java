@@ -28,4 +28,11 @@ public interface FlipFitGymNotificationService {
      */
     List<GymNotification> getNotifications(Long userId);
 
+    /**
+     * @methodname - clearAllNotifications
+     * @description - Deletes all notifications for a user.
+     * @param - userId The ID of the user.
+     */
+    void clearAllNotifications(Long userId);
+
 }

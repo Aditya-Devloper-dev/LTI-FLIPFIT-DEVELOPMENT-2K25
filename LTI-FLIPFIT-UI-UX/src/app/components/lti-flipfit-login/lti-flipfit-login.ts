@@ -9,9 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { UserService } from '../../services/user.service';
-import { RoleType } from '../../models/role.type';
-import { LoginResponse } from '../../models/user.model';
+import { RoleType } from '../../models/enums/role.type';
+import { LoginResponse } from '../../models/user/user.model';
+import { UserService } from '../../services/user-service/user.service';
 
 @Component({
   selector: 'app-login',
@@ -53,7 +53,7 @@ export class LtiFlipFitLogin {
           horizontalPosition: 'center',
           verticalPosition: 'top'
         });
-        
+
         // Store user details
         localStorage.setItem('user', JSON.stringify(response));
 

@@ -1,6 +1,7 @@
 <mat-card class="notifications-card" *ngIf="notifications.length > 0">
-  <mat-card-header>
+  <mat-card-header class="notification-header">
     <mat-card-title>Notifications</mat-card-title>
+    <button mat-button color="warn" (click)="onClearAll()">Clear All</button>
   </mat-card-header>
   <mat-card-content>
     <div class="notification-list">

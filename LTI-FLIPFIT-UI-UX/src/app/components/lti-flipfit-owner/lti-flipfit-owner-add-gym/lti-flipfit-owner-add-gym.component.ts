@@ -8,8 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { OwnerService } from '../../../services/owner.service';
-import { GymCenter } from '../../../models/gym-center.model';
+import { GymCenter } from '../../../models/gym-center/gym-center.model';
+import { OwnerService } from '../../../services/owner-service/owner.service';
 
 @Component({
   selector: 'app-lti-flipfit-owner-add-gym',

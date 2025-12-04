@@ -81,4 +81,16 @@ public class FlipFitGymNotificationServiceImpl implements FlipFitGymNotification
     public List<GymNotification> getNotifications(Long userId) {
         return notificationRepo.findByReceiver_UserIdOrderByCreatedAtDesc(userId);
     }
+
+    /**
+     * @methodname - clearAllNotifications
+     * @description - Deletes all notifications for a user.
+     * @param - userId The ID of the user.
+     */
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public void clearAllNotifications(Long userId) {
+        logger.info("Clearing all notifications for user ID: {}", userId);
+        notificationRepo.deleteByReceiver_UserId(userId);
+    }
 }
