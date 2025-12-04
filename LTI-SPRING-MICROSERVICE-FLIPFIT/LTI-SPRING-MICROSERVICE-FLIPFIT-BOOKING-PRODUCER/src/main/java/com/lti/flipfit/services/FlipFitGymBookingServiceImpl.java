@@ -67,6 +67,11 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
         logger.info("Attempting to book slot {} at center {} for customer {}", slotId, centerId, customerId);
 
+        // Set booking date if missing (defaults to today)
+        if (booking.getBookingDate() == null) {
+            booking.setBookingDate(LocalDate.now());
+        }
+
         // Perform all validations
         bookingValidator.validateBooking(booking);
 
@@ -77,9 +82,6 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         // We do NOT decrement the seat yet.
         booking.setStatus("PENDING");
         booking.setCreatedAt(LocalDateTime.now());
-        if (booking.getBookingDate() == null) {
-            booking.setBookingDate(LocalDate.now());
-        }
 
         GymBooking savedBooking = bookingRepo.save(booking);
         logger.info("Booking initialized with PENDING status. Booking ID: {}", savedBooking.getBookingId());

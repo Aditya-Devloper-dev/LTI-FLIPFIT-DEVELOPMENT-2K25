@@ -89,7 +89,7 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
         next: (data) => {
           // Map backend data to table format
           this.recentBookings = data.map(booking => ({
-            customer: booking.customer.name,
+            customer: booking.customer?.user?.fullName || 'Unknown Customer',
             time: `${booking.bookingDate} ${booking.slot.startTime}`,
             gymCenter: booking.center.centerName,
             status: booking.status
@@ -179,7 +179,7 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
         this.totalGymsCount = gyms.length;
         // Check for isApproved property, default to false if not present
         this.approvedGymsCount = gyms.filter(gym => gym.isApproved).length;
-        this.activeGymsCount = gyms.length; // Keeping active as total for now based on previous logic, or refine if needed
+        this.activeGymsCount = gyms.filter(gym => gym.isActive).length;
 
         if (gyms.length === 0) {
           this.activeSlotsCount = 0;

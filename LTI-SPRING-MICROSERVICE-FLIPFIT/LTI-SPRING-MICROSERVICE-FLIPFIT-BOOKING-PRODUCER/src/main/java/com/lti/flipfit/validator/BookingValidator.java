@@ -48,8 +48,8 @@ public class BookingValidator {
         }
 
         // 3. Check Duplicate Booking
-        if (bookingDAO.checkDuplicateBooking(customerId, slotId)) {
-            throw new BookingAlreadyExistsException("User already booked this slot");
+        if (bookingDAO.checkDuplicateBooking(customerId, slotId, booking.getBookingDate())) {
+            throw new BookingAlreadyExistsException("User already booked this slot for the selected date");
         }
 
         // 4. Check Availability

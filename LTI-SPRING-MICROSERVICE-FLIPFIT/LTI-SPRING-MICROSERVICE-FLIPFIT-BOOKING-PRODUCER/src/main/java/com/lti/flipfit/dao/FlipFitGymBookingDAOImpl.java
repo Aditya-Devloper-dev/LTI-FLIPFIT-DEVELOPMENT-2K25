@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,10 +24,11 @@ public class FlipFitGymBookingDAOImpl implements FlipFitGymBookingDAO {
     private EntityManager entityManager;
 
     @Override
-    public boolean checkDuplicateBooking(Long customerId, Long slotId) {
+    public boolean checkDuplicateBooking(Long customerId, Long slotId, LocalDate bookingDate) {
         TypedQuery<Long> query = entityManager.createQuery(JPAQLConstants.JPQL_CHECK_DUPLICATE_BOOKING, Long.class);
         query.setParameter("customerId", customerId);
         query.setParameter("slotId", slotId);
+        query.setParameter("bookingDate", bookingDate);
         Long count = query.getSingleResult();
         return count > 0;
     }
