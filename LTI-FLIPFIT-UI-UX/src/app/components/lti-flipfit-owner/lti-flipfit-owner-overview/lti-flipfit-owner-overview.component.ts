@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notification/lti-flipfit-notification.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lti-flipfit-owner-overview',
@@ -23,6 +24,13 @@ import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notifi
   styleUrl: './lti-flipfit-owner-overview.component.scss'
 })
 export class LtiFlipFitOwnerOverviewComponent {
+
+  constructor(private router: Router) { }
+
+  onManageGymProfile() {
+    this.router.navigate(['/gym-owner-dashboard/profile']);
+  }
+
   recentBookings = [
     { customer: 'Marsi Bastin', time: 'Feb 9:00 PM', status: 'Booking' },
     { customer: 'Elvan Hanley', time: 'Feb 4:30 PM', status: 'Booking' },

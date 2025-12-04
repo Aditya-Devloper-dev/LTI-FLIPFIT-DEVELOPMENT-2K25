@@ -48,18 +48,15 @@ export class LtiFlipFitGymOwnerDashboard implements OnInit {
   menuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/gym-owner-dashboard/overview' },
     { label: 'My Gyms', route: '/gym-owner-dashboard/my-gyms' },
-    { label: 'Slots', route: '/gym-owner-dashboard/slots' },
-    { label: 'Reports', route: '/gym-owner-dashboard/reports' }
+    { label: 'Slots', route: '/gym-owner-dashboard/slots' }
   ];
 
   onLogout() {
-    console.log('Logout clicked');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
   onProfile() {
-    console.log('Profile clicked');
     this.router.navigate(['/gym-owner-dashboard/profile']);
   }
 }
