@@ -18,4 +18,12 @@ export class UserService {
   login(credentials: UserLogin): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
+
+  getUserById(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${userId}`);
+  }
+
+  updateProfile(userId: number, user: any): Observable<string> {
+    return this.http.put(`${this.apiUrl}/update/${userId}`, user, { responseType: 'text' });
+  }
 }

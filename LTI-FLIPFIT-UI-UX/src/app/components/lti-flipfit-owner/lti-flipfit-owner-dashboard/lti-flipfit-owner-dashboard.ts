@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { HeaderComponent, MenuItem } from '../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 
@@ -17,6 +17,7 @@ import { FooterComponent } from '../../../shared/components/footer/footer.compon
   styleUrl: './lti-flipfit-owner-dashboard.scss'
 })
 export class LtiFlipFitGymOwnerDashboard {
+  constructor(private router: Router) {}
   menuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/gym-owner-dashboard/overview' },
     { label: 'My Gyms', route: '/gym-owner-dashboard/my-gyms' },
@@ -30,5 +31,6 @@ export class LtiFlipFitGymOwnerDashboard {
 
   onProfile() {
     console.log('Profile clicked');
+    this.router.navigate(['/gym-owner-dashboard/profile']);
   }
 }

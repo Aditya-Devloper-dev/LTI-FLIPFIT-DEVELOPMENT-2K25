@@ -46,4 +46,12 @@ public interface FlipFitGymUserService {
      * @return - A list of all users.
      */
     List<User> getAllUsers();
+
+    /**
+     * @methodname - getUserById
+     * @description - Retrieves a user by their unique ID.
+     * @param - userId The unique identifier of the user.
+     * @return - The User entity.
+     */
+    User getUserById(Long userId);
 }
