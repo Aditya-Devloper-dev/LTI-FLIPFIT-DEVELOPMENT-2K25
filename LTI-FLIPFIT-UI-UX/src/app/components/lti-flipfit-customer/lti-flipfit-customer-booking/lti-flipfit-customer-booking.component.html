@@ -1,0 +1,64 @@
+<div class="booking-container">
+  <div class="page-header">
+    <h1>Book Your Workout</h1>
+  </div>
+
+  <!-- Search Filters -->
+  <mat-card class="search-card">
+    <mat-card-content>
+      <div class="filters-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Location</mat-label>
+          <input matInput [(ngModel)]="searchFilters.location" placeholder="Enter location">
+          <mat-icon matSuffix>place</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Activity</mat-label>
+          <input matInput [(ngModel)]="searchFilters.activity" placeholder="Yoga, HIIT, etc.">
+          <mat-icon matSuffix>fitness_center</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="searchFilters.date">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Time</mat-label>
+          <input matInput [(ngModel)]="searchFilters.time" placeholder="10:00 AM">
+          <mat-icon matSuffix>schedule</mat-icon>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" class="search-btn" (click)="onSearch()">
+          Search
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Gym List -->
+  <div class="gyms-list">
+    <h3>Available Gyms</h3>
+    
+    <mat-card class="gym-card" *ngFor="let gym of gyms">
+      <div class="gym-content-wrapper">
+        <img [src]="gym.image" alt="Gym image" class="gym-image">
+        <div class="gym-details">
+          <div class="gym-header">
+            <h4>{{gym.name}}</h4>
+            <span class="gym-location">{{gym.location}}</span>
+          </div>
+          <div class="gym-tags">
+            <span class="tag" *ngFor="let tag of gym.tags">{{tag}}</span>
+          </div>
+        </div>
+        <div class="gym-action">
+          <button mat-flat-button color="primary" (click)="openBookingDialog(gym)">Book now</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

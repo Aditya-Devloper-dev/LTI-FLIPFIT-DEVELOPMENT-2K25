@@ -118,7 +118,9 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
                     String message = "Your booking for slot " + slotId + " at center " + centerId
                             + " is confirmed. Booking ID: " + savedBooking.getBookingId();
                     String subject = "Booking Confirmation - FlipFit";
-                    com.lti.flipfit.dto.NotificationEvent event = new com.lti.flipfit.dto.NotificationEvent(email,
+                    Long userId = customer.getUser().getUserId();
+                    com.lti.flipfit.dto.NotificationEvent event = new com.lti.flipfit.dto.NotificationEvent(userId,
+                            email,
                             message, subject);
                     notificationProducer.sendNotification(event);
                 }

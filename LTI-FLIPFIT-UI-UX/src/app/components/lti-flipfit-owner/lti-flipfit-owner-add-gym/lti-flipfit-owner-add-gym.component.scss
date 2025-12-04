@@ -1,0 +1,42 @@
+.add-gym-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+  }
+
+  .add-gym-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+    mat-card-content {
+      padding: 2rem;
+    }
+
+    .gym-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .full-width {
+        width: 100%;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+.notifications-card {
+  border-radius: 12px;
+  height: fit-content;
+  
+  mat-card-header {
+    padding: 1.5rem 1.5rem 0.5rem;
+    
+    mat-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+
+  mat-card-content {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 1rem;
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    mat-icon {
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+      margin-top: 2px;
+    }
+
+    .notification-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .message {
+        font-size: 14px;
+        color: #333;
+        line-height: 1.4;
+      }
+
+      .time {
+        font-size: 12px;
+        color: #666;
+      }
+    }
+  }
+}

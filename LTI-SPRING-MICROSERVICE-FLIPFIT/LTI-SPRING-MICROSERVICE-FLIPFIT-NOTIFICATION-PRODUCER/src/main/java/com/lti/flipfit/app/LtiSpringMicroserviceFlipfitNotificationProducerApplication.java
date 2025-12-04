@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableDiscoveryClient
 @ComponentScan("com.lti.flipfit")
 @EntityScan("com.lti.flipfit.entity")
-@EnableJpaRepositories
+@EnableJpaRepositories("com.lti.flipfit.repository")
 public class LtiSpringMicroserviceFlipfitNotificationProducerApplication {
 
 	public static void main(String[] args) {

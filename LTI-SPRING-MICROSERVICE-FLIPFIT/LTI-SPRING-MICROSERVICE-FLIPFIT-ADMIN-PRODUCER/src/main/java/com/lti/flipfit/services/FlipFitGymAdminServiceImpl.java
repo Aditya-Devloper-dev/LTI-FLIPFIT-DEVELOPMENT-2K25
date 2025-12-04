@@ -90,10 +90,11 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         logger.info("Slot approved with ID: {}", slotId);
 
         // Send Notification
+        Long userId = slot.getCenter().getOwner().getUser().getUserId();
         String ownerEmail = slot.getCenter().getOwner().getUser().getEmail();
         String message = "Congratulations! Your slot scheduled for " + slot.getStartTime() + " - " + slot.getEndTime()
                 + " has been approved.";
-        notificationProducer.sendNotification(new NotificationEvent(ownerEmail, message, "Slot Approved"));
+        notificationProducer.sendNotification(new NotificationEvent(userId, ownerEmail, message, "Slot Approved"));
 
         return "Slot approved successfully.";
     }
@@ -160,9 +161,10 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         logger.info("Owner approved with ID: {}", ownerId);
 
         // Send Notification
+        Long userId = owner.getUser().getUserId();
         String ownerEmail = owner.getUser().getEmail();
         String message = "Congratulations! Your Gym Owner account has been approved. You can now add centers and slots.";
-        notificationProducer.sendNotification(new NotificationEvent(ownerEmail, message, "Account Approved"));
+        notificationProducer.sendNotification(new NotificationEvent(userId, ownerEmail, message, "Account Approved"));
 
         return "Owner approved successfully.";
     }
@@ -200,9 +202,10 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         logger.info("Center approved with ID: {}", centerId);
 
         // Send Notification
+        Long userId = center.getOwner().getUser().getUserId();
         String ownerEmail = center.getOwner().getUser().getEmail();
         String message = "Congratulations! Your center '" + center.getCenterName() + "' has been approved.";
-        notificationProducer.sendNotification(new NotificationEvent(ownerEmail, message, "Center Approved"));
+        notificationProducer.sendNotification(new NotificationEvent(userId, ownerEmail, message, "Center Approved"));
 
         return "Center approved successfully.";
     }

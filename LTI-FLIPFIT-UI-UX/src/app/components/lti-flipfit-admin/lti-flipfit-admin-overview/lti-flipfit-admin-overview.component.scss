@@ -1,0 +1,193 @@
+.overview-container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 64px - 50px);
+
+  .dashboard-header {
+    margin-bottom: 2rem;
+    
+    h1 {
+      color: #2c3e50;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+
+    .stat-card {
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: none; // Remove border to match owner style
+      
+      mat-card-content {
+        padding: 1.5rem;
+      }
+
+      .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+
+        .stat-label {
+          color: #5f6368;
+          font-size: 1rem;
+          font-weight: 500;
+        }
+
+        .stat-icon {
+          color: #1976d2;
+          background-color: #e3f2fd;
+          padding: 8px;
+          border-radius: 8px;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+
+      .stat-sub {
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        
+        &.text-warning {
+          color: #f57c00;
+        }
+      }
+    }
+  }
+
+  .dashboard-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+
+    .section {
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #e0e0e0;
+      height: 100%;
+
+      mat-card-header {
+        padding: 1.5rem 1.5rem 0.5rem;
+        
+        mat-card-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #2c3e50;
+        }
+      }
+
+      mat-card-content {
+        padding: 0 1.5rem 1.5rem;
+      }
+
+      &.pending-approvals {
+        .approval-list {
+          .approval-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 0.5rem;
+            color: #5f6368;
+            font-weight: 500;
+            font-size: 0.9rem;
+          }
+
+          .approval-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .gym-info {
+              display: flex;
+              flex-direction: column;
+              
+              .gym-name {
+                font-weight: 600;
+                color: #333;
+                font-size: 0.95rem;
+              }
+
+              .gym-location {
+                font-size: 0.85rem;
+                color: #757575;
+                margin-top: 2px;
+              }
+            }
+
+            .actions {
+              display: flex;
+              gap: 0.5rem;
+              align-items: center;
+
+              button {
+                height: 32px;
+                line-height: 32px;
+                padding: 0 12px;
+                font-size: 0.85rem;
+                
+                &.btn-view {
+                  color: #5f6368;
+                  border-color: #dadce0;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.recent-events {
+        .event-item {
+          padding: 1rem 0;
+          
+          .event-icon {
+            color: #9aa0a6;
+            margin-right: 1rem;
+          }
+
+          .event-details {
+            display: flex;
+            flex-direction: column;
+
+            .event-title {
+              font-weight: 500;
+              color: #333;
+              font-size: 0.95rem;
+            }
+
+            .event-time {
+              font-size: 0.8rem;
+              color: #757575;
+              margin-top: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

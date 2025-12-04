@@ -1,4 +1,15 @@
 <div class="dashboard-container">
-  <h1>Welcome Gym Owner</h1>
-  <p>This is the Gym Owner Dashboard.</p>
+  <app-header 
+    [menuItems]="menuItems" 
+    userName="John Doe" 
+    userRole="Owner"
+    (logout)="onLogout()"
+    (profile)="onProfile()">
+  </app-header>
+
+  <main class="dashboard-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer></app-footer>
 </div>

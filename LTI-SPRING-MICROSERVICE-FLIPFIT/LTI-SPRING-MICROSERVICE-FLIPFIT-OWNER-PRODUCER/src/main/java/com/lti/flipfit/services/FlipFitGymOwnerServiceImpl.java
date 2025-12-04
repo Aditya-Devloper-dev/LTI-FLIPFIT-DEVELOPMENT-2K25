@@ -62,7 +62,6 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      */
     @Override
     @Transactional
-    @CacheEvict(value = "ownerCache", allEntries = true)
     public boolean toggleCenterActive(Long centerId, Long ownerId) {
         logger.info("Toggling active status for center ID: {}", centerId);
         GymCenter center = centerRepo.findById(centerId)
@@ -112,7 +111,6 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - The added GymCenter object.
      */
     @Override
-    @CacheEvict(value = "ownerCache", key = "#ownerId.toString()")
     public GymCenter addCenter(GymCenter center, Long ownerId) {
         logger.info("Adding center for owner ID: {}", ownerId);
         GymOwner owner = ownerRepo.findById(ownerId)
@@ -132,7 +130,6 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - The updated GymCenter object.
      */
     @Override
-    @CacheEvict(value = "ownerCache", key = "#ownerId.toString()")
     public GymCenter updateCenter(GymCenter center, Long ownerId) {
         logger.info("Updating center with ID: {}", center.getCenterId());
         if (center.getCenterId() == null) {
@@ -178,7 +175,6 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
      * @return - A list of GymCenter objects.
      */
     @Override
-    @Cacheable(value = "ownerCache", key = "#ownerId.toString()")
     public List<GymCenter> getCentersByOwner(Long ownerId) {
         logger.info("Fetching centers for owner ID: {}", ownerId);
         if (!ownerRepo.existsById(ownerId)) {

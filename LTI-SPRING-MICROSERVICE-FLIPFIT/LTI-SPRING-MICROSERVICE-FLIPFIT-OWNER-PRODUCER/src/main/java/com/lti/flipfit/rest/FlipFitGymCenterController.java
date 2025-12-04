@@ -1,5 +1,6 @@
 package com.lti.flipfit.rest;
 
+import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.services.FlipFitGymCenterService;
 import org.slf4j.Logger;
@@ -51,5 +52,17 @@ public class FlipFitGymCenterController {
     public ResponseEntity<List<GymSlot>> getSlotsByCenterId(@PathVariable Long centerId) {
         logger.info("Received request to get slots for center ID: {}", centerId);
         return ResponseEntity.ok(service.getSlotsByCenterId(centerId));
+    }
+
+    /**
+     * @methodname - getCenterById
+     * @description - Retrieves a gym center by its ID.
+     * @param - centerId The ID of the gym center.
+     * @return - The GymCenter entity.
+     */
+    @RequestMapping(value = "/{centerId}", method = RequestMethod.GET)
+    public ResponseEntity<GymCenter> getCenterById(@PathVariable Long centerId) {
+        logger.info("Received request to get center details for ID: {}", centerId);
+        return ResponseEntity.ok(service.getCenterById(centerId));
     }
 }

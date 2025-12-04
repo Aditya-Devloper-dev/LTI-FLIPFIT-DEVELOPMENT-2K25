@@ -7,6 +7,7 @@ package com.lti.flipfit.services;
  */
 
 import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.entity.GymCenter;
 
 import java.util.List;
 
@@ -28,5 +29,13 @@ public interface FlipFitGymCenterService {
      * @return - A list of GymSlot entities.
      */
     List<GymSlot> getSlotsByCenterId(Long centerId);
+
+    /**
+     * @methodname - getCenterById
+     * @description - Fetches a gym center by its ID.
+     * @param - centerId The ID of the gym center.
+     * @return - The GymCenter entity.
+     */
+    GymCenter getCenterById(Long centerId);
 
 }

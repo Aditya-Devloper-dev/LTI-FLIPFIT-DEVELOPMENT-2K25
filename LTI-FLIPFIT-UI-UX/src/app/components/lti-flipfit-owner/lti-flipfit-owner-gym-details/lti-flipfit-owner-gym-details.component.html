@@ -1,0 +1,54 @@
+<div class="gym-details-container" *ngIf="gym; else loading">
+  <button mat-button color="primary" (click)="goBack()" class="back-button">
+    <mat-icon>arrow_back</mat-icon> Back to My Gyms
+  </button>
+
+  <mat-card class="details-card">
+    <div class="card-header">
+      <div class="header-content">
+        <h1 class="mat-headline-3">{{gym.centerName}}</h1>
+        <mat-chip-set>
+          <mat-chip [class]="getStatus(gym) === 'Active' ? 'status-active' : 'status-pending'" selected>
+            {{getStatus(gym)}}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="content-section">
+      <div class="info-grid">
+        <div class="info-item">
+          <mat-icon>location_on</mat-icon>
+          <div class="info-text">
+            <span class="label">Location</span>
+            <span class="value">{{gym.city}}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <div class="info-text">
+            <span class="label">Contact</span>
+            <span class="value">{{gym.contactNumber}}</span>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <mat-icon>verified_user</mat-icon>
+          <div class="info-text">
+            <span class="label">Approval Status</span>
+            <span class="value">{{gym.isApproved ? 'Approved' : 'Pending'}}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <p>Loading gym details...</p>
+  </div>
+</ng-template>
