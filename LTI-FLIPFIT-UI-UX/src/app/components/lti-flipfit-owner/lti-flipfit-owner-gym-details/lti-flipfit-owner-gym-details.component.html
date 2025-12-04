@@ -1,51 +1,107 @@
 <div class="gym-details-container" *ngIf="gym; else loading">
-  <button mat-button color="primary" (click)="goBack()" class="back-button">
-    <mat-icon>arrow_back</mat-icon> Back to My Gyms
-  </button>
+    <button mat-button color="primary" (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon> Back to My Gyms
+    </button>
 
-  <mat-card class="details-card">
-    <div class="card-header">
-      <div class="header-content">
-        <h1 class="mat-headline-3">{{gym.centerName}}</h1>
-        <mat-chip-set>
-          <mat-chip [class]="getStatus(gym) === 'Active' ? 'status-active' : 'status-pending'" selected>
-            {{getStatus(gym)}}
-          </mat-chip>
-        </mat-chip-set>
+    <!-- Main Info & Stats Card -->
+    <mat-card class="main-card">
+      <div class="card-header">
+        <div class="header-content">
+          <h1 class="mat-headline-3">{{gym.centerName}}</h1>
+          <mat-chip-set>
+            <mat-chip [class]="getStatus(gym) === 'Active' ? 'status-active' : 'status-pending'" selected>
+              {{getStatus(gym)}}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
       </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="card-body">
+        <!-- Gym Info -->
+        <div class="info-section">
+          <div class="info-item">
+            <div class="icon-box">
+              <mat-icon>location_on</mat-icon>
+            </div>
+            <div class="info-text">
+              <span class="label">Location</span>
+              <span class="value">{{gym.city}}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="icon-box">
+              <mat-icon>phone</mat-icon>
+            </div>
+            <div class="info-text">
+              <span class="label">Contact</span>
+              <span class="value">{{gym.contactNumber}}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="icon-box">
+              <mat-icon>verified_user</mat-icon>
+            </div>
+            <div class="info-text">
+              <span class="label">Status</span>
+              <span class="value">{{gym.isApproved ? 'Approved' : 'Pending'}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vertical-divider"></div>
+
+        <!-- Stats -->
+        <div class="stats-section">
+          <div class="stat-item">
+            <span class="stat-value">{{stats.totalBookings}}</span>
+            <span class="stat-label">Bookings</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">₹{{stats.revenue}}</span>
+            <span class="stat-label">Revenue</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{stats.activeSlots}}</span>
+            <span class="stat-label">Active Slots</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Slots Section -->
+    <div class="slots-container">
+      <h2 class="section-title">Available Slots</h2>
+      
+      <div class="slots-grid" *ngIf="slots.length > 0; else noSlots">
+        <mat-card class="slot-card" *ngFor="let slot of slots">
+          <mat-card-content>
+            <div class="slot-header">
+              <mat-icon>access_time</mat-icon>
+              <span class="time">{{slot.startTime}} - {{slot.endTime}}</span>
+            </div>
+            <div class="slot-info">
+              <div class="seat-badge" [class.low]="slot.availableSeats < 5">
+                {{slot.availableSeats}} seats left
+              </div>
+              <div class="price">₹{{slot.price}}</div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <ng-template #noSlots>
+        <div class="no-slots-state">
+          <mat-icon>event_busy</mat-icon>
+          <p>No slots available for this gym.</p>
+          <button mat-stroked-button color="primary">Add Slot</button>
+        </div>
+      </ng-template>
     </div>
-
-    <mat-divider></mat-divider>
-
-    <mat-card-content class="content-section">
-      <div class="info-grid">
-        <div class="info-item">
-          <mat-icon>location_on</mat-icon>
-          <div class="info-text">
-            <span class="label">Location</span>
-            <span class="value">{{gym.city}}</span>
-          </div>
-        </div>
-
-        <div class="info-item">
-          <mat-icon>phone</mat-icon>
-          <div class="info-text">
-            <span class="label">Contact</span>
-            <span class="value">{{gym.contactNumber}}</span>
-          </div>
-        </div>
-        
-        <div class="info-item">
-          <mat-icon>verified_user</mat-icon>
-          <div class="info-text">
-            <span class="label">Approval Status</span>
-            <span class="value">{{gym.isApproved ? 'Approved' : 'Pending'}}</span>
-          </div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
+  </div>
 
 <ng-template #loading>
   <div class="loading-container">

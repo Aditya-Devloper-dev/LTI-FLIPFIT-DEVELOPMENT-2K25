@@ -9,39 +9,44 @@ package com.lti.flipfit.services;
 import com.lti.flipfit.entity.*;
 import com.lti.flipfit.exceptions.center.*;
 import com.lti.flipfit.repository.*;
-import com.lti.flipfit.validator.CenterValidator;
 import com.lti.flipfit.validator.OwnerValidator;
 import com.lti.flipfit.exceptions.user.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.CacheEvict;
 
 @Service
 public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
 
     private static final Logger logger = LoggerFactory.getLogger(FlipFitGymCenterServiceImpl.class);
 
-    private final FlipFitGymCenterRepository centerRepo;
-    private final FlipFitGymSlotRepository slotRepo;
-    private final CenterValidator centerValidator;
-    private final FlipFitGymOwnerRepository ownerRepo;
-    private final FlipFitGymBookingRepository bookingRepo;
-    private final OwnerValidator ownerValidator;
+    @Autowired
+    private FlipFitGymCenterRepository centerRepo;
+
+    @Autowired
+    private FlipFitGymSlotRepository slotRepo;
+
+    @Autowired
+    private FlipFitGymOwnerRepository ownerRepo;
+
+    @Autowired
+    private FlipFitGymBookingRepository bookingRepo;
+
+    @Autowired
+    private OwnerValidator ownerValidator;
 
     public FlipFitGymCenterServiceImpl(FlipFitGymCenterRepository centerRepo,
             FlipFitGymSlotRepository slotRepo,
-            CenterValidator centerValidator,
             FlipFitGymOwnerRepository ownerRepo,
             FlipFitGymBookingRepository bookingRepo,
             OwnerValidator ownerValidator) {
         this.centerRepo = centerRepo;
         this.slotRepo = slotRepo;
-        this.centerValidator = centerValidator;
         this.ownerRepo = ownerRepo;
         this.bookingRepo = bookingRepo;
         this.ownerValidator = ownerValidator;
@@ -55,7 +60,6 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      * @throws CenterNotFoundException if center does not exist.
      */
     @Override
-    @Cacheable(value = "centerSlots", key = "#centerId")
     public List<GymSlot> getSlotsByCenterId(Long centerId) {
         logger.info("Fetching all slots for center ID: {}", centerId);
         if (!centerRepo.existsById(centerId)) {

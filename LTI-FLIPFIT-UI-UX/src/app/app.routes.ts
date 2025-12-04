@@ -49,6 +49,7 @@ export const routes: Routes = [
       { path: 'slots', component: LtiFlipFitOwnerSlotsComponent },
       { path: 'profile', component: LtiFlipFitProfileComponent },
       { path: 'add-gym', component: LtiFlipFitOwnerAddGymComponent },
+      { path: 'edit-gym/:id', component: LtiFlipFitOwnerAddGymComponent },
       { path: 'gym-details/:id', component: LtiFlipFitOwnerGymDetailsComponent }
     ]
   },

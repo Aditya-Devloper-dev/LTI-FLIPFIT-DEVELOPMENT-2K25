@@ -9,6 +9,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { OwnerService } from '../../../services/owner-service/owner.service';
 import { GymCenter } from '../../../models/gym-center/gym-center.model';
 
+/*
+* @author: 
+* @version: 1.0
+* @description: This component is used to display the list of gyms.
+*/
 @Component({
   selector: 'app-lti-flipfit-owner-gyms',
   standalone: true,
@@ -36,6 +41,10 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     this.loadGyms();
   }
 
+  /*
+  *@method loadGyms
+  *@description: This method is used to load the gyms.
+  */
   loadGyms() {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
@@ -56,6 +65,11 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     }
   }
 
+  /*
+  *@method getStatus
+  *@param gym
+  *@description: This method is used to get the status of the gym.
+  */
   getStatus(gym: GymCenter): string {
     if (gym.isApproved) {
       return gym.isActive ? 'Active' : 'Inactive';
@@ -63,6 +77,11 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     return 'Pending Approval';
   }
 
+  /*
+  *@method viewDetails
+  *@param id
+  *@description: This method is used to view the details of the gym.
+  */
   viewDetails(id: number) {
     console.log('View details', id);
     this.router.navigate(['/gym-owner-dashboard/gym-details', id]);
@@ -97,10 +116,20 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     }
   }
 
+  /*
+  *@method toggleStatus
+  *@param gym
+  *@description: This method is used to toggle the status of the gym.
+  */
   editGym(id: number) {
     console.log('Edit gym', id);
+    this.router.navigate(['/gym-owner-dashboard/edit-gym', id]);
   }
 
+  /*
+  *@method addNewGym
+  *@description: This method is used to add a new gym.
+  */
   addNewGym() {
     this.router.navigate(['/gym-owner-dashboard/add-gym']);
   }

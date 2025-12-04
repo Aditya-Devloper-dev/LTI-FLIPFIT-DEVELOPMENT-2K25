@@ -8,36 +8,105 @@
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Today's Bookings:</span>
+          <span class="stat-label">Today's Bookings</span>
           <mat-icon class="stat-icon">calendar_today</mat-icon>
         </div>
-        <div class="stat-value">42</div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{todaysBookedCount}}</span>
+            <span class="split-label">Booked</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{todaysCancelledCount}}</span>
+            <span class="split-label">Cancelled</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{todaysPendingCount}}</span>
+            <span class="split-label">Pending</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Active Slots:</span>
+          <span class="stat-label">Gyms</span>
+          <mat-icon class="stat-icon">fitness_center</mat-icon>
+        </div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{totalGymsCount}}</span>
+            <span class="split-label">Total</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{activeGymsCount}}</span>
+            <span class="split-label">Active</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{approvedGymsCount}}</span>
+            <span class="split-label">Approved</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-header">
+          <span class="stat-label">Slots</span>
           <mat-icon class="stat-icon">list</mat-icon>
         </div>
-        <div class="stat-value">15</div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{totalSlotsCount}}</span>
+            <span class="split-label">Total</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{activeSlotsCount}}</span>
+            <span class="split-label">Active</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{approvedSlotsCount}}</span>
+            <span class="split-label">Approved</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Monthly Revenue:</span>
+          <span class="stat-label">Revenue</span>
           <mat-icon class="stat-icon">attach_money</mat-icon>
         </div>
-        <div class="stat-value">₹1,250</div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{monthlyRevenue | currency:'INR':'symbol':'1.0-0'}}</span>
+            <span class="split-label">Monthly</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{weeklyRevenue | currency:'INR':'symbol':'1.0-0'}}</span>
+            <span class="split-label">Weekly</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{todaysRevenue | currency:'INR':'symbol':'1.0-0'}}</span>
+            <span class="split-label">Today</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
 
   <div class="content-grid">
-    <!-- Quick Actions -->
     <div class="left-column">
       <mat-card class="quick-actions-card">
         <mat-card-header>
@@ -63,7 +132,7 @@
         <mat-card-title>Recent Bookings</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <table mat-table [dataSource]="recentBookings" class="activity-table">
+        <table mat-table [dataSource]="recentBookings" class="activity-table" ngSkipHydration>
           <ng-container matColumnDef="customer">
             <th mat-header-cell *matHeaderCellDef> Customer </th>
             <td mat-cell *matCellDef="let element"> {{element.customer}} </td>

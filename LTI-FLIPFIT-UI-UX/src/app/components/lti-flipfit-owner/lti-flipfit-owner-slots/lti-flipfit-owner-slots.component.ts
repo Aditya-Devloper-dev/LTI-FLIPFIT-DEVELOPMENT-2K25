@@ -70,12 +70,6 @@ export class LtiFlipFitOwnerSlotsComponent {
       const user = JSON.parse(userStr);
       if (user.userId) {
         this.userService.getUserById(user.userId).subscribe(u => {
-             // Assuming ownerId is part of user or we get it from somewhere. 
-             // Actually, the login response has ownerId.
-             // Let's check login response again. 
-             // LoginResponse has ownerId.
-             // So we can get it from localStorage directly if we stored the full response.
-             // The previous steps showed we stored the full response in 'user'.
              if (user.ownerId) {
                  this.ownerId = user.ownerId;
                  this.loadGyms();
@@ -158,7 +152,24 @@ export class LtiFlipFitOwnerSlotsComponent {
         },
         error: (err) => {
           console.error('Failed to add slot', err);
-          this.snackBar.open('Failed to add slot', 'Close', { duration: 3000 });
+          let errorMessage = 'Failed to add slot';
+          
+          if (err.error) {
+            if (typeof err.error === 'object' && err.error.message) {
+              errorMessage = err.error.message;
+            } else if (typeof err.error === 'string') {
+              try {
+                const parsed = JSON.parse(err.error);
+                errorMessage = parsed.message || err.error;
+              } catch (e) {
+                errorMessage = err.error;
+              }
+            }
+          } else if (err.message) {
+            errorMessage = err.message;
+          }
+          
+          this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
         }
       });
     } else {

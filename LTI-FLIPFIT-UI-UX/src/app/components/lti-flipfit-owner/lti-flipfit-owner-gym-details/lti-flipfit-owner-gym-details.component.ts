@@ -47,12 +47,42 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
       next: (data) => {
         this.gym = data;
         this.isLoading = false;
+        this.loadSlots(id);
+        this.loadStats(id);
       },
       error: (error) => {
         console.error('Error loading gym details', error);
         this.isLoading = false;
-        // Handle error (e.g., redirect or show message)
       }
+    });
+  }
+
+  slots: any[] = [];
+  stats = {
+    totalBookings: 0,
+    revenue: 0,
+    activeSlots: 0
+  };
+
+  loadSlots(centerId: number) {
+    this.ownerService.getSlotsByCenterId(centerId).subscribe({
+      next: (data) => {
+        this.slots = data;
+        this.stats.activeSlots = data.filter(s => s.isActive).length;
+      },
+      error: (err) => console.error('Error loading slots', err)
+    });
+  }
+
+  loadStats(centerId: number) {
+    this.ownerService.viewAllBookings(centerId).subscribe({
+      next: (data) => {
+        this.stats.totalBookings = data.length;
+        // Assuming price is available in slot or booking, calculating revenue
+        // For now, let's assume a fixed price or sum if available
+        this.stats.revenue = data.reduce((sum, booking) => sum + (booking.slot.price || 0), 0);
+      },
+      error: (err) => console.error('Error loading stats', err)
     });
   }
 
