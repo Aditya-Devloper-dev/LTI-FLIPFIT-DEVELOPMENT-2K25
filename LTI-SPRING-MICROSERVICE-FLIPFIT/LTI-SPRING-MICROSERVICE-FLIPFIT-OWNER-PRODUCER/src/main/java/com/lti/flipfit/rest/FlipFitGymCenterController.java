@@ -28,21 +28,6 @@ public class FlipFitGymCenterController {
     }
 
     /**
-     * @methodname - getSlotsByDate
-     * @description - Retrieves all slots available for the given center on the
-     *              selected date.
-     * @param - centerId The ID of the gym center.
-     * @param - date The date to check availability for.
-     * @return - A list of GymSlot entities.
-     */
-    @RequestMapping(value = "/slots", method = RequestMethod.GET)
-    public ResponseEntity<List<GymSlot>> getSlotsByDate(@RequestParam Long centerId,
-            @RequestParam String date) {
-        logger.info("Received request to get slots for center ID: {} on date: {}", centerId, date);
-        return ResponseEntity.ok(service.getSlotsByDate(centerId, date));
-    }
-
-    /**
      * @methodname - getSlotsByCenterId
      * @description - Retrieves all slots for the given center.
      * @param - centerId The ID of the gym center.

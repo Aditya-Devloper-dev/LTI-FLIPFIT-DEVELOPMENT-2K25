@@ -37,29 +37,6 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
     }
 
     /**
-     * @methodname - getSlotsByDate
-     * @description - Fetches all slots for a given center on a specific date.
-     * @param - centerId The ID of the gym center.
-     * @param - date The date to check availability for.
-     * @return - A list of GymSlot entities.
-     * @throws CenterNotFoundException if center does not exist.
-     */
-    @Override
-    @Cacheable(value = "centerSlots", key = "#centerId + '-' + #date")
-    public List<GymSlot> getSlotsByDate(Long centerId, String date) {
-        logger.info("Fetching slots for center ID: {} on date: {}", centerId, date);
-
-        GymCenter center = centerRepo.findById(centerId)
-                .orElseThrow(() -> new CenterNotFoundException("Center " + centerId + " not found"));
-
-        centerValidator.validateGetSlotsByDate(date, center);
-
-        List<GymSlot> slots = slotRepo.findByCenterCenterId(centerId);
-
-        return slots;
-    }
-
-    /**
      * @methodname - getSlotsByCenterId
      * @description - Fetches all slots for a given center.
      * @param - centerId The ID of the gym center.

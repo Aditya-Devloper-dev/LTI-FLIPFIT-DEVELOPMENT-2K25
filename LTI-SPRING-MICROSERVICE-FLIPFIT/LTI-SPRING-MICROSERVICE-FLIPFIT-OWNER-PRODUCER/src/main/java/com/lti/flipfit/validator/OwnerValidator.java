@@ -39,6 +39,10 @@ public class OwnerValidator {
             throw new InvalidInputException("Start time must be before end time");
         }
 
+        if (slot.getCapacity() <= 0) {
+            throw new InvalidInputException("Capacity must be greater than 0");
+        }
+
         if (!center.getOwner().getOwnerId().equals(ownerId)) {
             throw new UnauthorizedAccessException("You do not own this center");
         }

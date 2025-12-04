@@ -52,7 +52,7 @@ export class LtiFlipFitOwnerSlotsComponent {
     date: '',
     startTime: '',
     endTime: '',
-    capacity: 0,
+    capacity: 10,
     availableSeats: 0,
     price: 0,
     activity: ''
@@ -150,7 +150,7 @@ export class LtiFlipFitOwnerSlotsComponent {
             date: '',
             startTime: '',
             endTime: '',
-            capacity: 0,
+            capacity: 10,
             availableSeats: 0,
             price: 0,
             activity: ''
