@@ -62,8 +62,8 @@
           <div class="action-buttons">
             <button mat-stroked-button color="primary" (click)="viewGym(gym.id)">View</button>
             <ng-container *ngIf="gym.status === 'Pending'">
-              <button mat-flat-button color="primary">Approve</button>
-              <button mat-flat-button color="warn">Reject</button>
+              <button mat-flat-button color="primary" (click)="approveGym(gym.id)">Approve</button>
+              <button mat-flat-button color="warn" (click)="rejectGym(gym.id)">Reject</button>
             </ng-container>
           </div>
         </td>

@@ -109,4 +109,8 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
         return customerDAO.findActiveGyms();
     }
 
+    @Override
+    public GymCustomer getCustomerByUserId(Long userId) {
+        return customerRepo.findByUser_UserId(userId);
+    }
 }

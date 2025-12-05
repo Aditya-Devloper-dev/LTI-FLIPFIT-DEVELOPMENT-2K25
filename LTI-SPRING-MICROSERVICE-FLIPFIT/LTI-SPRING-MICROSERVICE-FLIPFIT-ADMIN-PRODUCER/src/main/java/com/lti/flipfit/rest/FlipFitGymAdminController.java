@@ -17,7 +17,6 @@ import java.util.List;
  * adding slots, updating center details, and retrieving center information.
  */
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/admin")
 public class FlipFitGymAdminController {

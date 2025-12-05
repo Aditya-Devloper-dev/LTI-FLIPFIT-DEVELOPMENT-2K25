@@ -88,4 +88,16 @@ public class FlipFitGymCustomerController {
         logger.info("Received request to view all active gym centers");
         return ResponseEntity.ok(customerService.viewAllGyms());
     }
+
+    /**
+     * @methodname - getCustomerByUserId
+     * @description - Fetches customer details by user ID.
+     * @param - userId The unique ID of the user.
+     * @return - The GymCustomer entity.
+     */
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<GymCustomer> getCustomerByUserId(@PathVariable Long userId) {
+        logger.info("Received request to get customer by user ID: {}", userId);
+        return ResponseEntity.ok(customerService.getCustomerByUserId(userId));
+    }
 }

@@ -51,4 +51,12 @@ public interface FlipFitGymCustomerService {
      * @return - A list of active GymCenter entities.
      */
     List<com.lti.flipfit.entity.GymCenter> viewAllGyms();
+
+    /**
+     * @methodname - getCustomerByUserId
+     * @description - Fetches customer details by user ID.
+     * @param - userId The unique ID of the user.
+     * @return - The GymCustomer entity.
+     */
+    GymCustomer getCustomerByUserId(Long userId);
 }
