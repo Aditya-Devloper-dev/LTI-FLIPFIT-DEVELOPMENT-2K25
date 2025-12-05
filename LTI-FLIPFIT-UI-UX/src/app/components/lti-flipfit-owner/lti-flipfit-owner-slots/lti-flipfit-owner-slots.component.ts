@@ -18,6 +18,11 @@ import { GymCenter } from '../../../models/gym-center/gym-center.model';
 import { GymSlot } from '../../../models/gym-slot/gym-slot.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @description: Component for managing gym slots (view, add, toggle status).
+ */
 @Component({
   selector: 'app-lti-flipfit-owner-slots',
   standalone: true,
@@ -64,6 +69,10 @@ export class LtiFlipFitOwnerSlotsComponent {
     private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Initializes the component and loads gyms for the owner.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -79,6 +88,10 @@ export class LtiFlipFitOwnerSlotsComponent {
     }
   }
 
+  /**
+   * @method loadGyms
+   * @description Loads the gyms owned by the current user.
+   */
   loadGyms() {
     if (this.ownerId) {
       this.ownerService.getGymsByOwnerId(this.ownerId).subscribe({
@@ -90,12 +103,20 @@ export class LtiFlipFitOwnerSlotsComponent {
     }
   }
 
+  /**
+   * @method onGymSelect
+   * @description Handles gym selection change and loads slots for the selected gym.
+   */
   onGymSelect() {
     if (this.selectedGymId) {
       this.loadSlots();
     }
   }
 
+  /**
+   * @method loadSlots
+   * @description Loads slots for the selected gym.
+   */
   loadSlots() {
     if (this.selectedGymId) {
       this.ownerService.getSlotsByCenterId(this.selectedGymId).subscribe({
@@ -107,6 +128,11 @@ export class LtiFlipFitOwnerSlotsComponent {
     }
   }
 
+  /**
+   * @method toggleSlotStatus
+   * @param slot - The slot object.
+   * @description Toggles the active status of a slot.
+   */
   toggleSlotStatus(slot: any) {
     if (this.ownerId && slot.slotId) {
       this.ownerService.toggleSlotActive(slot.slotId, this.ownerId).subscribe({
@@ -123,10 +149,18 @@ export class LtiFlipFitOwnerSlotsComponent {
     }
   }
 
+  /**
+   * @method toggleAddForm
+   * @description Toggles the visibility of the add slot form.
+   */
   toggleAddForm() {
     this.showAddForm = !this.showAddForm;
   }
 
+  /**
+   * @method onSubmit
+   * @description Submits the new slot form.
+   */
   onSubmit() {
     if (this.ownerId && this.selectedGymId) {
       this.newSlot.centerId = this.selectedGymId;
@@ -177,6 +211,10 @@ export class LtiFlipFitOwnerSlotsComponent {
     }
   }
 
+  /**
+   * @method onCancel
+   * @description Cancels the add slot operation.
+   */
   onCancel() {
     this.showAddForm = false;
   }

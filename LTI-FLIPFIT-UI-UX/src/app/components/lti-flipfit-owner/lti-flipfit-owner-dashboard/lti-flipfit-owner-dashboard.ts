@@ -5,6 +5,11 @@ import { HeaderComponent, MenuItem } from '../../../shared/components/header/hea
 import { UserService } from '../../../services/user-service/user.service';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @description: Dashboard component for Gym Owners.
+ */
 @Component({
   selector: 'app-gym-owner-dashboard',
   standalone: true,
@@ -26,6 +31,10 @@ export class LtiFlipFitGymOwnerDashboard implements OnInit {
     private userService: UserService
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Initializes the dashboard and fetches user details.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -51,11 +60,19 @@ export class LtiFlipFitGymOwnerDashboard implements OnInit {
     { label: 'Slots', route: '/gym-owner-dashboard/slots' }
   ];
 
+  /**
+   * @method onLogout
+   * @description Logs out the user and navigates to login page.
+   */
   onLogout() {
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
+  /**
+   * @method onProfile
+   * @description Navigates to the user profile page.
+   */
   onProfile() {
     this.router.navigate(['/gym-owner-dashboard/profile']);
   }

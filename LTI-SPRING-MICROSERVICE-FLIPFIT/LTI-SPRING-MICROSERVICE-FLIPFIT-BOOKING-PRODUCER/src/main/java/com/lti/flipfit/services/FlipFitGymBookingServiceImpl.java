@@ -3,6 +3,7 @@ package com.lti.flipfit.services;
 import com.lti.flipfit.client.PaymentClient;
 import com.lti.flipfit.dao.FlipFitGymBookingDAO;
 import com.lti.flipfit.entity.*;
+import com.lti.flipfit.enums.BookingStatus;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.exceptions.bookings.*;
 import com.lti.flipfit.repository.*;
@@ -57,7 +58,6 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      * @return - A success message with the booking ID.
      */
     @Override
-    @CacheEvict(value = "payments", allEntries = true)
     public String bookSlot(GymBooking booking) {
 
         // Extract IDs from incoming JSON
@@ -80,7 +80,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
         // Step 1: Initialize Booking with PENDING status
         // We do NOT decrement the seat yet.
-        booking.setStatus("PENDING");
+        booking.setStatus(BookingStatus.PENDING);
         booking.setCreatedAt(LocalDateTime.now());
 
         GymBooking savedBooking = bookingRepo.save(booking);
@@ -107,7 +107,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
             slot.setAvailableSeats(slot.getAvailableSeats() - 1);
             slotRepo.save(slot);
 
-            savedBooking.setStatus("BOOKED");
+            savedBooking.setStatus(BookingStatus.BOOKED);
             bookingRepo.save(savedBooking);
 
             logger.info("Booking confirmed. Seat deducted. Booking ID: {}", savedBooking.getBookingId());
@@ -153,15 +153,14 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      */
     @Override
     @Transactional
-    @CacheEvict(value = "payments", allEntries = true)
     public String cancelBooking(Long bookingId) {
         logger.info("Attempting to cancel booking with ID: {}", bookingId);
 
         GymBooking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
-        if ("COMPLETED".equalsIgnoreCase(booking.getStatus())) {
-            throw new BookingCancellationNotAllowedException("Cannot cancel completed bookings");
+        if (BookingStatus.CANCELLED == booking.getStatus()) {
+            throw new BookingCancellationNotAllowedException("Booking is already cancelled");
         }
 
         // Restore seat
@@ -190,7 +189,8 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
             logger.info("Cancellation is less than 1 hour before slot. No refund.");
         }
 
-        bookingRepo.delete(booking);
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepo.save(booking);
 
         logger.info("Booking cancelled successfully. Booking ID: {}", bookingId);
 
@@ -205,7 +205,6 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
      * @return - List of GymPayment objects.
      */
     @Override
-    @Cacheable(value = "payments", key = "{#filterType, #date}")
     public java.util.List<com.lti.flipfit.entity.GymPayment> viewPayments(String filterType, String date) {
         if ("ALL".equalsIgnoreCase(filterType)) {
             return paymentRepo.findAll();

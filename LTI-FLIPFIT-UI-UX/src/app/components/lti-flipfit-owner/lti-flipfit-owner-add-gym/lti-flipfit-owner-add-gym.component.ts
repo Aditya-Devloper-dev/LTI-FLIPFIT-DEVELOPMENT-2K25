@@ -48,6 +48,10 @@ export class LtiFlipFitOwnerAddGymComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Initializes the component and checks for edit mode.
+   */
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -59,6 +63,11 @@ export class LtiFlipFitOwnerAddGymComponent implements OnInit {
     });
   }
 
+  /**
+   * @method loadGymDetails
+   * @description Loads the details of a gym for editing.
+   * @param id - The ID of the gym to load.
+   */
   loadGymDetails(id: number) {
     this.ownerService.getGymDetails(id).subscribe({
       next: (data) => {
@@ -130,6 +139,12 @@ export class LtiFlipFitOwnerAddGymComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * @method handleError
+   * @param error - The error object.
+   * @description Handles errors that occur during gym saving.
+   */
 
   handleError(error: any) {
     console.error('Error saving gym', error);

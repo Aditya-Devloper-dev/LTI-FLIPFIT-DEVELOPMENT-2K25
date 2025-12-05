@@ -31,7 +31,8 @@ public class GymBooking {
     @JoinColumn(name = "center_id", nullable = false)
     private GymCenter center;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private com.lti.flipfit.enums.BookingStatus status;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

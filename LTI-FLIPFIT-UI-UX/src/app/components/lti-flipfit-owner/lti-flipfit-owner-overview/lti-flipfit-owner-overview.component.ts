@@ -12,6 +12,11 @@ import { OwnerService } from '../../../services/owner-service/owner.service';
 import { UserService } from '../../../services/user-service/user.service';
 import { forkJoin } from 'rxjs';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @description: Overview component for the Gym Owner Dashboard, displaying stats and recent bookings.
+ */
 @Component({
   selector: 'app-lti-flipfit-owner-overview',
   standalone: true,
@@ -58,6 +63,10 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
     private userService: UserService
   ) { }
 
+  /**
+   * @method ngOnInit
+   * @description Initializes the component and loads dashboard data.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -76,6 +85,10 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
     }
   }
 
+  /**
+   * @method loadDashboardData
+   * @description Triggers loading of recent bookings and calculation of statistics.
+   */
   loadDashboardData() {
     if (this.ownerId) {
       this.loadRecentBookings();
@@ -83,6 +96,10 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
     }
   }
 
+  /**
+   * @method loadRecentBookings
+   * @description Fetches and displays recent bookings for the owner.
+   */
   loadRecentBookings() {
     if (this.ownerId) {
       this.ownerService.getAllBookingsByOwner(this.ownerId).subscribe({
@@ -100,6 +117,10 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
     }
   }
 
+  /**
+   * @method calculateStats
+   * @description Calculates various statistics like revenue, booking counts, and active slots.
+   */
   calculateStats() {
     const ownerId = this.ownerId;
     if (!ownerId) return;
@@ -213,14 +234,27 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
     });
   }
 
+  /**
+   * @method setRevenueView
+   * @description Toggles the revenue view between monthly and daily.
+   * @param view - The view mode ('monthly' or 'today').
+   */
   setRevenueView(view: 'monthly' | 'today') {
     this.revenueView = view;
   }
 
+  /**
+   * @method onManageGymProfile
+   * @description Navigates to the gym profile management page.
+   */
   onManageGymProfile() {
     this.router.navigate(['/gym-owner-dashboard/profile']);
   }
 
+  /**
+   * @method onAddSlot
+   * @description Navigates to the add slot page.
+   */
   onAddSlot() {
     this.router.navigate(['/gym-owner-dashboard/slots']);
   }

@@ -9,6 +9,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { GymCenter } from '../../../models/gym-center/gym-center.model';
 import { OwnerService } from '../../../services/owner-service/owner.service';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @description: Component to display details of a specific gym center.
+ */
 @Component({
   selector: 'app-lti-flipfit-owner-gym-details',
   standalone: true,
@@ -33,6 +38,10 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     private ownerService: OwnerService
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Initializes the component and loads gym details.
+   */
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -42,6 +51,11 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @method loadGymDetails
+   * @description Loads the details of the gym.
+   * @param id - The ID of the gym.
+   */
   loadGymDetails(id: number) {
     this.ownerService.getGymDetails(id).subscribe({
       next: (data) => {
@@ -64,6 +78,11 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     activeSlots: 0
   };
 
+  /**
+   * @method loadSlots
+   * @description Loads the slots for the gym.
+   * @param centerId - The ID of the gym center.
+   */
   loadSlots(centerId: number) {
     this.ownerService.getSlotsByCenterId(centerId).subscribe({
       next: (data) => {
@@ -74,6 +93,11 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @method loadStats
+   * @description Loads the statistics for the gym.
+   * @param centerId - The ID of the gym center.
+   */
   loadStats(centerId: number) {
     this.ownerService.viewAllBookings(centerId).subscribe({
       next: (data) => {
@@ -86,6 +110,12 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @method getStatus
+   * @description Returns the display status of the gym.
+   * @param gym - The gym center object.
+   * @returns The status string.
+   */
   getStatus(gym: GymCenter): string {
     if (gym.isApproved) {
       return gym.isActive ? 'Active' : 'Inactive';
@@ -93,6 +123,10 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     return 'Pending Approval';
   }
 
+  /**
+   * @method goBack
+   * @description Navigates back to the gym list.
+   */
   goBack() {
     this.router.navigate(['/gym-owner-dashboard/my-gyms']);
   }

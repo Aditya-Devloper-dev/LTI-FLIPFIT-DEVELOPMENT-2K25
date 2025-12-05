@@ -64,7 +64,7 @@ public class FlipFitGymSchedulerServiceImpl implements FlipFitGymSchedulerServic
                 newBooking.setCustomer(waitlistEntry.getCustomer());
                 newBooking.setSlot(slot);
                 newBooking.setCenter(slot.getCenter());
-                newBooking.setStatus("CONFIRMED");
+                newBooking.setStatus(com.lti.flipfit.enums.BookingStatus.BOOKED);
                 newBooking.setCreatedAt(LocalDateTime.now());
                 newBooking.setOwnerApprovalRequired(false);
                 newBooking.setApprovedByOwner(true); // Auto-approve promoted bookings
