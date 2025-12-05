@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
 import { UserService } from '../../../services/user-service/user.service';
 import { RoleType } from '../../../models/enums/role.type';
 
@@ -20,7 +21,8 @@ import { RoleType } from '../../../models/enums/role.type';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSelectModule
   ],
   templateUrl: './lti-flipfit-admin-users.component.html',
   styleUrl: './lti-flipfit-admin-users.component.scss'
@@ -28,6 +30,8 @@ import { RoleType } from '../../../models/enums/role.type';
 export class LtiFlipFitAdminUsersComponent implements OnInit {
   displayedColumns: string[] = ['name', 'email', 'role', 'status', 'actions'];
   users: any[] = [];
+  allUsers: any[] = [];
+  selectedRole: string = 'ALL';
 
   constructor(
     private router: Router,
@@ -41,18 +45,36 @@ export class LtiFlipFitAdminUsersComponent implements OnInit {
   loadUsers() {
     this.userService.getAllUsers().subscribe({
       next: (data) => {
-        this.users = data
+        this.allUsers = data
           .filter(user => user.role?.roleName === RoleType.OWNER || user.role?.roleName === RoleType.CUSTOMER)
           .map(user => ({
             name: user.fullName,
             email: user.email,
             role: user.role?.roleName === RoleType.OWNER ? 'Gym Owner' : 'Customer',
-            status: 'Active', // Defaulting to Active as User entity doesn't have status
+            rawRole: user.role?.roleName, // Keep raw role for filtering
+            status: 'Active',
             id: user.userId
           }));
+        this.applyFilter();
       },
       error: (err) => console.error('Failed to load users', err)
     });
+  }
+
+  onRoleFilterChange(event: any) {
+    this.selectedRole = event.value;
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    if (this.selectedRole === 'ALL') {
+      this.users = [...this.allUsers];
+    } else {
+      this.users = this.allUsers.filter(user => 
+        (this.selectedRole === 'OWNER' && user.rawRole === RoleType.OWNER) ||
+        (this.selectedRole === 'CUSTOMER' && user.rawRole === RoleType.CUSTOMER)
+      );
+    }
   }
 
   viewUser(id: string) {

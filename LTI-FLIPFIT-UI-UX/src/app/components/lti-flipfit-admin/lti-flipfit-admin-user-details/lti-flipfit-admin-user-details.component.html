@@ -8,9 +8,21 @@
   <div class="details-header">
     <div class="title-section">
       <h2 class="user-name mat-headline-4">User Details: {{ user.fullName }}</h2>
-      <mat-chip-set class="status-chip">
-        <mat-chip class="status-active" selected>Active</mat-chip>
-      </mat-chip-set>
+      <div class="status-actions">
+        <!-- Show Active/Inactive status -->
+        <mat-chip-set class="status-chip">
+          <mat-chip [class]="user.isApproved ? 'status-active' : 'status-pending'" selected>
+            {{ user.isApproved ? 'Active' : 'Pending Approval' }}
+          </mat-chip>
+        </mat-chip-set>
+
+        <!-- Show Approve Button only for Gym Owners who are not approved -->
+        <button mat-flat-button color="primary" 
+                *ngIf="user.roleName === roleType.OWNER && !user.isApproved"
+                (click)="approveOwner()">
+          Approve Owner
+        </button>
+      </div>
     </div>
   </div>
 

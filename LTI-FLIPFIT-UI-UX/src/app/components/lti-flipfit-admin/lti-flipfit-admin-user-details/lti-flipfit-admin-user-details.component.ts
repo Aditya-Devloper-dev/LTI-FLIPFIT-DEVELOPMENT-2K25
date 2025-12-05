@@ -10,6 +10,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { UserService } from '../../../services/user-service/user.service';
 import { CustomerService } from '../../../services/customer-service/customer.service';
 import { OwnerService } from '../../../services/owner-service/owner.service';
+import { AdminService } from '../../../services/admin-service/admin.service';
 import { RoleType } from '../../../models/enums/role.type';
 
 @Component({
@@ -38,7 +39,8 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private userService: UserService,
     private customerService: CustomerService,
-    private ownerService: OwnerService
+    private ownerService: OwnerService,
+    private adminService: AdminService
   ) {}
 
   ngOnInit() {
@@ -53,7 +55,9 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
       const foundUser = users.find(u => u.userId.toString() === userId);
       if (foundUser) {
         this.user = foundUser;
-        this.user.roleName = foundUser.role?.roleName; // Normalize role name access
+        this.user.roleName = foundUser.role?.roleName;
+        // Default isApproved to true for customers, logic will update for owners
+        this.user.isApproved = true;
 
         if (this.user.roleName === RoleType.CUSTOMER) {
           this.loadCustomerData(foundUser.userId);
@@ -62,6 +66,18 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
         }
       }
     });
+  }
+
+  approveOwner() {
+    if (this.user && this.user.ownerId) {
+      this.adminService.approveOwner(this.user.ownerId).subscribe({
+        next: () => {
+          this.user.isApproved = true;
+          this.loadOwnerData(this.user.userId); // Reload to metrics
+        },
+        error: (err) => console.error('Approval failed', err)
+      });
+    }
   }
 
   loadCustomerData(userId: number) {
@@ -81,7 +97,6 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
           const totalBookings = bookings.length;
           const attended = bookings.filter(b => b.status === 'ATTENDED').length;
           const cancelled = bookings.filter(b => b.status === 'CANCELLED').length;
-          // Last active logic could be complex, using last booking date for now
           const lastActive = bookings.length > 0 ? bookings[bookings.length - 1].bookingDate : 'N/A';
 
           this.stats = {
@@ -98,6 +113,9 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
   loadOwnerData(userId: number) {
     this.ownerService.getOwnerByUserId(userId).subscribe(owner => {
       if (owner) {
+        this.user.ownerId = owner.ownerId;
+        this.user.isApproved = owner.isApproved;
+
         this.ownerService.getGymsByOwnerId(owner.ownerId).subscribe(gyms => {
           this.tableData = gyms.map(g => ({
             name: g.centerName,
@@ -110,13 +128,13 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
           // Calculate Stats
           const totalGyms = gyms.length;
           const activeGyms = gyms.filter(g => g.isActive).length;
-          const pendingGyms = totalGyms - activeGyms; // Assuming inactive means pending/not approved
-          const lastActive = 'N/A'; // Owner activity logic
+          const pendingGyms = totalGyms - activeGyms;
+          const lastActive = 'N/A';
 
           this.stats = {
             box1: { value: totalGyms, label: 'Total Gyms' },
             box2: { value: activeGyms, label: 'Active Gyms', class: 'success' },
-            box3: { value: pendingGyms, label: 'Pending Gyms', class: 'warning' }, // Changed class to warning for pending
+            box3: { value: pendingGyms, label: 'Pending Gyms', class: 'warning' },
             box4: { value: lastActive, label: 'Last Active', class: 'info' }
           };
         });

@@ -4,13 +4,13 @@
     <div class="header-actions">
       <mat-form-field appearance="outline" class="search-input">
         <mat-label>Search gyms</mat-label>
-        <input matInput placeholder="Ex. FitZone">
+        <input matInput placeholder="Ex. FitZone" [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()">
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
       
       <mat-form-field appearance="outline" class="filter-select">
         <mat-label>Status</mat-label>
-        <mat-select value="all">
+        <mat-select [(value)]="filterStatus" (selectionChange)="applyFilter()">
           <mat-option value="all">All Status</mat-option>
           <mat-option value="pending">Pending</mat-option>
           <mat-option value="active">Active</mat-option>
