@@ -1,10 +1,10 @@
-<mat-card class="notifications-card" *ngIf="notifications.length > 0">
+<mat-card class="notifications-card">
   <mat-card-header class="notification-header">
     <mat-card-title>Notifications</mat-card-title>
-    <button mat-button color="warn" (click)="onClearAll()">Clear All</button>
+    <button mat-button color="warn" (click)="onClearAll()" *ngIf="notifications.length > 0">Clear All</button>
   </mat-card-header>
   <mat-card-content>
-    <div class="notification-list">
+    <div class="notification-list" *ngIf="notifications.length > 0; else noNotifications">
       <div class="notification-item" *ngFor="let notification of notifications">
         <mat-icon color="primary">notifications</mat-icon>
         <div class="notification-text">
@@ -13,5 +13,12 @@
         </div>
       </div>
     </div>
+    <ng-template #noNotifications>
+      <div class="no-notifications">
+        <mat-icon class="empty-icon">notifications_none</mat-icon>
+        <p class="empty-text">No New Notifications</p>
+        <p class="empty-subtext">We'll notify you when something important happens.</p>
+      </div>
+    </ng-template>
   </mat-card-content>
 </mat-card>

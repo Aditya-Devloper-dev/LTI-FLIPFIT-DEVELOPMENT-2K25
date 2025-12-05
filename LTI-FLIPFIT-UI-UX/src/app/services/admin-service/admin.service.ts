@@ -68,4 +68,26 @@ export class AdminService {
   approveOwner(ownerId: number): Observable<string> {
     return this.http.put(`${this.baseUrl}/approve-owner/${ownerId}`, {}, { responseType: 'text' });
   }
+
+  /**
+   * @description: Fetches all pending gym owners.
+   * @returns: Observable of GymOwner array.
+   */
+  getPendingOwners(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/pending-owners`);
+  }
+
+  /**
+   * @description: Retrieves payments based on filter type and date.
+   * @param filterType The type of filter (ALL, MONTHLY, WEEKLY, DAILY).
+   * @param date The specific date for DAILY filter (YYYY-MM-DD).
+   * @returns Observable of GymPayment array.
+   */
+  viewPayments(filterType: string = 'ALL', date?: string): Observable<any[]> {
+    let url = `${this.baseUrl}/payments?filterType=${filterType}`;
+    if (date) {
+      url += `&date=${date}`;
+    }
+    return this.http.get<any[]>(url);
+  }
 }

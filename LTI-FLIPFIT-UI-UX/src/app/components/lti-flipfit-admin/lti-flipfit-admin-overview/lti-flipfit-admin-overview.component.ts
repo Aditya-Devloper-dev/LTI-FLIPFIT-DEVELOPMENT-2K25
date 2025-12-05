@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { AdminService } from '../../../services/admin-service/admin.service';
+import { UserService } from '../../../services/user-service/user.service';
+import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notification/lti-flipfit-notification.component';
 
 @Component({
   selector: 'app-lti-flipfit-admin-overview',
@@ -13,22 +16,110 @@ import { MatListModule } from '@angular/material/list';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    LtiFlipFitNotificationComponent
   ],
   templateUrl: './lti-flipfit-admin-overview.component.html',
   styleUrl: './lti-flipfit-admin-overview.component.scss'
 })
-export class LtiFlipFitAdminOverviewComponent {
-  pendingGyms = [
-    { name: 'FlipFit Gym', location: 'Kandwente, GA' },
-    { name: 'FlipFit Rover Gym', location: 'Leumbourw, HL' },
-    { name: 'FlipFit Gym', location: 'Kanshrame, GA' }
-  ];
+export class LtiFlipFitAdminOverviewComponent implements OnInit {
+  // Gym Stats
+  totalGyms = 0;
+  pendingGymsCount = 0;
+  approvedGymsCount = 0;
 
-  recentEvents = [
-    { title: 'User registered Administrativn', time: '11 Jun 12, 2023, 07:43 AM' },
-    { title: 'User registered Adminisaaow', time: '11 Jun 12, 2023, 07:48 AM' },
-    { title: 'Booking Confirmed by natad Rornax Flanana', time: '11 Jun 12, 2023, 13:38 AM' },
-    { title: 'Booking Confirmed by nated Aomin Fianana', time: '11 Jun 12, 2023, 12:38 AM' }
-  ];
+  // User Stats
+  totalUsers = 0;
+  customerCount = 0;
+  ownerCount = 0;
+
+  // Booking Stats
+  totalBookings = 0;
+  bookedCount = 0;
+  attendedCount = 0; // Pending or Attended
+
+  // Revenue Stats
+  monthlyRevenue = 0;
+  weeklyRevenue = 0;
+  dailyRevenue = 0;
+
+  // Recent Action lists
+  pendingGymsList: any[] = [];
+  pendingOwnersList: any[] = [];
+  
+  constructor(
+    private adminService: AdminService,
+    private userService: UserService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadGymStats();
+    this.loadUserStats();
+    this.loadBookingAndRevenueStats();
+  }
+
+  loadGymStats() {
+    this.adminService.getAllCenters().subscribe({
+      next: (centers) => {
+        console.log('Centers:', centers);
+        this.totalGyms = centers.length;
+        this.approvedGymsCount = centers.filter(c => c.isApproved).length;
+        this.pendingGymsCount = this.totalGyms - this.approvedGymsCount;
+      },
+      error: (e) => console.error('Error loading gyms', e)
+    });
+
+    this.adminService.getPendingCenters().subscribe({
+      next: (pending) => {
+        this.pendingGymsList = pending;
+      }
+    });
+
+    this.adminService.getPendingOwners().subscribe({
+      next: (pending) => {
+        this.pendingOwnersList = pending;
+      },
+      error: (e) => console.error('Error loading pending owners', e)
+    });
+  }
+
+  loadUserStats() {
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        console.log('Users:', users);
+        this.totalUsers = users.length;
+        this.customerCount = users.filter((u: any) => u.role === 'CUSTOMER').length;
+        this.ownerCount = users.filter((u: any) => u.role === 'GYM_OWNER').length;
+      },
+      error: (e) => console.error('Error loading users', e)
+    });
+  }
+
+  loadBookingAndRevenueStats() {
+    this.adminService.viewPayments('MONTHLY').subscribe(payments => {
+         this.monthlyRevenue = payments.reduce((sum: number, p: any) => sum + (p.amount || 0), 0);
+    });
+    this.adminService.viewPayments('WEEKLY').subscribe(payments => {
+         this.weeklyRevenue = payments.reduce((sum: number, p: any) => sum + (p.amount || 0), 0);
+    });
+    this.adminService.viewPayments('DAILY').subscribe(payments => {
+         this.dailyRevenue = payments.reduce((sum: number, p: any) => sum + (p.amount || 0), 0);
+    });
+
+    // Approximate bookings from all payments
+    this.adminService.viewPayments('ALL').subscribe(payments => {
+        this.totalBookings = payments.length; 
+        this.bookedCount = payments.length; // Assuming all payments = booked
+        // Attempt to find attended status if available in nested object
+        this.attendedCount = payments.filter((p: any) => p.booking?.status === 'ATTENDED').length; 
+    });
+  }
+
+  formatStat(value: number, isCurrency: boolean = false): string {
+    if (value === undefined || value === null) return '0';
+    if (isCurrency) {
+      return '₹' + value.toLocaleString('en-IN');
+    }
+    return value.toLocaleString('en-IN');
+  }
 }
