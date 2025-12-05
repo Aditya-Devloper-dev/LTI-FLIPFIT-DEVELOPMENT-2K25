@@ -102,8 +102,6 @@ export class LtiFlipFitOwnerGymDetailsComponent implements OnInit {
     this.ownerService.viewAllBookings(centerId).subscribe({
       next: (data) => {
         this.stats.totalBookings = data.length;
-        // Assuming price is available in slot or booking, calculating revenue
-        // For now, let's assume a fixed price or sum if available
         this.stats.revenue = data.reduce((sum, booking) => sum + (booking.slot.price || 0), 0);
       },
       error: (err) => console.error('Error loading stats', err)

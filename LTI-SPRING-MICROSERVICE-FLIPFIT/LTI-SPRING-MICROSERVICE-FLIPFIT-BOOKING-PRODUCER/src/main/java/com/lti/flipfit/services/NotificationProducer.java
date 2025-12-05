@@ -1,4 +1,4 @@
-package com.lti.flipfit.service;
+package com.lti.flipfit.services;
 
 import com.lti.flipfit.dto.NotificationEvent;
 import org.slf4j.Logger;

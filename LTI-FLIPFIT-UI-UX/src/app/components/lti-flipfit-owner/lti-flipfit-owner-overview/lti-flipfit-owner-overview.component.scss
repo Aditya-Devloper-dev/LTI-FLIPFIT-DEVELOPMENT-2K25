@@ -71,28 +71,37 @@
         .split-item {
           display: flex;
           flex-direction: column;
-          align-items: flex-start; // Align to left for cleaner look, or center
+          align-items: center;
+          flex: 1;
+          min-width: 0;
           
           .split-value {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #2c3e50;
             line-height: 1.2;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
           }
 
           .split-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #7f8c8d;
             font-weight: 500;
             margin-top: 4px;
+            text-align: center;
           }
         }
 
         .split-divider {
           width: 1px;
-          height: 40px;
+          height: 30px;
           background-color: #e0e0e0;
-          margin: 0 8px;
+          margin: 0 4px;
+          flex-shrink: 0;
         }
       }
     }

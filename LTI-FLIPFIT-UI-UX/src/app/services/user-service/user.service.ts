@@ -26,4 +26,7 @@ export class UserService {
   updateProfile(userId: number, user: any): Observable<string> {
     return this.http.put(`${this.apiUrl}/update/${userId}`, user, { responseType: 'text' });
   }
+  getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/all`);
+  }
 }

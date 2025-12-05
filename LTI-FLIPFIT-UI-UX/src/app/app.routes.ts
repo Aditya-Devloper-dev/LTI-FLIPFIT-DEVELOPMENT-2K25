@@ -35,8 +35,7 @@ export const routes: Routes = [
       { path: 'gyms/:id', component: LtiFlipFitAdminGymDetailsComponent },
       { path: 'users', component: LtiFlipFitAdminUsersComponent },
       { path: 'users/:id', component: LtiFlipFitAdminUserDetailsComponent },
-      { path: 'profile', component: LtiFlipFitProfileComponent },
-      { path: 'reports', redirectTo: 'overview' } // Placeholder for reports
+      { path: 'profile', component: LtiFlipFitProfileComponent }
     ]
   },
   {

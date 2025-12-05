@@ -258,4 +258,25 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
   onAddSlot() {
     this.router.navigate(['/gym-owner-dashboard/slots']);
   }
+
+  /**
+   * @method formatStat
+   * @description Formats numbers for display (e.g., 10k for >10000) and adds currency symbol if needed.
+   */
+  formatStat(value: number, isCurrency: boolean = false): string {
+    if (value === undefined || value === null) return '0';
+    
+    let formattedValue = '';
+    if (value >= 10000) {
+      formattedValue = (value / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    } else {
+      // Add commas for thousands separator if not using k notation
+      formattedValue = value.toLocaleString('en-IN');
+    }
+
+    if (isCurrency) {
+      return '₹' + formattedValue;
+    }
+    return formattedValue;
+  }
 }

@@ -11,10 +11,9 @@ import com.lti.flipfit.validator.BookingValidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +45,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
     @Autowired
     private BookingValidator bookingValidator;
     @Autowired
-    private com.lti.flipfit.service.NotificationProducer notificationProducer;
+    private NotificationProducer notificationProducer;
     @Autowired
     private FlipFitGymCustomerRepository customerRepo;
 
@@ -240,5 +239,26 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
         logger.info("Fetching payments from {} to {}", startDateTime, endDateTime);
         return bookingDAO.findPaymentsByDateRange(startDateTime, endDateTime);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void markBookingsAsAttended() {
+        java.util.List<GymBooking> bookings = bookingRepo.findByStatus(BookingStatus.BOOKED);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (GymBooking booking : bookings) {
+            LocalDate bookingDate = booking.getBookingDate();
+            if (bookingDate == null)
+                continue;
+
+            LocalDateTime slotEndTime = LocalDateTime.of(bookingDate, booking.getSlot().getEndTime());
+
+            if (now.isAfter(slotEndTime.plusMinutes(20))) {
+                booking.setStatus(BookingStatus.ATTENDED);
+                bookingRepo.save(booking);
+                logger.info("Booking ID {} marked as ATTENDED", booking.getBookingId());
+            }
+        }
     }
 }
