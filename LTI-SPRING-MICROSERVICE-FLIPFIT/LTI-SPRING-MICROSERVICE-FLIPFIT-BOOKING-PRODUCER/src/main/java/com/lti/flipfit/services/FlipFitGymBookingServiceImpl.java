@@ -15,12 +15,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  * Author :
@@ -240,5 +242,24 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
 
         logger.info("Fetching payments from {} to {}", startDateTime, endDateTime);
         return bookingDAO.findPaymentsByDateRange(startDateTime, endDateTime);
+    }
+
+    @Scheduled(fixedRate = 60000) // Run every minute
+    @Transactional
+    public void markBookingsAsAttended() {
+        logger.info("Running scheduled task to mark bookings as ATTENDED");
+        java.util.List<GymBooking> bookings = bookingRepo.findByStatus(BookingStatus.BOOKED);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (GymBooking booking : bookings) {
+            if (booking.getBookingDate() != null && booking.getSlot() != null) {
+                LocalDateTime slotEndTime = LocalDateTime.of(booking.getBookingDate(), booking.getSlot().getEndTime());
+                if (slotEndTime.plusMinutes(20).isBefore(now)) {
+                    booking.setStatus(BookingStatus.ATTENDED);
+                    bookingRepo.save(booking);
+                    logger.info("Marked Booking ID {} as ATTENDED", booking.getBookingId());
+                }
+            }
+        }
     }
 }
