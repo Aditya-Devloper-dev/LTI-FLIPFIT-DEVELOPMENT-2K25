@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { Router } from '@angular/router';
 import { AdminService } from '../../../services/admin-service/admin.service';
 import { UserService } from '../../../services/user-service/user.service';
 import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notification/lti-flipfit-notification.component';
@@ -50,13 +51,22 @@ export class LtiFlipFitAdminOverviewComponent implements OnInit {
   
   constructor(
     private adminService: AdminService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadGymStats();
     this.loadUserStats();
     this.loadBookingAndRevenueStats();
+  }
+
+  viewGymDetails(gymId: number) {
+    this.router.navigate(['/admin-dashboard/gyms', gymId]);
+  }
+
+  viewUserDetails(userId: number) {
+    this.router.navigate(['/admin-dashboard/users', userId]);
   }
 
   loadGymStats() {

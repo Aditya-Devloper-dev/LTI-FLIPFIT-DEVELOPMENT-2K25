@@ -9,7 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdminService } from '../../../services/admin-service/admin.service';
+import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
 @Component({
   selector: 'app-lti-flipfit-admin-gyms',
@@ -23,7 +26,9 @@ import { AdminService } from '../../../services/admin-service/admin.service';
     MatInputModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './lti-flipfit-admin-gyms.component.html',
   styleUrl: './lti-flipfit-admin-gyms.component.scss'
@@ -36,7 +41,8 @@ export class LtiFlipFitAdminGymsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -80,17 +86,22 @@ export class LtiFlipFitAdminGymsComponent implements OnInit {
     this.router.navigate(['/admin-dashboard/gyms', id]);
   }
 
-  approveGym(id: number) {
-    this.adminService.approveCenter(id).subscribe(() => {
-      this.loadGyms(); // Reload to update status
+  deleteGym(id: number) {
+    const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Gym Center',
+        message: 'Are you sure you want to delete this gym center? This action cannot be undone.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.adminService.deleteCenter(id).subscribe(() => {
+          this.loadGyms();
+        });
+      }
     });
   }
 
-  rejectGym(id: number) {
-    if (confirm('Are you sure you want to reject (delete) this gym?')) {
-      this.adminService.deleteCenter(id).subscribe(() => {
-        this.loadGyms(); // Reload to remove from list
-      });
-    }
-  }
 }

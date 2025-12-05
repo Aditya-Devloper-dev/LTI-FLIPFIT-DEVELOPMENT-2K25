@@ -30,7 +30,7 @@ export class AdminService {
    * @returns: Observable of GymCenter array.
    */
   getPendingCenters(): Observable<GymCenter[]> {
-    return this.http.get<GymCenter[]>(`${this.baseUrl}/pending-centers?t=${new Date().getTime()}`);
+    return this.http.get<GymCenter[]>(`${this.baseUrl}/pending-centers`);
   }
 
   /**
@@ -74,7 +74,7 @@ export class AdminService {
    * @returns: Observable of GymOwner array.
    */
   getPendingOwners(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/pending-owners?t=${new Date().getTime()}`);
+    return this.http.get<any[]>(`${this.baseUrl}/pending-owners`);
   }
 
   /**
@@ -115,5 +115,14 @@ export class AdminService {
    */
   rejectSlot(slotId: number): Observable<string> {
     return this.http.put(`${this.baseUrl}/reject-slot/${slotId}`, {}, { responseType: 'text' });
+  }
+
+  /**
+   * @description: Deletes a slot by its ID.
+   * @param slotId: The ID of the slot to delete.
+   * @returns: Observable of string response.
+   */
+  deleteSlot(slotId: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/delete-slot/${slotId}`, { responseType: 'text' });
   }
 }

@@ -116,6 +116,9 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
       if (owner) {
         this.user.ownerId = owner.ownerId;
         this.user.isApproved = owner.approved;
+        this.user.businessName = owner.businessName;
+        this.user.gstNumber = owner.gstNumber;
+        this.user.panNumber = owner.panNumber;
 
         this.ownerService.getGymsByOwnerId(owner.ownerId).subscribe(gyms => {
           this.tableData = gyms.map(g => ({

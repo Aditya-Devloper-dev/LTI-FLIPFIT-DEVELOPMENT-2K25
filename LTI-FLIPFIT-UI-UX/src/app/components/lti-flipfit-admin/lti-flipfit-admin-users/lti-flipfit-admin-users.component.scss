@@ -10,9 +10,15 @@
       margin: 0;
     }
 
-    .search-input {
-      font-size: 0.9rem;
-      width: 250px;
+    .header-actions {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+
+      .search-input {
+        font-size: 0.9rem;
+        width: 250px;
+      }
     }
   }
 
@@ -63,7 +69,7 @@
 
       // Status Chip Styles
       ::ng-deep .mat-mdc-chip {
-        &.status-active {
+        &.status-active, &.status-approved {
           background-color: #e8f5e9 !important;
           color: #2e7d32 !important;
           --mdc-chip-label-text-color: #2e7d32 !important;

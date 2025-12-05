@@ -16,7 +16,6 @@ import com.lti.flipfit.dto.NotificationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +64,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
-    @CacheEvict(value = "pendingSlots", allEntries = true)
     public String approveSlot(Long slotId) {
         GymSlot slot = slotRepo.findById(slotId)
                 .orElseThrow(() -> new SlotNotFoundException("Slot not found with ID: " + slotId));
@@ -106,7 +104,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of pending GymSlot objects.
      */
     @Override
-    @Cacheable(value = "pendingSlots", key = "#centerId")
     public List<GymSlot> getPendingSlots(Long centerId) {
         logger.info("Fetching pending slots for center ID: {}", centerId);
         return adminDAO.findPendingSlots(centerId);
@@ -118,7 +115,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of all GymCenter objects.
      */
     @Override
-    @Cacheable(value = "gymCenters")
     public List<GymCenter> getAllCenters() {
         logger.info("Fetching all centers");
         return centerRepo.findAll();
@@ -132,7 +128,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @throws CenterNotFoundException if the center is not found.
      */
     @Override
-    @Cacheable(value = "gymCenter", key = "#centerId")
     public GymCenter getCenterById(Long centerId) {
         logger.info("Fetching center with ID: {}", centerId);
         return centerRepo.findById(centerId)
@@ -148,7 +143,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
-    @CacheEvict(value = "pendingOwners", allEntries = true)
     public String approveOwner(Long ownerId) {
         GymOwner owner = ownerRepo.findById(ownerId)
                 .orElseThrow(() -> new InvalidInputException("Owner not found with ID: " + ownerId));
@@ -175,7 +169,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of pending GymOwner objects.
      */
     @Override
-    @Cacheable(value = "pendingOwners")
     public List<GymOwner> getPendingOwners() {
         logger.info("Fetching pending owners");
         return adminDAO.findPendingOwners();
@@ -189,7 +182,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      */
     @Override
     @Transactional
-    @CacheEvict(value = { "pendingCenters", "gymCenters" }, allEntries = true)
     public String approveCenter(Long centerId) {
         GymCenter center = centerRepo.findById(centerId)
                 .orElseThrow(() -> new CenterNotFoundException("Center not found with ID: " + centerId));
@@ -216,7 +208,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of pending GymCenter objects.
      */
     @Override
-    @Cacheable(value = "pendingCenters")
     public List<GymCenter> getPendingCenters() {
         logger.info("Fetching pending centers");
         return adminDAO.findPendingCenters();
@@ -264,7 +255,6 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
      * @return List of GymPayment objects.
      */
     @Override
-    @Cacheable(value = "adminPayments", key = "{#filterType, #date}")
     public List<com.lti.flipfit.entity.GymPayment> viewPayments(String filterType, String date) {
         logger.info("Fetching payments via Feign Client with filter: {} and date: {}", filterType, date);
         return bookingClient.viewPayments(filterType, date);

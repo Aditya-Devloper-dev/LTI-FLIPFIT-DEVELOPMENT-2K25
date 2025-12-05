@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { UserService } from '../../../services/user-service/user.service';
+import { AdminService } from '../../../services/admin-service/admin.service';
 import { RoleType } from '../../../models/enums/role.type';
 
 @Component({
@@ -35,7 +36,8 @@ export class LtiFlipFitAdminUsersComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private adminService: AdminService
   ) {}
 
   ngOnInit() {
@@ -43,21 +45,33 @@ export class LtiFlipFitAdminUsersComponent implements OnInit {
   }
 
   loadUsers() {
-    this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.allUsers = data
-          .filter(user => user.role?.roleName === RoleType.OWNER || user.role?.roleName === RoleType.CUSTOMER)
-          .map(user => ({
-            name: user.fullName,
-            email: user.email,
-            role: user.role?.roleName === RoleType.OWNER ? 'Gym Owner' : 'Customer',
-            rawRole: user.role?.roleName, // Keep raw role for filtering
-            status: 'Active',
-            id: user.userId
-          }));
-        this.applyFilter();
-      },
-      error: (err) => console.error('Failed to load users', err)
+    // Determine status by checking pending owners
+    this.adminService.getPendingOwners().subscribe(pendingOwners => {
+      const pendingUserIds = new Set(pendingOwners.map(o => o.user?.userId));
+
+      this.userService.getAllUsers().subscribe({
+        next: (data) => {
+          this.allUsers = data
+            .filter(user => user.role?.roleName === RoleType.OWNER || user.role?.roleName === RoleType.CUSTOMER)
+            .map(user => {
+              let status = 'Active';
+              if (user.role?.roleName === RoleType.OWNER) {
+                status = pendingUserIds.has(user.userId) ? 'Pending' : 'Approved';
+              }
+              
+              return {
+                name: user.fullName,
+                email: user.email,
+                role: user.role?.roleName === RoleType.OWNER ? 'Gym Owner' : 'Customer',
+                rawRole: user.role?.roleName,
+                status: status,
+                id: user.userId
+              };
+            });
+          this.applyFilter();
+        },
+        error: (err) => console.error('Failed to load users', err)
+      });
     });
   }
 

@@ -1,0 +1,24 @@
+h2 {
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+}
+
+mat-dialog-content {
+  p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+}
+
+mat-dialog-actions {
+  padding-bottom: 24px;
+  padding-right: 24px;
+  
+  button {
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}

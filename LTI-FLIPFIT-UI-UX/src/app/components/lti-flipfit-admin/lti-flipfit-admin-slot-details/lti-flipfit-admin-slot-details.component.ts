@@ -1,24 +1,44 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 import { AdminService } from '../../../services/admin-service/admin.service';
 import { GymSlot } from '../../../models/gym-slot/gym-slot.model';
+import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-slot-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatCardModule,
+    MatTooltipModule,
+    MatDialogModule
+  ],
   templateUrl: './lti-flipfit-admin-slot-details.component.html',
   styleUrl: './lti-flipfit-admin-slot-details.component.scss'
 })
 export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
+  displayedColumns: string[] = ['capacity', 'time', 'activity', 'price', 'status', 'actions'];
   slots: GymSlot[] = [];
   centerId: number | null = null;
 
   constructor(
     private adminService: AdminService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -42,24 +62,32 @@ export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
   approveSlot(slotId: number | undefined) {
     if (slotId) {
       this.adminService.approveSlot(slotId).subscribe(() => {
-        // Refresh list
         this.loadSlots();
       }, error => {
         console.error('Error approving slot', error);
-        // Optimistic refresh anyway or show notification?
-        // Basic handling for now
         this.loadSlots();
       });
     }
   }
 
-  rejectSlot(slotId: number | undefined) {
+  deleteSlot(slotId: number | undefined) {
     if (slotId) {
-      this.adminService.rejectSlot(slotId).subscribe(() => {
-        this.loadSlots();
-      }, error => {
-        console.error('Error rejecting slot', error);
-        this.loadSlots();
+      const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Delete Slot',
+          message: 'Are you sure you want to delete this slot? This action cannot be undone.'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.adminService.deleteSlot(slotId).subscribe(() => {
+            this.loadSlots();
+          }, error => {
+            console.error('Error deleting slot', error);
+          });
+        }
       });
     }
   }

@@ -130,7 +130,7 @@
                 <span class="gym-location">{{gym.city}}</span>
               </div>
               <div class="actions">
-                <button mat-flat-button color="primary" class="btn-approve">View</button>
+                <button mat-flat-button color="primary" class="btn-approve" (click)="viewGymDetails(gym.centerId)">View</button>
               </div>
             </div>
           </div>
@@ -152,11 +152,11 @@
             <div *ngIf="pendingOwnersList.length === 0" class="no-data">No pending approvals</div>
             <div *ngFor="let owner of pendingOwnersList" class="approval-item">
               <div class="gym-info">
-                <span class="gym-name">{{owner.fullName}}</span>
-                <span class="gym-location">{{owner.email}}</span>
+                <span class="gym-name">{{owner.user?.fullName}}</span>
+                <span class="gym-location">{{owner.user?.email}}</span>
               </div>
               <div class="actions">
-                <button mat-flat-button color="primary" class="btn-approve">View</button>
+                <button mat-flat-button color="primary" class="btn-approve" (click)="viewUserDetails(owner.user?.userId)">View</button>
               </div>
             </div>
           </div>

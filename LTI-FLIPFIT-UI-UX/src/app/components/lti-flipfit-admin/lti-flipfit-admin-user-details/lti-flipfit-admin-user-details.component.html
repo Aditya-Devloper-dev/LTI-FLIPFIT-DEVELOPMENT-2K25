@@ -9,15 +9,14 @@
     <div class="title-section">
       <h2 class="user-name mat-headline-4">User Details: {{ user.fullName }}</h2>
       <div class="status-actions">
-        <!-- Show Active/Inactive status -->
         <mat-chip-set class="status-chip">
           <mat-chip [class]="user.isApproved ? 'status-active' : 'status-pending'" selected>
-            {{ user.isApproved ? 'Active' : 'Pending Approval' }}
+            {{ user.isApproved ? 'Active' : 'Pending' }}
           </mat-chip>
         </mat-chip-set>
 
-        <!-- Show Approve Button only for Gym Owners who are not approved -->
         <button mat-flat-button color="primary" 
+                class="approve-btn"
                 *ngIf="user.roleName === roleType.OWNER && !user.isApproved"
                 (click)="approveOwner()">
           Approve Owner
@@ -48,6 +47,18 @@
           <div class="info-item">
             <span class="label">Role</span>
             <span class="value">{{ user.roleName === roleType.OWNER ? 'Gym Owner' : 'Customer' }}</span>
+          </div>
+          <div class="info-item" *ngIf="user.roleName === roleType.OWNER">
+            <span class="label">Business Name</span>
+            <span class="value">{{ user.businessName || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="user.roleName === roleType.OWNER">
+            <span class="label">PAN Number</span>
+            <span class="value">{{ user.panNumber || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="user.roleName === roleType.OWNER">
+            <span class="label">GST Number</span>
+            <span class="value">{{ user.gstNumber || 'N/A' }}</span>
           </div>
           <div class="info-item">
             <span class="label">Joined Date</span>
