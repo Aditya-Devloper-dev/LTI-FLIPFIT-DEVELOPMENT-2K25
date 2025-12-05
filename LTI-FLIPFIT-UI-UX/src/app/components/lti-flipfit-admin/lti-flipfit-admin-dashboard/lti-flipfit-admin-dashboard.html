@@ -2,8 +2,8 @@
   <div class="admin-layout">
     <app-header 
       [menuItems]="menuItems" 
-      userName="Admin" 
-      userRole="Administrator"
+      [userName]="userName" 
+      [userRole]="userRole"
       (logout)="onLogout()"
       (profile)="onProfile()">
     </app-header>

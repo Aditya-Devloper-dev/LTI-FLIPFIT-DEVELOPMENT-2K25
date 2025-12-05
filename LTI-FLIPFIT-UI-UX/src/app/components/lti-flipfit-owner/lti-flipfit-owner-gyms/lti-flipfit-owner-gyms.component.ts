@@ -6,9 +6,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { OwnerService } from '../../../services/owner.service';
-import { GymCenter } from '../../../models/gym-center.model';
+import { OwnerService } from '../../../services/owner-service/owner.service';
+import { GymCenter } from '../../../models/gym-center/gym-center.model';
 
+/*
+* @author: 
+* @version: 1.0
+* @description: This component is used to display the list of gyms.
+*/
+/**
+ * @author: 
+ * @version: 1.0
+ * @description: This component is used to display the list of gyms.
+ */
 @Component({
   selector: 'app-lti-flipfit-owner-gyms',
   standalone: true,
@@ -32,10 +42,18 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Initializes the component and loads the list of gyms.
+   */
   ngOnInit() {
     this.loadGyms();
   }
 
+  /**
+   * @method loadGyms
+   * @description Loads the gyms owned by the current user.
+   */
   loadGyms() {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
@@ -56,6 +74,12 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     }
   }
 
+  /**
+   * @method getStatus
+   * @param gym - The gym center object.
+   * @description Returns the display status of the gym.
+   * @returns The status string.
+   */
   getStatus(gym: GymCenter): string {
     if (gym.isApproved) {
       return gym.isActive ? 'Active' : 'Inactive';
@@ -63,11 +87,21 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     return 'Pending Approval';
   }
 
+  /**
+   * @method viewDetails
+   * @param id - The ID of the gym.
+   * @description Navigates to the gym details page.
+   */
   viewDetails(id: number) {
     console.log('View details', id);
     this.router.navigate(['/gym-owner-dashboard/gym-details', id]);
   }
 
+  /**
+   * @method toggleStatus
+   * @param gym - The gym center object.
+   * @description Toggles the active status of the gym.
+   */
   toggleStatus(gym: GymCenter) {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
@@ -97,10 +131,20 @@ export class LtiFlipFitOwnerGymsComponent implements OnInit {
     }
   }
 
+  /**
+   * @method editGym
+   * @param id - The ID of the gym to edit.
+   * @description Navigates to the edit gym page.
+   */
   editGym(id: number) {
     console.log('Edit gym', id);
+    this.router.navigate(['/gym-owner-dashboard/edit-gym', id]);
   }
 
+  /**
+   * @method addNewGym
+   * @description Navigates to the add gym page.
+   */
   addNewGym() {
     this.router.navigate(['/gym-owner-dashboard/add-gym']);
   }

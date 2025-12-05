@@ -1,8 +1,8 @@
 <div class="customer-layout">
   <app-header 
     [menuItems]="menuItems" 
-    userName="Jane Doe" 
-    userRole="Customer"
+    [userName]="userName" 
+    [userRole]="userRole"
     (logout)="onLogout()"
     (profile)="onProfile()">
   </app-header>

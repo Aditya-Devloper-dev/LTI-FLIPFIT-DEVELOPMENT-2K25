@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,67 +122,6 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
     }
 
     /**
-     * @methodname - updateCenter
-     * @description - Updates an existing center's details.
-     * @param - center The GymCenter object with updated details.
-     * @param - ownerId The ID of the owner.
-     * @return - The updated GymCenter object.
-     */
-    @Override
-    public GymCenter updateCenter(GymCenter center, Long ownerId) {
-        logger.info("Updating center with ID: {}", center.getCenterId());
-        if (center.getCenterId() == null) {
-            throw new CenterNotFoundException("Center ID is required for update");
-        }
-
-        GymCenter existingCenter = centerRepo.findById(center.getCenterId())
-                .orElseThrow(() -> new CenterNotFoundException("Center not found"));
-
-        ownerValidator.validateUpdateCenter(existingCenter, ownerId);
-
-        // Update fields (only non-null)
-        if (center.getCenterName() != null)
-            existingCenter.setCenterName(center.getCenterName());
-        if (center.getCity() != null)
-            existingCenter.setCity(center.getCity());
-        if (center.getContactNumber() != null)
-            existingCenter.setContactNumber(center.getContactNumber());
-
-        return centerRepo.save(existingCenter);
-    }
-
-    /**
-     * @methodname - viewAllBookings
-     * @description - Retrieves all bookings for a specific center.
-     * @param - centerId The ID of the center.
-     * @return - A list of GymBooking objects.
-     */
-    @Override
-    @Cacheable(value = "ownerCache", key = "'bookings-' + #centerId")
-    public List<GymBooking> viewAllBookings(Long centerId) {
-        logger.info("Fetching all bookings for center ID: {}", centerId);
-        if (!centerRepo.existsById(centerId)) {
-            throw new CenterNotFoundException("Center not found");
-        }
-        return bookingRepo.findByCenterCenterId(centerId);
-    }
-
-    /**
-     * @methodname - getCentersByOwner
-     * @description - Retrieves all centers owned by a specific owner.
-     * @param - ownerId The ID of the owner.
-     * @return - A list of GymCenter objects.
-     */
-    @Override
-    public List<GymCenter> getCentersByOwner(Long ownerId) {
-        logger.info("Fetching centers for owner ID: {}", ownerId);
-        if (!ownerRepo.existsById(ownerId)) {
-            throw new UserNotFoundException("Owner not found");
-        }
-        return centerRepo.findByOwnerOwnerId(ownerId);
-    }
-
-    /**
      * @methodname - addSlot
      * @description - Adds a new slot to a center.
      * @param - slot The GymSlot object to add.
@@ -206,5 +144,21 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         slot.setStatus("PENDING");
 
         slotRepo.save(slot);
+    }
+
+    /**
+     * @methodname - getAllBookingsByOwner
+     * @description - Retrieves all bookings for all centers owned by a specific
+     *              owner.
+     * @param - ownerId The ID of the owner.
+     * @return - A list of GymBooking objects.
+     */
+    @Override
+    public List<GymBooking> getAllBookingsByOwner(Long ownerId) {
+        logger.info("Fetching all bookings for owner ID: {}", ownerId);
+        if (!ownerRepo.existsById(ownerId)) {
+            throw new UserNotFoundException("Owner not found");
+        }
+        return bookingRepo.findByCenterOwnerOwnerId(ownerId);
     }
 }

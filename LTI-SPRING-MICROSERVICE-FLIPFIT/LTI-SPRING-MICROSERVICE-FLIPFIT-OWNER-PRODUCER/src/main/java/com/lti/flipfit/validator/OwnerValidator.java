@@ -5,10 +5,17 @@ import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.exceptions.UnauthorizedAccessException;
+import com.lti.flipfit.dao.FlipFitGymSlotDAO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OwnerValidator {
+
+    private final FlipFitGymSlotDAO slotDAO;
+
+    public OwnerValidator(FlipFitGymSlotDAO slotDAO) {
+        this.slotDAO = slotDAO;
+    }
 
     public void validateToggleCenter(GymCenter center, Long ownerId) {
         if (!center.getOwner().getOwnerId().equals(ownerId)) {
@@ -37,6 +44,14 @@ public class OwnerValidator {
     public void validateAddSlot(GymSlot slot, GymCenter center, Long ownerId) {
         if (slot.getStartTime().isAfter(slot.getEndTime()) || slot.getStartTime().equals(slot.getEndTime())) {
             throw new InvalidInputException("Start time must be before end time");
+        }
+
+        if (slot.getCapacity() <= 0) {
+            throw new InvalidInputException("Capacity must be greater than 0");
+        }
+
+        if (slotDAO.checkSlotOverlap(center.getCenterId(), slot.getStartTime(), slot.getEndTime())) {
+            throw new InvalidInputException("Slot overlaps with an existing slot");
         }
 
         if (!center.getOwner().getOwnerId().equals(ownerId)) {

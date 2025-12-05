@@ -79,4 +79,16 @@ public class FlipFitGymUserController {
         logger.info("Received request to get all users");
         return service.getAllUsers();
     }
+
+    /**
+     * @methodname - getUserById
+     * @description - Retrieves a user by their unique ID.
+     * @param - userId The unique identifier of the user.
+     * @return - The User entity.
+     */
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    public User getUserById(@PathVariable Long userId) {
+        logger.info("Received request to get user by ID: {}", userId);
+        return service.getUserById(userId);
+    }
 }

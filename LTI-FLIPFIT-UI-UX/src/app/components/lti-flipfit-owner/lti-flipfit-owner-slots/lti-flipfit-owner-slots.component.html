@@ -6,6 +6,18 @@
     </button>
   </div>
 
+  <!-- Gym Selector -->
+  <div class="gym-selector" *ngIf="!showAddForm" style="margin-bottom: 20px;">
+    <mat-form-field appearance="outline" style="width: 300px;">
+      <mat-label>Select Gym to View Slots</mat-label>
+      <mat-select [(ngModel)]="selectedGymId" (selectionChange)="onGymSelect()">
+        <mat-option *ngFor="let gym of gyms" [value]="gym.centerId">
+          {{gym.centerName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <!-- Add Slot Form -->
   <mat-card class="add-slot-card" *ngIf="showAddForm">
     <mat-card-header>
@@ -15,16 +27,16 @@
       <form class="slot-form">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Select Gym</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let gym of gyms" [value]="gym.id">
-              {{gym.name}}
+          <mat-select [(ngModel)]="selectedGymId" (selectionChange)="onGymSelect()" name="gymSelect">
+            <mat-option *ngFor="let gym of gyms" [value]="gym.centerId">
+              {{gym.centerName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Date</mat-label>
-          <input matInput [matDatepicker]="picker">
+          <input matInput [matDatepicker]="picker" [(ngModel)]="newSlot.date" name="date">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -32,29 +44,31 @@
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Start Time</mat-label>
-            <input matInput type="time">
+            <input matInput type="time" [(ngModel)]="newSlot.startTime" name="startTime">
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>End Time</mat-label>
-            <input matInput type="time">
+            <input matInput type="time" [(ngModel)]="newSlot.endTime" name="endTime">
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Activity (e.g., Yoga, HIIT)</mat-label>
-          <input matInput placeholder="Enter activity name">
+          <input matInput placeholder="Enter activity name" [(ngModel)]="newSlot.activity" name="activity">
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Total Capacity</mat-label>
-          <input matInput type="number" min="1">
+          <input matInput type="number" min="1" [(ngModel)]="newSlot.capacity" name="capacity">
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Instructor Name (Optional)</mat-label>
-          <input matInput placeholder="Enter instructor name">
+          <mat-label>Price</mat-label>
+          <input matInput type="number" min="0" [(ngModel)]="newSlot.price" name="price">
         </mat-form-field>
+
+
 
         <div class="form-actions">
           <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
@@ -68,37 +82,48 @@
   <div class="slots-list-container mat-elevation-z2" *ngIf="!showAddForm">
     <table mat-table [dataSource]="slots" class="slots-table">
       
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef> Date </th>
-        <td mat-cell *matCellDef="let slot"> {{slot.date}} </td>
+      <ng-container matColumnDef="activity">
+        <th mat-header-cell *matHeaderCellDef> Activity </th>
+        <td mat-cell *matCellDef="let slot"> {{slot.activity || 'N/A'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="time">
         <th mat-header-cell *matHeaderCellDef> Time </th>
-        <td mat-cell *matCellDef="let slot"> {{slot.time}} </td>
+        <td mat-cell *matCellDef="let slot"> {{slot.startTime}} - {{slot.endTime}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="activity">
-        <th mat-header-cell *matHeaderCellDef> Activity </th>
-        <td mat-cell *matCellDef="let slot"> {{slot.activity}} </td>
-      </ng-container>
+
 
       <ng-container matColumnDef="capacity">
         <th mat-header-cell *matHeaderCellDef> Capacity </th>
-        <td mat-cell *matCellDef="let slot"> {{slot.capacity}} </td>
+        <td mat-cell *matCellDef="let slot">
+          {{slot.capacity}}
+          <span class="full-indicator" *ngIf="slot.availableSeats === 0" matTooltip="Slot Full">F</span>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="booked">
         <th mat-header-cell *matHeaderCellDef> Booked </th>
-        <td mat-cell *matCellDef="let slot"> {{slot.booked}} </td>
+        <td mat-cell *matCellDef="let slot"> {{slot.capacity - slot.availableSeats}} </td>
       </ng-container>
 
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef> Status </th>
         <td mat-cell *matCellDef="let slot">
           <mat-chip-set>
-            <mat-chip [class]="slot.status === 'Active' ? 'status-active' : 'status-full'" selected>
-              {{slot.status}}
+            <mat-chip [class]="slot.isActive ? 'status-active' : 'status-full'" selected>
+              {{slot.isActive ? 'Active' : 'Inactive'}}
+            </mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="approvalStatus">
+        <th mat-header-cell *matHeaderCellDef> Approval </th>
+        <td mat-cell *matCellDef="let slot">
+          <mat-chip-set>
+            <mat-chip [class]="slot.isApproved ? 'status-active' : 'status-full'" selected>
+              {{slot.isApproved ? 'Approved' : 'Pending'}}
             </mat-chip>
           </mat-chip-set>
         </td>
@@ -107,12 +132,12 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let slot">
-          <button mat-icon-button color="primary">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <mat-slide-toggle
+              [checked]="slot.isActive"
+              (change)="toggleSlotStatus(slot)"
+              color="primary">
+            {{slot.isActive ? 'Active' : 'Inactive'}}
+          </mat-slide-toggle>
         </td>
       </ng-container>
 

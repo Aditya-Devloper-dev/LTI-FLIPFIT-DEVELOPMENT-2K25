@@ -184,4 +184,18 @@ public class FlipFitGymUserServiceImpl implements FlipFitGymUserService {
         logger.info("Fetching all users");
         return userRepo.findAll();
     }
+
+    /**
+     * @methodname - getUserById
+     * @description - Retrieves a user by their unique ID.
+     * @param - userId The unique identifier of the user.
+     * @return - The User entity.
+     * @throws UserNotFoundException if no user is found with the given ID.
+     */
+    @Override
+    public User getUserById(Long userId) {
+        logger.info("Fetching user with ID: {}", userId);
+        return userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
+    }
 }

@@ -1,8 +1,8 @@
 <div class="dashboard-container">
   <app-header 
     [menuItems]="menuItems" 
-    userName="John Doe" 
-    userRole="Owner"
+    [userName]="userName" 
+    [userRole]="userRole"
     (logout)="onLogout()"
     (profile)="onProfile()">
   </app-header>

@@ -54,7 +54,7 @@ public class FlipFitGymBookingController {
      * @param - bookingId The unique booking ID.
      * @return - A response entity containing the cancellation status.
      */
-    @RequestMapping(value = "/cancel/{bookingId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/cancel/{bookingId}", method = RequestMethod.PUT)
     public ResponseEntity<String> cancelBooking(@PathVariable Long bookingId) {
         logger.info("Received request to cancel booking with ID: {}", bookingId);
         return ResponseEntity.ok(bookingService.cancelBooking(bookingId));

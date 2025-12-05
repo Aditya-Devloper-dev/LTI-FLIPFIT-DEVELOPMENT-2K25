@@ -20,4 +20,6 @@ public interface FlipFitGymBookingRepository extends JpaRepository<GymBooking, L
     List<GymBooking> findByCustomer(GymCustomer customer);
 
     List<GymBooking> findByCenterCenterId(Long centerId);
+
+    List<GymBooking> findByCenterOwnerOwnerId(Long ownerId);
 }

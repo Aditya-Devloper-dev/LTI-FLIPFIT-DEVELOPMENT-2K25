@@ -13,4 +13,8 @@ export class NotificationService {
   getNotifications(userId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`);
   }
+
+  clearAllNotifications(userId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/user/${userId}`);
+  }
 }

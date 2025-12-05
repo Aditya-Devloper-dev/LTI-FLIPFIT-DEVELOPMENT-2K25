@@ -1,6 +1,8 @@
 package com.lti.flipfit.dao;
 
 import com.lti.flipfit.entity.GymPayment;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,13 +15,14 @@ import java.util.List;
 public interface FlipFitGymBookingDAO {
 
     /**
-     * Checks if a booking exists for a specific customer and slot.
+     * Checks if a booking exists for a specific customer and slot on a given date.
      * 
-     * @param customerId The ID of the customer.
-     * @param slotId     The ID of the slot.
+     * @param customerId  The ID of the customer.
+     * @param slotId      The ID of the slot.
+     * @param bookingDate The date of the booking.
      * @return true if booking exists, false otherwise.
      */
-    boolean checkDuplicateBooking(Long customerId, Long slotId);
+    boolean checkDuplicateBooking(Long customerId, Long slotId, LocalDate bookingDate);
 
     /**
      * Retrieves payments within a specific date range.

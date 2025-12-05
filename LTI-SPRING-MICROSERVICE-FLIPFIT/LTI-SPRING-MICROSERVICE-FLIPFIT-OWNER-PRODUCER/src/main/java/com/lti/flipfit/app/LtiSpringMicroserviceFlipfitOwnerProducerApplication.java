@@ -7,6 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -14,6 +15,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EntityScan("com.lti.flipfit.entity")
 @EnableJpaRepositories("com.lti.flipfit.repository")
 @EnableCaching
+@EnableScheduling
 public class LtiSpringMicroserviceFlipfitOwnerProducerApplication {
 
 	public static void main(String[] args) {

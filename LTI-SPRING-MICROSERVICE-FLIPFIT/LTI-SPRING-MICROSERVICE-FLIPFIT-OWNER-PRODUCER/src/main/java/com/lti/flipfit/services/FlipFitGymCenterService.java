@@ -8,19 +8,11 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymBooking;
 
 import java.util.List;
 
 public interface FlipFitGymCenterService {
-
-    /**
-     * @methodname - getSlotsByDate
-     * @description - Fetches all slots for a given center on a specific date.
-     * @param - centerId The ID of the gym center.
-     * @param - date The date to check availability for.
-     * @return - A list of GymSlot entities.
-     */
-    List<GymSlot> getSlotsByDate(Long centerId, String date);
 
     /**
      * @methodname - getSlotsByCenterId
@@ -37,5 +29,30 @@ public interface FlipFitGymCenterService {
      * @return - The GymCenter entity.
      */
     GymCenter getCenterById(Long centerId);
+
+    /**
+     * @methodname - getCentersByOwner
+     * @description - Retrieves all centers owned by a specific owner.
+     * @param - ownerId The ID of the owner.
+     * @return - A list of GymCenter objects.
+     */
+    List<GymCenter> getCentersByOwner(Long ownerId);
+
+    /**
+     * @methodname - viewAllBookings
+     * @description - Retrieves all bookings for a specific center.
+     * @param - centerId The ID of the center.
+     * @return - A list of GymBooking objects.
+     */
+    List<GymBooking> viewAllBookings(Long centerId);
+
+    /**
+     * @methodname - updateCenter
+     * @description - Updates an existing center's details.
+     * @param - center The GymCenter object with updated details.
+     * @param - ownerId The ID of the owner.
+     * @return - The updated GymCenter object.
+     */
+    GymCenter updateCenter(GymCenter center, Long ownerId);
 
 }

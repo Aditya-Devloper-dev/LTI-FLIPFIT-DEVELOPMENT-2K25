@@ -32,6 +32,7 @@ export class HeaderComponent implements OnInit {
   @Input() menuItems: MenuItem[] = [];
   @Input() userName: string = 'User';
   @Input() userRole: string = '';
+  @Input() isLandingPage: boolean = false;
   @Output() logout = new EventEmitter<void>();
   @Output() profile = new EventEmitter<void>();
 
