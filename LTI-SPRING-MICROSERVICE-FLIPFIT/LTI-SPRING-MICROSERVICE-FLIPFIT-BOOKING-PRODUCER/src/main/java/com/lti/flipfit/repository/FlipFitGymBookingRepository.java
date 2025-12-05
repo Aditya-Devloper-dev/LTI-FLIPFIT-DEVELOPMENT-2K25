@@ -30,4 +30,12 @@ public interface FlipFitGymBookingRepository extends JpaRepository<GymBooking, L
      * @return A list of bookings for the center.
      */
     List<GymBooking> findByCenterCenterId(Long centerId);
+
+    /**
+     * Finds all bookings with a specific status.
+     *
+     * @param status The booking status.
+     * @return A list of bookings with the given status.
+     */
+    List<GymBooking> findByStatus(com.lti.flipfit.enums.BookingStatus status);
 }

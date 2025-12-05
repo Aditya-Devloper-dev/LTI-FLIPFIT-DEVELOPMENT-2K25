@@ -13,7 +13,7 @@ import { UserService } from '../../../services/user-service/user.service';
 import { forkJoin } from 'rxjs';
 
 /**
- * @author: 
+ * @author:
  * @version: 1.0
  * @description: Overview component for the Gym Owner Dashboard, displaying stats and recent bookings.
  */
@@ -47,7 +47,7 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
   activeSlotsCount: number = 0;
   totalSlotsCount: number = 0;
   approvedSlotsCount: number = 0;
-  
+
   activeGymsCount: number = 0;
   totalGymsCount: number = 0;
   approvedGymsCount: number = 0;
@@ -105,12 +105,25 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
       this.ownerService.getAllBookingsByOwner(this.ownerId).subscribe({
         next: (data) => {
           // Map backend data to table format
-          this.recentBookings = data.map(booking => ({
-            customer: booking.customer?.user?.fullName || 'Unknown Customer',
-            time: `${booking.bookingDate} ${booking.slot.startTime}`,
-            gymCenter: booking.center.centerName,
-            status: booking.status
-          }));
+          this.recentBookings = data.map(booking => {
+            let dateStr = '';
+            if (Array.isArray(booking.bookingDate)) {
+               // [year, month, day]
+               const year = booking.bookingDate[0];
+               const month = String(booking.bookingDate[1]).padStart(2, '0');
+               const day = String(booking.bookingDate[2]).padStart(2, '0');
+               dateStr = `${year}-${month}-${day}`;
+            } else {
+               dateStr = String(booking.bookingDate);
+            }
+            
+            return {
+              customer: booking.customer?.user?.fullName || 'Unknown Customer',
+              time: `${dateStr} ${booking.slot.startTime}`,
+              gymCenter: booking.center.centerName,
+              status: booking.status
+            };
+          }).sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
         },
         error: (err) => console.error('Failed to load bookings', err)
       });
@@ -131,7 +144,7 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
         const today = new Date();
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
-        
+
         // Calculate start of the week (Sunday)
         const startOfWeek = new Date(today);
         startOfWeek.setDate(today.getDate() - today.getDay());
@@ -141,7 +154,7 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
         this.todaysBookedCount = 0;
         this.todaysCancelledCount = 0;
         this.todaysPendingCount = 0;
-        
+
         this.monthlyRevenue = 0;
         this.weeklyRevenue = 0;
         this.todaysRevenue = 0;
@@ -162,7 +175,7 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
                 bookingDate = new Date(dateStr);
              }
           }
-          
+
           const price = booking.slot?.price || 0;
 
           // Today's Bookings & Revenue
@@ -212,13 +225,13 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
         const slotRequests = gyms
           .filter(gym => gym.centerId !== undefined)
           .map(gym => this.ownerService.getSlotsByCenterId(gym.centerId as number));
-        
+
         forkJoin(slotRequests).subscribe({
           next: (slotsArray) => {
             this.activeSlotsCount = 0;
             this.totalSlotsCount = 0;
             this.approvedSlotsCount = 0;
-            
+
             slotsArray.forEach(slots => {
               this.totalSlotsCount += slots.length;
               const activeInGym = slots.filter(slot => slot.isActive).length;
@@ -232,15 +245,6 @@ export class LtiFlipFitOwnerOverviewComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load gyms for stats', err)
     });
-  }
-
-  /**
-   * @method setRevenueView
-   * @description Toggles the revenue view between monthly and daily.
-   * @param view - The view mode ('monthly' or 'today').
-   */
-  setRevenueView(view: 'monthly' | 'today') {
-    this.revenueView = view;
   }
 
   /**

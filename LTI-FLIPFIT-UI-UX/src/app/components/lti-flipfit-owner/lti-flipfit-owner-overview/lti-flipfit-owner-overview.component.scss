@@ -66,33 +66,42 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
 
         .split-item {
           display: flex;
           flex-direction: column;
-          align-items: flex-start; // Align to left for cleaner look, or center
+          align-items: center;
+          flex: 1;
+          min-width: 0; // Allow flex item to shrink below content size
           
           .split-value {
-            font-size: 1.5rem;
+            font-size: 1.1rem; // Reduced further
             font-weight: 700;
             color: #2c3e50;
             line-height: 1.2;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden; // Handle overflow gracefully
+            text-overflow: ellipsis;
+            width: 100%;
           }
 
           .split-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem; // Reduced label size
             color: #7f8c8d;
             font-weight: 500;
             margin-top: 4px;
+            text-align: center;
           }
         }
 
         .split-divider {
           width: 1px;
-          height: 40px;
+          height: 30px; // Slightly shorter
           background-color: #e0e0e0;
-          margin: 0 8px;
+          margin: 0 6px; // Reduced margin
+          flex-shrink: 0;
         }
       }
     }
@@ -168,10 +177,22 @@
         color: #5f6368;
       }
 
-      .status-booking {
+      .status-booked {
         background-color: #e8f5e9 !important;
         color: #2e7d32 !important;
         --mdc-chip-label-text-color: #2e7d32 !important;
+      }
+
+      .status-cancelled {
+        background-color: #ffebee !important;
+        color: #c62828 !important;
+        --mdc-chip-label-text-color: #c62828 !important;
+      }
+
+      .status-attended {
+        background-color: #e3f2fd !important;
+        color: #1565c0 !important;
+        --mdc-chip-label-text-color: #1565c0 !important;
       }
     }
   }
