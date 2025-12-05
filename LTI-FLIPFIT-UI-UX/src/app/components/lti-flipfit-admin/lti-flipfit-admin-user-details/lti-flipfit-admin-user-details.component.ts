@@ -58,6 +58,7 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
         this.user.roleName = foundUser.role?.roleName;
         // Default isApproved to true for customers, logic will update for owners
         this.user.isApproved = true;
+        this.user.updatedAt = foundUser.updatedAt;
 
         if (this.user.roleName === RoleType.CUSTOMER) {
           this.loadCustomerData(foundUser.userId);
@@ -97,13 +98,13 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
           const totalBookings = bookings.length;
           const attended = bookings.filter(b => b.status === 'ATTENDED').length;
           const cancelled = bookings.filter(b => b.status === 'CANCELLED').length;
-          const lastActive = bookings.length > 0 ? bookings[bookings.length - 1].bookingDate : 'N/A';
+          const lastActive = this.user.updatedAt || 'N/A';
 
           this.stats = {
             box1: { value: totalBookings, label: 'Total Bookings' },
             box2: { value: attended, label: 'Attended Workouts', class: 'success' },
             box3: { value: cancelled, label: 'Cancelled Workouts', class: 'error' },
-            box4: { value: lastActive, label: 'Last Active', class: 'info' }
+            box4: { value: lastActive, label: 'Last Updated', class: 'info' }
           };
         });
       }
@@ -114,7 +115,7 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     this.ownerService.getOwnerByUserId(userId).subscribe(owner => {
       if (owner) {
         this.user.ownerId = owner.ownerId;
-        this.user.isApproved = owner.isApproved;
+        this.user.isApproved = owner.approved;
 
         this.ownerService.getGymsByOwnerId(owner.ownerId).subscribe(gyms => {
           this.tableData = gyms.map(g => ({
@@ -129,13 +130,13 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
           const totalGyms = gyms.length;
           const activeGyms = gyms.filter(g => g.isActive).length;
           const pendingGyms = totalGyms - activeGyms;
-          const lastActive = 'N/A';
+          const lastActive = this.user.updatedAt || 'N/A';
 
           this.stats = {
             box1: { value: totalGyms, label: 'Total Gyms' },
             box2: { value: activeGyms, label: 'Active Gyms', class: 'success' },
             box3: { value: pendingGyms, label: 'Pending Gyms', class: 'warning' },
-            box4: { value: lastActive, label: 'Last Active', class: 'info' }
+            box4: { value: lastActive, label: 'Last Updated', class: 'info' }
           };
         });
       }

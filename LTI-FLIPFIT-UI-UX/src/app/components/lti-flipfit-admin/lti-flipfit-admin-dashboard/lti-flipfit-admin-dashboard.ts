@@ -35,7 +35,7 @@ export class LtiFlipFitAdminDashboard implements OnInit {
     { label: 'Dashboard', route: '/admin-dashboard/overview' },
     { label: 'Gyms', route: '/admin-dashboard/gyms' },
     { label: 'Users', route: '/admin-dashboard/users' },
-    { label: 'Approvals', route: '/admin-dashboard/approvals', badge: '3' }
+    { label: 'Slots', route: '/admin-dashboard/slots' }
   ];
 
   onLogout() {

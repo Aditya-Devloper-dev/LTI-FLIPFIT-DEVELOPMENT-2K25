@@ -1,7 +1,7 @@
 
 export interface GymOwner {
     ownerId: number;
-    user: any; // Using any for User model for now
+    user: any; 
     businessName: string;
     gstNumber: string;
     panNumber: string;

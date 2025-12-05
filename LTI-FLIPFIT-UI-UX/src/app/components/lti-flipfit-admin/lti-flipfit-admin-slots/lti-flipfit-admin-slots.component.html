@@ -1,0 +1,44 @@
+<div class="slots-container">
+  <h2>Slot Management</h2>
+
+  <div class="gym-list-card">
+    <div class="search-filter-header">
+      <div class="search-box">
+        <input type="text" placeholder="Search gyms..." [(ngModel)]="searchTerm" (input)="filterGyms()">
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Gym Name</th>
+          <th>Total Slots</th>
+          <th>Approved Slots</th>
+          <th>Pending Slots</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let gym of filteredGyms">
+          <td>{{gym.centerName}}</td>
+          <td>{{gym.totalSlots}}</td>
+          <td>
+            <span class="badge success">{{gym.approvedSlots}}</span>
+          </td>
+          <td>
+            <span class="badge warning">{{gym.pendingSlots}}</span>
+          </td>
+          <td>
+            <button class="btn-view" (click)="viewSlots(gym.centerId)">View</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredGyms.length === 0">
+          <td colspan="5" style="text-align: center; padding: 32px; color: #718096;">
+            No gyms found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

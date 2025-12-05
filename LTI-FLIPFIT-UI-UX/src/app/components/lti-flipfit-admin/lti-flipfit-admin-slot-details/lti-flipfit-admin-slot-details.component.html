@@ -1,0 +1,53 @@
+<div class="slot-details-container">
+  <div class="header-actions">
+    <h2>Slot Details</h2>
+    <button class="btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Back to Gyms
+    </button>
+  </div>
+
+  <div class="slots-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Activity</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let slot of slots">
+          <td>{{slot.date}}</td>
+          <td>{{slot.startTime}} - {{slot.endTime}}</td>
+          <td>{{slot.activity || 'N/A'}}</td>
+          <td>₹{{slot.price}}</td>
+          <td>
+            <span class="status-badge" [ngClass]="{
+              'approved': slot.isApproved,
+              'pending': !slot.isApproved
+            }">
+              {{ slot.isApproved ? 'Approved' : 'Pending' }}
+            </span>
+          </td>
+          <td>
+            <div class="actions" *ngIf="!slot.isApproved">
+              <button class="btn-approve" (click)="approveSlot(slot.slotId)">Approve</button>
+              <button class="btn-reject" (click)="rejectSlot(slot.slotId)">Reject</button>
+            </div>
+            <span *ngIf="slot.isApproved" style="color: #48bb78; font-weight: 500;">
+              <i class="fas fa-check-circle"></i> Approved
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="slots.length === 0">
+          <td colspan="6" style="text-align: center; padding: 32px; color: #718096;">
+            No slots found for this gym.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

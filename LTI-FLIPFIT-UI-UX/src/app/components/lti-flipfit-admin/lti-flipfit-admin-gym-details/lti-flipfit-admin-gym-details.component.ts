@@ -27,8 +27,12 @@ import { GymCenter } from '../../../models/gym-center/gym-center.model';
 })
 export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
   gym: GymCenter | undefined;
+  slots: any[] = [];
+  slotColumns: string[] = ['time', 'capacity', 'price', 'status', 'actions'];
   totalGyms: number = 0;
   totalBookings: number = 0;
+  activeGyms: number = 0;
+  totalRevenue: number = 0;
 
   constructor(
     private location: Location,
@@ -42,6 +46,7 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
       const id = params['id'];
       if (id) {
         this.loadGymDetails(id);
+        this.loadSlots(id);
       }
     });
   }
@@ -60,13 +65,68 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  loadSlots(centerId: number) {
+    this.adminService.getSlotsByCenterId(centerId).subscribe({
+      next: (data) => {
+        this.slots = data;
+      },
+      error: (err) => console.error('Error fetching slots', err)
+    });
+  }
+
   loadOwnerStats(ownerId: number) {
     this.ownerService.getGymsByOwnerId(ownerId).subscribe(gyms => {
       this.totalGyms = gyms.length;
+      this.activeGyms = gyms.filter(g => g.isApproved).length;
     });
 
     this.ownerService.getAllBookingsByOwner(ownerId).subscribe(bookings => {
       this.totalBookings = bookings.length;
+      this.totalRevenue = bookings.reduce((sum, booking) => sum + (booking.slot?.price || 0), 0);
+    });
+  }
+
+  approveGym() {
+    if (this.gym?.centerId) {
+      this.adminService.approveCenter(this.gym.centerId).subscribe({
+        next: () => {
+          this.loadGymDetails(this.gym!.centerId!);
+        },
+        error: (err) => console.error('Error approving gym', err)
+      });
+    }
+  }
+
+  rejectGym() {
+    if (this.gym?.centerId) {
+      this.adminService.deleteCenter(this.gym.centerId).subscribe({
+        next: () => {
+          this.goBack();
+        },
+        error: (err) => console.error('Error rejecting gym', err)
+      });
+    }
+  }
+
+  approveSlot(slotId: number) {
+    this.adminService.approveSlot(slotId).subscribe({
+      next: () => {
+        if (this.gym?.centerId) {
+          this.loadSlots(this.gym.centerId);
+        }
+      },
+      error: (err) => console.error('Error approving slot', err)
+    });
+  }
+
+  rejectSlot(slotId: number) {
+    this.adminService.rejectSlot(slotId).subscribe({
+      next: () => {
+        if (this.gym?.centerId) {
+          this.loadSlots(this.gym.centerId);
+        }
+      },
+      error: (err) => console.error('Error rejecting slot', err)
     });
   }
 

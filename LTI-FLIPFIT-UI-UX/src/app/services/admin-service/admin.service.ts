@@ -30,7 +30,7 @@ export class AdminService {
    * @returns: Observable of GymCenter array.
    */
   getPendingCenters(): Observable<GymCenter[]> {
-    return this.http.get<GymCenter[]>(`${this.baseUrl}/pending-centers`);
+    return this.http.get<GymCenter[]>(`${this.baseUrl}/pending-centers?t=${new Date().getTime()}`);
   }
 
   /**
@@ -74,7 +74,7 @@ export class AdminService {
    * @returns: Observable of GymOwner array.
    */
   getPendingOwners(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/pending-owners`);
+    return this.http.get<any[]>(`${this.baseUrl}/pending-owners?t=${new Date().getTime()}`);
   }
 
   /**
@@ -89,5 +89,31 @@ export class AdminService {
       url += `&date=${date}`;
     }
     return this.http.get<any[]>(url);
+  }
+  /**
+   * @description: Gets all slots for the gym center.
+   * @param centerId: The ID of the gym center.
+   * @returns: Observable of the slots.
+   */
+  getSlotsByCenterId(centerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:8080/gym-center/slots/${centerId}`);
+  }
+
+  /**
+   * @description: Approves a slot by its ID.
+   * @param slotId: The ID of the slot to approve.
+   * @returns: Observable of string response.
+   */
+  approveSlot(slotId: number): Observable<string> {
+    return this.http.put(`${this.baseUrl}/approve-slot/${slotId}`, {}, { responseType: 'text' });
+  }
+
+  /**
+   * @description: Rejects a slot by its ID.
+   * @param slotId: The ID of the slot to reject.
+   * @returns: Observable of string response.
+   */
+  rejectSlot(slotId: number): Observable<string> {
+    return this.http.put(`${this.baseUrl}/reject-slot/${slotId}`, {}, { responseType: 'text' });
   }
 }

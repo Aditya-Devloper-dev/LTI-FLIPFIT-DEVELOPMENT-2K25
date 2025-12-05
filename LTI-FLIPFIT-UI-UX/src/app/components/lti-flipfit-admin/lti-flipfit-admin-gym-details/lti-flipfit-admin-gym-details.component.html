@@ -4,9 +4,9 @@
       <mat-icon>arrow_back</mat-icon> Back to Gyms
     </button>
     
-    <div class="header-actions">
-      <button mat-flat-button color="primary" class="action-btn">Approve</button>
-      <button mat-stroked-button color="warn" class="action-btn">Reject</button>
+    <div class="header-actions" *ngIf="!gym?.isApproved">
+      <button mat-flat-button color="primary" class="action-btn" (click)="approveGym()">Approve</button>
+      <button mat-stroked-button color="warn" class="action-btn" (click)="rejectGym()">Reject</button>
     </div>
   </div>
 
@@ -22,43 +22,61 @@
   </div>
 
   <div class="info-grid" *ngIf="gym">
-    <mat-card class="info-card basic-info">
-      <mat-card-header>
-        <mat-card-title>Basic Information</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="info-list">
-          <div class="info-item">
-            <span class="label">Owner Name</span>
-            <span class="value">{{gym.owner?.user?.fullName || 'N/A'}}</span>
+    <div class="left-col">
+      <!-- Gym Details Card -->
+      <mat-card class="info-card gym-details mb-4">
+        <mat-card-header>
+          <mat-card-title>Gym Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-list">
+             <div class="info-item">
+              <span class="label">Center Name</span>
+              <span class="value">{{gym.centerName}}</span>
+            </div>
+             <div class="info-item">
+              <span class="label">Location</span>
+              <span class="value">{{gym.city}}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Contact Phone</span>
+              <span class="value">{{gym.contactNumber}}</span>
+            </div>
           </div>
-          <div class="info-item">
-            <span class="label">Owner Business Name</span>
-            <span class="value">{{gym.owner?.businessName || 'N/A'}}</span>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Owner Details Card -->
+      <mat-card class="info-card owner-details">
+        <mat-card-header>
+          <mat-card-title>Owner Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="label">Owner Name</span>
+              <span class="value">{{gym.owner?.user?.fullName || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Business Name</span>
+              <span class="value">{{gym.owner?.businessName || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email</span>
+              <span class="value">{{gym.owner?.user?.email || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">GST Number</span>
+              <span class="value">{{gym.owner?.gstNumber || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">PAN Number</span>
+              <span class="value">{{gym.owner?.panNumber || 'N/A'}}</span>
+            </div>
           </div>
-          <div class="info-item">
-            <span class="label">Contact Email</span>
-            <span class="value">{{gym.owner?.user?.email || 'N/A'}}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Phone</span>
-            <span class="value">{{gym.contactNumber}}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">GST Number</span>
-            <span class="value">{{gym.owner?.gstNumber || 'N/A'}}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">PAN Number</span>
-            <span class="value">{{gym.owner?.panNumber || 'N/A'}}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Address</span>
-            <span class="value">{{gym.city}}</span>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
     <mat-card class="info-card stats-info">
       <mat-card-header>
@@ -71,10 +89,72 @@
             <span class="stat-label">Total Gyms</span>
           </div>
           <div class="stat-box active">
+            <span class="stat-value">{{activeGyms}}</span>
+            <span class="stat-label">Active Gyms</span>
+          </div>
+          <div class="stat-box active">
             <span class="stat-value">{{totalBookings}}</span>
             <span class="stat-label">Total Bookings</span>
           </div>
+          <div class="stat-box">
+            <span class="stat-value">{{totalRevenue | currency:'INR'}}</span>
+            <span class="stat-label">Total Revenue</span>
+          </div>
         </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="slots-section" *ngIf="slots.length > 0">
+      <mat-card-header>
+        <mat-card-title>Gym Slots</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="slots" class="slots-table">
+          <!-- Time Column -->
+          <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef> Time </th>
+            <td mat-cell *matCellDef="let slot"> {{slot.startTime}} - {{slot.endTime}} </td>
+          </ng-container>
+
+          <!-- Capacity Column -->
+          <ng-container matColumnDef="capacity">
+            <th mat-header-cell *matHeaderCellDef> Capacity </th>
+            <td mat-cell *matCellDef="let slot"> {{slot.capacity}} </td>
+          </ng-container>
+
+          <!-- Price Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let slot"> {{slot.price | currency:'INR'}} </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let slot">
+              <mat-chip-set>
+                <mat-chip [class]="slot.isApproved ? 'status-active' : 'status-pending'" selected>
+                  {{slot.isApproved ? 'Approved' : 'Pending'}}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let slot">
+              <div class="action-buttons" *ngIf="!slot.isApproved">
+                <button mat-button color="primary" (click)="approveSlot(slot.slotId)">Approve</button>
+                <button mat-button color="warn" (click)="rejectSlot(slot.slotId)">Reject</button>
+              </div>
+              <span *ngIf="slot.isApproved" class="approved-text">Approved</span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="slotColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: slotColumns;"></tr>
+        </table>
       </mat-card-content>
     </mat-card>
   </div>

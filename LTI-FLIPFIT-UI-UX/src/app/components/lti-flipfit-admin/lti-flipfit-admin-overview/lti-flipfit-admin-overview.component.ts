@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { AdminService } from '../../../services/admin-service/admin.service';
 import { UserService } from '../../../services/user-service/user.service';
 import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notification/lti-flipfit-notification.component';
+import { RoleType } from '../../../models/enums/role.type';
 
 @Component({
   selector: 'app-lti-flipfit-admin-overview',
@@ -88,8 +89,8 @@ export class LtiFlipFitAdminOverviewComponent implements OnInit {
       next: (users) => {
         console.log('Users:', users);
         this.totalUsers = users.length;
-        this.customerCount = users.filter((u: any) => u.role === 'CUSTOMER').length;
-        this.ownerCount = users.filter((u: any) => u.role === 'GYM_OWNER').length;
+        this.customerCount = users.filter((u: any) => u.role?.roleName === RoleType.CUSTOMER).length;
+        this.ownerCount = users.filter((u: any) => u.role?.roleName === RoleType.OWNER).length;
       },
       error: (e) => console.error('Error loading users', e)
     });

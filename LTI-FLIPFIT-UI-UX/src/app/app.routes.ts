@@ -8,6 +8,8 @@ import { LtiFlipFitAdminGymsComponent } from './components/lti-flipfit-admin/lti
 import { LtiFlipFitAdminGymDetailsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-gym-details/lti-flipfit-admin-gym-details.component';
 import { LtiFlipFitAdminUsersComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-users/lti-flipfit-admin-users.component';
 import { LtiFlipFitAdminUserDetailsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-user-details/lti-flipfit-admin-user-details.component';
+import { LtiFlipFitAdminSlotsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-slots/lti-flipfit-admin-slots.component';
+import { LtiFlipFitAdminSlotDetailsComponent } from './components/lti-flipfit-admin/lti-flipfit-admin-slot-details/lti-flipfit-admin-slot-details.component';
 import { LtiFlipFitOwnerGymsComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-gyms/lti-flipfit-owner-gyms.component';
 import { LtiFlipFitOwnerSlotsComponent } from './components/lti-flipfit-owner/lti-flipfit-owner-slots/lti-flipfit-owner-slots.component';
 import { LtiFlipFitProfileComponent } from './components/common/lti-flipfit-profile/lti-flipfit-profile.component';
@@ -35,6 +37,8 @@ export const routes: Routes = [
       { path: 'gyms/:id', component: LtiFlipFitAdminGymDetailsComponent },
       { path: 'users', component: LtiFlipFitAdminUsersComponent },
       { path: 'users/:id', component: LtiFlipFitAdminUserDetailsComponent },
+      { path: 'slots', component: LtiFlipFitAdminSlotsComponent },
+      { path: 'slots/:id', component: LtiFlipFitAdminSlotDetailsComponent },
       { path: 'profile', component: LtiFlipFitProfileComponent }
     ]
   },
