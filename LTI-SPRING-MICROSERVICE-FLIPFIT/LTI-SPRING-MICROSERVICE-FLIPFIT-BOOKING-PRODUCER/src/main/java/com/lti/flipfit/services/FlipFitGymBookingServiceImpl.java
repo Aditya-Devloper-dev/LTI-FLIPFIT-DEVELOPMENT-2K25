@@ -242,7 +242,7 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         return bookingDAO.findPaymentsByDateRange(startDateTime, endDateTime);
     }
 
-    @Scheduled(fixedRate = 60000) // Run every minute
+    @Scheduled(fixedRate = 6000000) // Run every minute
     @Transactional
     public void markBookingsAsAttended() {
         logger.info("Running scheduled task to mark bookings as ATTENDED");

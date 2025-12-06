@@ -47,8 +47,8 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     }
 
     this.customerService.getAllSlots().subscribe(slots => {
-      // Limit to 6 slots for display
-      this.popularClasses = slots.slice(0, 6).map((slot, index) => ({
+      // Show all data
+      this.popularClasses = slots.map((slot, index) => ({
         slotId: slot.slotId,
         title: slot.activity && slot.activity.trim() !== '' ? slot.activity : 'Workout Session', // Use activity if available
         location: slot.center ? `${slot.center.centerName}, ${slot.center.city}` : 'Unknown Location',
