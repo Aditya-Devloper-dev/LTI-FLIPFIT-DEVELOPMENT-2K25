@@ -1,0 +1,54 @@
+.slots-container {
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .page-title {
+      color: #333;
+      margin: 0;
+    }
+
+    .header-actions {
+       display: flex;
+       gap: 1rem;
+       align-items: center;
+
+       mat-form-field {
+         font-size: 0.9rem;
+         
+         &.search-input {
+           width: 250px;
+         }
+       }
+    }
+  }
+
+  .slots-table-container {
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .slots-table {
+      width: 100%;
+
+      .name {
+        font-weight: 500;
+        color: #1976d2;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        
+        button {
+          height: 32px;
+          line-height: 32px;
+          padding: 0 12px;
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}

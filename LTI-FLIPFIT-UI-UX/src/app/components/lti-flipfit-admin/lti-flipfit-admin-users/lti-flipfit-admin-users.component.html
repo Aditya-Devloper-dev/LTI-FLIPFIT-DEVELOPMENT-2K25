@@ -2,6 +2,14 @@
   <div class="page-header">
     <h2 class="page-title mat-headline-4">User Management</h2>
     <div class="header-actions">
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Filter by Role</mat-label>
+        <mat-select (selectionChange)="onRoleFilterChange($event)" value="ALL">
+          <mat-option value="ALL">All Users</mat-option>
+          <mat-option value="OWNER">Gym Owners</mat-option>
+          <mat-option value="CUSTOMER">Customers</mat-option>
+        </mat-select>
+      </mat-form-field>
       <mat-form-field appearance="outline" class="search-input">
         <mat-label>Search users</mat-label>
         <input matInput placeholder="Ex. John Doe">
@@ -51,7 +59,7 @@
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let user">
           <div class="action-buttons">
-            <button mat-stroked-button color="primary" class="btn-view" (click)="viewUser('123')">View</button>
+            <button mat-stroked-button color="primary" class="btn-view" (click)="viewUser(user.id)">View</button>
           </div>
         </td>
       </ng-container>

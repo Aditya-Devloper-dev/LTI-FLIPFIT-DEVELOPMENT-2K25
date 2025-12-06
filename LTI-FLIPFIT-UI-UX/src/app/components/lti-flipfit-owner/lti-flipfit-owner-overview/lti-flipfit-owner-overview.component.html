@@ -88,17 +88,17 @@
         </div>
         <div class="stat-value-split">
           <div class="split-item">
-            <span class="split-value">{{monthlyRevenue | currency:'INR':'symbol':'1.0-0'}}</span>
+            <span class="split-value">{{formatStat(monthlyRevenue, true)}}</span>
             <span class="split-label">Monthly</span>
           </div>
           <div class="split-divider"></div>
           <div class="split-item">
-            <span class="split-value">{{weeklyRevenue | currency:'INR':'symbol':'1.0-0'}}</span>
+            <span class="split-value">{{formatStat(weeklyRevenue, true)}}</span>
             <span class="split-label">Weekly</span>
           </div>
           <div class="split-divider"></div>
           <div class="split-item">
-            <span class="split-value">{{todaysRevenue | currency:'INR':'symbol':'1.0-0'}}</span>
+            <span class="split-value">{{formatStat(todaysRevenue, true)}}</span>
             <span class="split-label">Today</span>
           </div>
         </div>

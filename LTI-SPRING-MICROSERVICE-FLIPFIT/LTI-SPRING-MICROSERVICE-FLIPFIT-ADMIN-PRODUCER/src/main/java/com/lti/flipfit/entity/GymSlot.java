@@ -47,4 +47,7 @@ public class GymSlot implements Serializable {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "activity")
+    private String activity;
 }

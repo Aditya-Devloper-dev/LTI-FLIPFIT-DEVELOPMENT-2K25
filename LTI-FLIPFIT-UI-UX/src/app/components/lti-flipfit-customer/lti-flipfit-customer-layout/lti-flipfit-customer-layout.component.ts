@@ -31,7 +31,7 @@ export class LtiFlipFitCustomerLayoutComponent implements OnInit {
     if (userStr) {
       const user = JSON.parse(userStr);
       this.userRole = user.roleName;
-      
+
       if (user.userId) {
         this.userService.getUserById(user.userId).subscribe({
           next: (userData) => {
@@ -48,7 +48,6 @@ export class LtiFlipFitCustomerLayoutComponent implements OnInit {
   menuItems: MenuItem[] = [
     { label: 'Home', route: '/customer-dashboard/home' },
     { label: 'Workouts', route: '/customer-dashboard/workouts' },
-    { label: 'Blog', route: '/customer-dashboard/blog' },
     { label: 'Profile', route: '/customer-dashboard/profile' }
   ];
 
@@ -60,6 +59,6 @@ export class LtiFlipFitCustomerLayoutComponent implements OnInit {
 
   onProfile() {
     console.log('Profile clicked');
-    this.router.navigate(['/customer-dashboard/profile']);
+    this.router.navigate(['/customer-dashboard/manage-profile']);
   }
 }

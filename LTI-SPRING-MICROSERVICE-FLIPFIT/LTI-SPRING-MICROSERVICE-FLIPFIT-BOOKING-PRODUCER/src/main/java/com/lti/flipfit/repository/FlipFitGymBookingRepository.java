@@ -9,6 +9,7 @@ package com.lti.flipfit.repository;
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.GymSlot;
+import com.lti.flipfit.enums.BookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -37,5 +38,6 @@ public interface FlipFitGymBookingRepository extends JpaRepository<GymBooking, L
      * @param status The booking status.
      * @return A list of bookings with the given status.
      */
-    List<GymBooking> findByStatus(com.lti.flipfit.enums.BookingStatus status);
+    List<GymBooking> findByStatus(BookingStatus status);
+
 }

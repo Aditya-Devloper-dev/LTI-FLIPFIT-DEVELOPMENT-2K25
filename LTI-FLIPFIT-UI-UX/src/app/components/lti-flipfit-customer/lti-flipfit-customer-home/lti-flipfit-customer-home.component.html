@@ -44,13 +44,22 @@
     <h2>Popular Classes Near You</h2>
     <div class="classes-grid">
       <mat-card class="class-card" *ngFor="let classItem of popularClasses">
-        <img mat-card-image [src]="classItem.image" alt="Class image" class="class-image"> <!-- Placeholder image handling needed -->
+        <img mat-card-image [src]="classItem.image" alt="Class image" class="class-image"> 
         <mat-card-content>
           <h3>{{classItem.title}}</h3>
-          <p>{{classItem.location}}</p>
+          <p class="location-text">{{classItem.location}}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-weight: 500; font-size: 0.9rem;">
+             <span style="display: flex; align-items: center; gap: 4px; color: #666;">
+                <mat-icon style="font-size: 16px; height: 16px; width: 16px;">access_time</mat-icon> {{classItem.time}}
+             </span>
+             <span style="color: #2e7d32; font-weight: 600;">₹{{classItem.price}}</span>
+          </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-flat-button color="primary">Book</button>
+          <button *ngIf="classItem.availableSeats > 0; else waitlistBtn" mat-flat-button color="primary" (click)="openBookingDialog(classItem)" style="width: 100%">Book</button>
+          <ng-template #waitlistBtn>
+            <button mat-flat-button color="warn" (click)="onJoinWaitlist(classItem)" style="width: 100%">Join Waitlist</button>
+          </ng-template>
         </mat-card-actions>
       </mat-card>
     </div>

@@ -161,4 +161,9 @@ public class FlipFitGymOwnerServiceImpl implements FlipFitGymOwnerService {
         }
         return bookingRepo.findByCenterOwnerOwnerId(ownerId);
     }
+
+    @Override
+    public GymOwner getOwnerByUserId(Long userId) {
+        return ownerRepo.findByUser_UserId(userId);
+    }
 }

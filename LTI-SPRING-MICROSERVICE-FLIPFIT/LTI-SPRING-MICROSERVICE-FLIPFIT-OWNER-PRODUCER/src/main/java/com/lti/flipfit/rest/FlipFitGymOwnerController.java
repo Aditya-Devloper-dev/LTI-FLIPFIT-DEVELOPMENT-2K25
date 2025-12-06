@@ -101,4 +101,16 @@ public class FlipFitGymOwnerController {
         logger.info("Received request to get all bookings for owner ID: {}", ownerId);
         return ResponseEntity.ok(service.getAllBookingsByOwner(ownerId));
     }
+
+    /**
+     * @methodname - getOwnerByUserId
+     * @description - Fetches owner details by user ID.
+     * @param - userId The unique ID of the user.
+     * @return - The GymOwner entity.
+     */
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<com.lti.flipfit.entity.GymOwner> getOwnerByUserId(@PathVariable Long userId) {
+        logger.info("Received request to get owner by user ID: {}", userId);
+        return ResponseEntity.ok(service.getOwnerByUserId(userId));
+    }
 }

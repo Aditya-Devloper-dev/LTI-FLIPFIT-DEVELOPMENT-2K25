@@ -1,0 +1,56 @@
+<div class="slots-container">
+  <div class="page-header">
+    <h2 class="page-title mat-headline-4">Slot Management</h2>
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="search-input">
+        <mat-label>Search gyms</mat-label>
+        <input matInput placeholder="Ex. FitZone" [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="slots-table-container mat-elevation-z2">
+    <table mat-table [dataSource]="filteredGyms" class="slots-table">
+      
+      <!-- Gym Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Gym Name </th>
+        <td mat-cell *matCellDef="let gym">
+           <span class="name">{{gym.centerName}}</span>
+        </td>
+      </ng-container>
+
+      <!-- Total Slots Column -->
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef> Total Slots </th>
+        <td mat-cell *matCellDef="let gym"> {{gym.totalSlots}} </td>
+      </ng-container>
+
+      <!-- Approved Slots Column -->
+      <ng-container matColumnDef="approved">
+        <th mat-header-cell *matHeaderCellDef> Approved Slots </th>
+        <td mat-cell *matCellDef="let gym"> {{gym.approvedSlots}} </td>
+      </ng-container>
+
+      <!-- Pending Slots Column -->
+      <ng-container matColumnDef="pending">
+        <th mat-header-cell *matHeaderCellDef> Pending Slots </th>
+        <td mat-cell *matCellDef="let gym"> {{gym.pendingSlots}} </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let gym">
+          <div class="action-buttons">
+            <button mat-stroked-button color="primary" (click)="viewSlots(gym.centerId)">View</button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

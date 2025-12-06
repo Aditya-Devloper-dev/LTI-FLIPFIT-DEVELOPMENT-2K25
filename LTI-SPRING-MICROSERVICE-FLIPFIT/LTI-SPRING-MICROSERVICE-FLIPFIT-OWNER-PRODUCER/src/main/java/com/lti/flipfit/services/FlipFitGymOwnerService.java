@@ -58,4 +58,11 @@ public interface FlipFitGymOwnerService {
      */
     List<GymBooking> getAllBookingsByOwner(Long ownerId);
 
+    /**
+     * @methodname - getOwnerByUserId
+     * @description - Fetches owner details by user ID.
+     * @param - userId The unique ID of the user.
+     * @return - The GymOwner entity.
+     */
+    com.lti.flipfit.entity.GymOwner getOwnerByUserId(Long userId);
 }

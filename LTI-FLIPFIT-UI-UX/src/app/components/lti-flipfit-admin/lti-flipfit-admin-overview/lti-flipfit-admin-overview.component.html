@@ -4,89 +4,169 @@
   </div>
 
   <div class="stats-grid">
+    <!-- Gym Card -->
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Total Gyms</span>
-          <mat-icon class="stat-icon">store</mat-icon>
+          <span class="stat-label">Gyms</span>
+          <mat-icon class="stat-icon">fitness_center</mat-icon>
         </div>
-        <div class="stat-value">150</div>
-        <div class="stat-sub text-warning">(12 Pending)</div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{totalGyms}}</span>
+            <span class="split-label">Total</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{pendingGymsCount}}</span>
+            <span class="split-label">Pending</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{approvedGymsCount}}</span>
+            <span class="split-label">Approved</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
+    <!-- User Card -->
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Total Users</span>
+          <span class="stat-label">Users</span>
           <mat-icon class="stat-icon">group</mat-icon>
         </div>
-        <div class="stat-value">4,520</div>
+        <div class="stat-value-split">
+            <div class="split-item">
+            <span class="split-value">{{totalUsers}}</span>
+            <span class="split-label">Total</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{customerCount}}</span>
+            <span class="split-label">Customer</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{ownerCount}}</span>
+            <span class="split-label">Owner</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
+    <!-- Bookings Card -->
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Today's Bookings</span>
+          <span class="stat-label">Bookings</span>
           <mat-icon class="stat-icon">calendar_today</mat-icon>
         </div>
-        <div class="stat-value">315</div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{totalBookings}}</span>
+            <span class="split-label">Total</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{bookedCount}}</span>
+            <span class="split-label">Booked</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{attendedCount}}</span>
+            <span class="split-label">Attended</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
+    <!-- Revenue Card -->
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-header">
-          <span class="stat-label">Platform Revenue (Mo)</span>
+          <span class="stat-label">Revenue</span>
           <mat-icon class="stat-icon">attach_money</mat-icon>
         </div>
-        <div class="stat-value">₹15,200</div>
+        <div class="stat-value-split">
+          <div class="split-item">
+            <span class="split-value">{{formatStat(monthlyRevenue, true)}}</span>
+            <span class="split-label">Monthly</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{formatStat(weeklyRevenue, true)}}</span>
+            <span class="split-label">Weekly</span>
+          </div>
+          <div class="split-divider"></div>
+          <div class="split-item">
+            <span class="split-value">{{formatStat(dailyRevenue, true)}}</span>
+            <span class="split-label">Daily</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
 
   <div class="dashboard-sections">
-    <mat-card class="section pending-approvals">
-      <mat-card-header>
-        <mat-card-title>Pending Gym Approvals</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="approval-list">
-          <div class="approval-header">
-            <span class="col-name">Name</span>
-            <span class="col-actions">Actions</span>
-          </div>
-          <div *ngFor="let gym of pendingGyms" class="approval-item">
-            <div class="gym-info">
-              <span class="gym-name">{{gym.name}}</span>
-              <span class="gym-location">{{gym.location}}</span>
+    <div class="left-tables">
+      <!-- Pending Gyms -->
+      <mat-card class="section pending-approvals">
+        <mat-card-header>
+          <mat-card-title>Pending Gym Approvals</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="approval-list">
+            <div class="approval-header">
+              <span class="col-name">Name</span>
+              <span class="col-location">Location</span>
+              <span class="col-actions">Actions</span>
             </div>
-            <div class="actions">
-              <button mat-stroked-button class="btn-view">View</button>
-              <button mat-flat-button color="primary" class="btn-approve">Approve</button>
-              <button mat-flat-button color="warn" class="btn-reject">Reject</button>
+            <div *ngIf="pendingGymsList.length === 0" class="no-data">No pending approvals</div>
+            <div *ngFor="let gym of pendingGymsList" class="approval-item">
+              <div class="gym-info">
+                <span class="gym-name">{{gym.centerName}}</span>
+                <span class="gym-location">{{gym.city}}</span>
+              </div>
+              <div class="actions">
+                <button mat-flat-button color="primary" class="btn-approve" (click)="viewGymDetails(gym.centerId)">View</button>
+              </div>
             </div>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
 
-    <mat-card class="section recent-events">
-      <mat-card-header>
-        <mat-card-title>Recent System Events</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-list>
-          <mat-list-item *ngFor="let event of recentEvents" class="event-item">
-            <mat-icon matListItemIcon class="event-icon">info</mat-icon>
-            <div class="event-details">
-              <span class="event-title">{{event.title}}</span>
-              <span class="event-time">{{event.time}}</span>
+      <!-- Pending Owners -->
+      <mat-card class="section pending-approvals mt-4">
+        <mat-card-header>
+          <mat-card-title>Pending Gym Owner Approvals</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="approval-list">
+            <div class="approval-header">
+              <span class="col-name">Name</span>
+              <span class="col-location">Email</span>
+              <span class="col-actions">Actions</span>
             </div>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
+            <div *ngIf="pendingOwnersList.length === 0" class="no-data">No pending approvals</div>
+            <div *ngFor="let owner of pendingOwnersList" class="approval-item">
+              <div class="gym-info">
+                <span class="gym-name">{{owner.user?.fullName}}</span>
+                <span class="gym-location">{{owner.user?.email}}</span>
+              </div>
+              <div class="actions">
+                <button mat-flat-button color="primary" class="btn-approve" (click)="viewUserDetails(owner.user?.userId)">View</button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Notifications Card -->
+    <div class="right-panel">
+       <app-lti-flipfit-notification></app-lti-flipfit-notification>
+    </div>
   </div>
 </div>

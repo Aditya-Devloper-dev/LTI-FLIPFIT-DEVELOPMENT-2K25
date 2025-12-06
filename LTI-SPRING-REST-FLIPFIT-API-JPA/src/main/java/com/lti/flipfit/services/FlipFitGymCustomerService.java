@@ -8,6 +8,7 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymSlot;
 
 import java.util.List;
 import java.util.Map;
@@ -19,10 +20,9 @@ import java.util.Map;
  */
 public interface FlipFitGymCustomerService {
 
-    List<Map<String, Object>> viewAvailability(String centerId, String date);
-
     GymCustomer getProfile(Long customerId);
 
     List<GymBooking> getCustomerBookings(Long customerId);
 
+    List<GymSlot> getAllAvailableSlots();
 }

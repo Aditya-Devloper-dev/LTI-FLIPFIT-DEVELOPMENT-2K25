@@ -3,11 +3,11 @@ package com.lti.flipfit.dao;
 import com.lti.flipfit.constants.JPAQLConstants;
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymSlot;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -23,11 +23,9 @@ public class FlipFitGymCustomerDAOImpl implements FlipFitGymCustomerDAO {
     private EntityManager entityManager;
 
     @Override
-    public List<Object[]> findSlotAvailability(Long centerId, LocalDate date) {
-        TypedQuery<Object[]> query = entityManager.createQuery(JPAQLConstants.JPQL_FIND_SLOT_AVAILABILITY,
-                Object[].class);
-        query.setParameter("centerId", centerId);
-        query.setParameter("date", date);
+    public List<GymSlot> findAllActiveSlots() {
+        TypedQuery<GymSlot> query = entityManager.createQuery(JPAQLConstants.JPQL_FIND_ALL_ACTIVE_SLOTS,
+                GymSlot.class);
         return query.getResultList();
     }
 

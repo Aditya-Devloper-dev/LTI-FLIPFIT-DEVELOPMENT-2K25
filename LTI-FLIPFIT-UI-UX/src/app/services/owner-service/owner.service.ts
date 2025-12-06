@@ -113,4 +113,12 @@ export class OwnerService {
     return this.http.get<any[]>(`${this.apiUrl}/bookings/${ownerId}`);
   }
 
+  /**
+   * @description: Gets owner details by user ID.
+   * @param userId: The ID of the user.
+   * @returns: Observable of the owner details.
+   */
+  getOwnerByUserId(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/${userId}`);
+  }
 }

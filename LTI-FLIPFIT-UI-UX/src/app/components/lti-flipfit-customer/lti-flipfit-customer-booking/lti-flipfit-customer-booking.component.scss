@@ -18,14 +18,21 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 
     .filters-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center; // Vertically align items
+      gap: 16px;
+      padding: 16px;
+
+      mat-form-field {
+        flex: 1 1 200px; // Grow/shrink, min width
+        margin-bottom: -1.25em; // Material hack: Fix bottom spacing for form fields
+      }
 
       .search-btn {
         height: 56px;
-        font-size: 1rem;
+        min-width: 120px;
+        margin-top: 4px; // Slight adjustment to match Outline field height visually
       }
     }
   }

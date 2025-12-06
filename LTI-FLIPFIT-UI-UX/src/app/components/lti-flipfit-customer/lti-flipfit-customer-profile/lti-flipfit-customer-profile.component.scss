@@ -1,0 +1,168 @@
+.profile-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+
+  .header-section {
+    margin-bottom: 32px;
+    
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #6B7280;
+      font-size: 16px;
+    }
+  }
+
+  .profile-tabs {
+    ::ng-deep .mat-mdc-tab-labels {
+      background: transparent;
+    }
+    
+    ::ng-deep .mat-mdc-tab-link-container {
+      border-bottom: 1px solid #E5E7EB;
+    }
+    
+    ::ng-deep .mdc-tab__text-label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  .tab-content {
+    padding-top: 24px;
+  }
+
+  // Profile Card Styles
+  .profile-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #E5E7EB;
+
+    mat-card-header {
+      padding: 24px 24px 0;
+      margin-bottom: 24px;
+      
+      mat-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111827;
+      }
+    }
+
+    mat-card-content {
+      padding: 0 24px 24px;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .detail-item {
+        mat-label {
+          display: block;
+          font-size: 14px;
+          font-weight: 500;
+          color: #6B7280;
+          margin-bottom: 8px;
+        }
+
+        .value {
+          font-size: 16px;
+          color: #111827;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // Table Styles
+  .table-container {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+    .loading-shade {
+        padding: 20px;
+        text-align: center;
+        color: #6b7280;
+    }
+    
+    table {
+      width: 100%;
+      
+      th.mat-mdc-header-cell {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6B7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 16px 24px;
+        border-bottom: 1px solid #E5E7EB;
+        background-color: #F9FAFB;
+      }
+
+      td.mat-mdc-cell {
+        padding: 16px 24px;
+        color: #374151;
+        font-size: 14px;
+        border-bottom: 1px solid #F3F4F6;
+        
+        &.mat-column-gymName {
+          font-weight: 500;
+          color: #111827;
+        }
+      }
+
+      tr.mat-mdc-row:last-child td {
+        border-bottom: none;
+      }
+      
+      tr.mat-mdc-row:hover {
+        background-color: #F9FAFB;
+      }
+    }
+  }
+
+  // Status Badge Styles
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-transform: uppercase;
+
+    &.attended {
+      background-color: #DEF7EC;
+      color: #03543F;
+    }
+
+    &.booked {
+      background-color: #E1EFFE;
+      color: #1E429F;
+    }
+
+    &.cancelled {
+      background-color: #FDE8E8;
+      color: #9B1C1C;
+    }
+  }
+}
