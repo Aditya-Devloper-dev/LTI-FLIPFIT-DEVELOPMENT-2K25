@@ -16,6 +16,12 @@ import { BookingDialogComponent } from '../../common/booking-dialog/booking-dial
 import { GymSlotsDialogComponent } from './gym-slots-dialog/gym-slots-dialog.component';
 import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitCustomerBookingComponent
+ * @description: Component for handling customer booking flow, including viewing gyms, filtering slots, and managing booking actions.
+ */
 @Component({
   selector: 'app-lti-flipfit-customer-booking',
   standalone: true,
@@ -64,6 +70,10 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook that initializes the component. Loads user data and initial gym data.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -73,6 +83,10 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * @methodname: loadData
+   * @description: Fetches all gyms and slots from the backend.
+   */
   loadData() {
     this.isLoading = true;
     this.customerService.viewAllGyms().subscribe({
@@ -97,11 +111,19 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onSearch
+   * @description: Triggered when search filters are applied.
+   */
   onSearch() {
     console.log('Searching with filters:', this.searchFilters);
     this.filterData();
   }
 
+  /**
+   * @methodname: filterData
+   * @description: Filters the loaded slots based on search criteria and groups them by gym.
+   */
   filterData() {
     // Debugging logs
     console.log('All Gyms:', this.allGyms);
@@ -177,6 +199,11 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     this.gyms = Array.from(gymSlotsMap.values());
   }
 
+  /**
+   * @methodname: openGymSlotsDialog
+   * @description: Opens a dialog showing detailed slots for a specific gym.
+   * @param: gym - The gym object containing slots.
+   */
   openGymSlotsDialog(gym: any) {
     this.dialog.open(GymSlotsDialogComponent, {
       width: '600px',
@@ -187,6 +214,11 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onJoinWaitlist
+   * @description: Handles the action of joining a waitlist for a full slot.
+   * @param: gym - The gym object involved.
+   */
   onJoinWaitlist(gym: any) {
     if (!this.customerId) {
         this.snackBar.open('Please login to join waitlist', 'Close', { duration: 3000 });
@@ -221,6 +253,11 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
 
 
 
+  /**
+   * @methodname: bookSlot
+   * @description: Handles the booking of a slot.
+   * @param: slot - The slot to book.
+   */
   bookSlot(slot: any) {
     if (!this.customerId) {
          this.snackBar.open('Please login to book a slot', 'Close', { duration: 3000 });
@@ -247,6 +284,12 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: getErrorMessage
+   * @description: Helper method to extract error message from API response.
+   * @param: err - The error object.
+   * @return: Extracted error message string.
+   */
   private getErrorMessage(err: any): string {
     if (err.error) {
         try {

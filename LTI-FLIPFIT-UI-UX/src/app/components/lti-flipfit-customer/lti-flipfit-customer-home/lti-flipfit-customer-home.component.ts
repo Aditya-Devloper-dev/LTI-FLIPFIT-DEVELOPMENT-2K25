@@ -10,6 +10,12 @@ import { CustomerService } from '../../../services/customer-service/customer.ser
 import { BookingDialogComponent } from '../../common/booking-dialog/booking-dialog.component';
 import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitCustomerHomeComponent
+ * @description: Home component for customers, displaying popular classes and quick booking options.
+ */
 @Component({
   selector: 'app-lti-flipfit-customer-home',
   standalone: true,
@@ -43,6 +49,10 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Initializes user context and loads popular classes.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -68,6 +78,11 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onJoinWaitlist
+   * @description: Allows a customer to join the waitlist for a specific class.
+   * @param: classItem - The class/slot details.
+   */
   onJoinWaitlist(classItem: any) {
     if (!this.customerId) {
         this.snackBar.open('Please login to join waitlist', 'Close', { duration: 3000 });
@@ -106,10 +121,19 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onFindGym
+   * @description: Navigates to the workout/gyms browsing page.
+   */
   onFindGym() {
     this.router.navigate(['/customer-dashboard/workouts']);
   }
 
+  /**
+   * @methodname: openBookingDialog
+   * @description: Opens the booking confirmation dialog for a slot.
+   * @param: classItem - The slot details.
+   */
   openBookingDialog(classItem: any) {
     const dialogRef = this.dialog.open(BookingDialogComponent, {
       data: {
@@ -129,6 +153,11 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: bookSlot
+   * @description: Processes the slot booking.
+   * @param: slot - The slot object to be booked.
+   */
   bookSlot(slot: any) {
     if (!this.customerId) {
         this.snackBar.open('Please login to book a slot', 'Close', { duration: 3000 });
@@ -160,6 +189,12 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: getErrorMessage
+   * @description: Parses backend error messages logic.
+   * @param: err - Error object.
+   * @return: String message.
+   */
   private getErrorMessage(err: any): string {
     if (err.error) {
         try {

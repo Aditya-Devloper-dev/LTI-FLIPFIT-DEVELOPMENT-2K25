@@ -8,6 +8,14 @@ import { MatListModule } from '@angular/material/list';
 import { BookingDialogComponent } from '../../../common/booking-dialog/booking-dialog.component';
 import { CustomerService } from '../../../../services/customer-service/customer.service';
 
+import { LtiFlipFitConfirmDialogComponent } from '../../../../components/common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
+
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: GymSlotsDialogComponent
+ * @description: Dialog component for displaying available slots for a gym and handling booking/waitlist actions.
+ */
 @Component({
   selector: 'app-gym-slots-dialog',
   standalone: true,
@@ -34,6 +42,11 @@ export class GymSlotsDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: onBook
+   * @description: Opens the booking confirmation dialog for a selected slot.
+   * @param: slot - The slot to be booked.
+   */
   onBook(slot: any) {
     const dialogRef = this.dialog.open(BookingDialogComponent, {
       data: {
@@ -53,6 +66,11 @@ export class GymSlotsDialogComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onJoinWaitlist
+   * @description: Handles the process of joining the waitlist for a slot.
+   * @param: slot - The slot to join waitlist for.
+   */
   onJoinWaitlist(slot: any) {
     if (!this.customerId) {
         this.snackBar.open('Please login to join waitlist', 'Close', { duration: 3000 });
@@ -60,22 +78,37 @@ export class GymSlotsDialogComponent implements OnInit {
     }
     const customerId = this.customerId; 
     
-    if(confirm(`Do you want to join the waitlist for ${slot.activity}?`)) {
-      this.customerService.joinWaitlist(customerId, slot.slotId).subscribe({
-        next: (res) => {
-          console.log('Joined waitlist:', res);
-          this.snackBar.open('Successfully joined the waitlist!', 'Close', { duration: 3000 });
-          this.dialogRef.close(true); // Close dialog on success
-        },
-        error: (err) => {
-          console.error('Failed to join waitlist:', err);
-          const errorMsg = this.getErrorMessage(err);
-          this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Join Waitlist',
+        message: `Do you want to join the waitlist for ${slot.activity}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.joinWaitlist(customerId, slot.slotId).subscribe({
+          next: (res) => {
+            console.log('Joined waitlist:', res);
+            this.snackBar.open('Successfully joined the waitlist!', 'Close', { duration: 3000 });
+            this.dialogRef.close(true); // Close dialog on success
+          },
+          error: (err) => {
+            console.error('Failed to join waitlist:', err);
+            const errorMsg = this.getErrorMessage(err);
+            this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
+  /**
+   * @methodname: processBooking
+   * @description: Processes the booking request after confirmation.
+   * @param: slot - The slot to be booked.
+   */
   processBooking(slot: any) {
     if (!this.customerId) {
         this.snackBar.open('Please login to book a slot', 'Close', { duration: 3000 });

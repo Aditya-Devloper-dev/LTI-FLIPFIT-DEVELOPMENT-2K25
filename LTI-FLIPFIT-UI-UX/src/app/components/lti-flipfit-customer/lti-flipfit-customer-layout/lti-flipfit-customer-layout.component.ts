@@ -5,6 +5,12 @@ import { UserService } from '../../../services/user-service/user.service';
 import { HeaderComponent, MenuItem } from '../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitCustomerLayoutComponent
+ * @description: Main layout component for the customer dashboard, including header and footer.
+ */
 @Component({
   selector: 'app-lti-flipfit-customer-layout',
   standalone: true,
@@ -26,6 +32,10 @@ export class LtiFlipFitCustomerLayoutComponent implements OnInit {
     private userService: UserService
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Initializes user information from local storage.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -51,12 +61,20 @@ export class LtiFlipFitCustomerLayoutComponent implements OnInit {
     { label: 'Profile', route: '/customer-dashboard/profile' }
   ];
 
+  /**
+   * @methodname: onLogout
+   * @description: Logs out the current user and redirects to login page.
+   */
   onLogout() {
     console.log('Logout clicked');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
+  /**
+   * @methodname: onProfile
+   * @description: Navigates to the user profile management page.
+   */
   onProfile() {
     console.log('Profile clicked');
     this.router.navigate(['/customer-dashboard/manage-profile']);

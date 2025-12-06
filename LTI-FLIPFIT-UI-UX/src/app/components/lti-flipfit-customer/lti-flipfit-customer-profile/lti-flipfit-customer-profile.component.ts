@@ -14,6 +14,12 @@ import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notifi
 import { MatDialog } from '@angular/material/dialog';
 import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipfitCustomerProfileComponent
+ * @description: Component for managing customer profile, viewing details, and booking history.
+ */
 @Component({
   selector: 'app-lti-flipfit-customer-profile',
   standalone: true,
@@ -50,6 +56,10 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Initializes user data, profile, and bookings.
+   */
   ngOnInit(): void {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -62,6 +72,10 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: loadProfile
+   * @description: Fetches user profile details from the backend.
+   */
   loadProfile() {
     if (this.userId) {
       this.userService.getUserById(this.userId).subscribe({
@@ -76,6 +90,10 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: loadBookings
+   * @description: Fetches booking history for the customer.
+   */
   loadBookings() {
     if (this.customerId) {
         this.isLoading = true;
@@ -101,6 +119,12 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: deriveStatus
+   * @description: Helper to determine or normalize the booking status.
+   * @param: booking - The booking object.
+   * @return: Status string.
+   */
   deriveStatus(booking: any): string {
       // Logic to derive status if not explicitly provided, or normalize it
       // For now, assuming booking.status exists or using a cancelled flag if available
@@ -109,6 +133,11 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
       return booking.status || 'BOOKED'; 
   }
 
+  /**
+   * @methodname: showNotification
+   * @description: Displays a snackbar notification.
+   * @param: message - Message to display.
+   */
   private showNotification(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
@@ -117,6 +146,11 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: cancelBooking
+   * @description: Initiates the cancellation process for a booking.
+   * @param: booking - The booking to cancel.
+   */
   cancelBooking(booking: any) {
     const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
       width: '400px',

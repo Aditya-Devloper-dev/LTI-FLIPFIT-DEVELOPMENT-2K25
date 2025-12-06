@@ -117,7 +117,8 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
                 GymCustomer customer = customerRepo.findById(customerId).orElse(null);
                 if (customer != null && customer.getUser() != null) {
                     String email = customer.getUser().getEmail();
-                    String message = "Your booking for slot " + slotId + " at center " + centerId
+                    String message = "Your booking for " + slot.getActivity() + " at " + slot.getStartTime() + " at "
+                            + booking.getCenter().getCenterName()
                             + " is confirmed. Booking ID: " + savedBooking.getBookingId();
                     String subject = "Booking Confirmation - FlipFit";
                     Long userId = customer.getUser().getUserId();
