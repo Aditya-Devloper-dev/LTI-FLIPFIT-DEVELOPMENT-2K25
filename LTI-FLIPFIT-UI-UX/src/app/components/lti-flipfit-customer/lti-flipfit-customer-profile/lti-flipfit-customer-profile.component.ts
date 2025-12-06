@@ -11,6 +11,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomerService } from '../../../services/customer-service/customer.service';
 import { UserService } from '../../../services/user-service/user.service';
 import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notification/lti-flipfit-notification.component';
+import { MatDialog } from '@angular/material/dialog';
+import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
 @Component({
   selector: 'app-lti-flipfit-customer-profile',
@@ -35,7 +37,7 @@ import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notifi
 export class LtiFlipfitCustomerProfileComponent implements OnInit {
   customerProfile: any = {};
   bookings: any[] = [];
-  displayedColumns: string[] = ['bookingId', 'gymName', 'activity', 'date', 'status'];
+  displayedColumns: string[] = ['bookingId', 'gymName', 'activity', 'date', 'status', 'actions']; // Added actions column
   
   userId: number | null = null;
   customerId: number | null = null;
@@ -44,7 +46,8 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
   constructor(
     private customerService: CustomerService,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -111,6 +114,31 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
       duration: 3000,
       horizontalPosition: 'end',
       verticalPosition: 'top'
+    });
+  }
+
+  cancelBooking(booking: any) {
+    const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Cancel Booking',
+        message: `Are you sure you want to cancel your booking at ${booking.gymName}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.cancelBooking(booking.bookingId).subscribe({
+          next: () => {
+            this.showNotification('Booking cancelled successfully');
+            this.loadBookings(); // Reload to update list
+          },
+          error: (err) => {
+            console.error('Cancellation failed:', err);
+            this.showNotification('Failed to cancel booking');
+          }
+        });
+      }
     });
   }
 }

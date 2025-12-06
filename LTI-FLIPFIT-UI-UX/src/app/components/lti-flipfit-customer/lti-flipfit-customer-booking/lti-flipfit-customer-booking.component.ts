@@ -211,7 +211,7 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
           },
           error: (err) => {
             console.error('Failed to join waitlist:', err);
-            const errorMsg = err.error || 'Failed to join waitlist. Please try again.';
+            const errorMsg = this.getErrorMessage(err);
             this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
           }
         });
@@ -223,7 +223,7 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
 
   bookSlot(slot: any) {
     if (!this.customerId) {
-         alert('Please login to book a slot');
+         this.snackBar.open('Please login to book a slot', 'Close', { duration: 3000 });
          return;
     }
     const bookingRequest = {
@@ -241,9 +241,26 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
         },
         error: (err) => {
             console.error('Booking failed', err);
-            const errorMsg = err.error || 'Booking Failed. Please try again.';
+            const errorMsg = this.getErrorMessage(err);
             this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
         }
     });
+  }
+
+  private getErrorMessage(err: any): string {
+    if (err.error) {
+        try {
+            // Try parsing if it's a JSON string
+            const errorObj = JSON.parse(err.error);
+            if (errorObj && errorObj.message) {
+                return errorObj.message;
+            }
+        } catch (e) {
+            // If parsing fails, use the raw string
+            return err.error;
+        }
+        return err.error; // Fallback to raw string if no message field
+    }
+    return 'An error occurred. Please try again.';
   }
 }

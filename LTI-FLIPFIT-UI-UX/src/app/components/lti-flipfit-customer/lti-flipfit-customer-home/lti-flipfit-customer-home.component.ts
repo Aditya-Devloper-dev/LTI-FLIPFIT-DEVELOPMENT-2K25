@@ -62,14 +62,15 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
         gymName: slot.center ? slot.center.centerName : 'Gym',
         activity: slot.activity,
         // Map availability from backend
-        availableSeats: slot.availableSeats
+        availableSeats: slot.availableSeats,
+        centerId: slot.center ? slot.center.centerId : null // Ensure centerId is mapped for booking
       }));
     });
   }
 
   onJoinWaitlist(classItem: any) {
     if (!this.customerId) {
-        alert('Please login to join waitlist');
+        this.snackBar.open('Please login to join waitlist', 'Close', { duration: 3000 });
         return;
     }
     const customerId = this.customerId; 
@@ -94,7 +95,7 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
           },
           error: (err) => {
             console.error('Failed to join waitlist:', err);
-            const errorMsg = err.error || 'Failed to join waitlist. Please try again.';
+            const errorMsg = this.getErrorMessage(err);
             this.snackBar.open(errorMsg, 'Close', { 
               duration: 3000, 
               panelClass: ['error-snackbar']
@@ -130,7 +131,7 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
 
   bookSlot(slot: any) {
     if (!this.customerId) {
-        alert('Please login to book a slot');
+        this.snackBar.open('Please login to book a slot', 'Close', { duration: 3000 });
         return;
     }
     const bookingRequest = {
@@ -150,12 +151,27 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
         },
         error: (err) => {
             console.error('Booking failed', err);
-            const errorMsg = err.error || 'Booking Failed. Please try again.';
+            const errorMsg = this.getErrorMessage(err);
             this.snackBar.open(errorMsg, 'Close', {
                 duration: 3000,
                 panelClass: ['error-snackbar']
             });
         }
     });
+  }
+
+  private getErrorMessage(err: any): string {
+    if (err.error) {
+        try {
+            const errorObj = JSON.parse(err.error);
+            if (errorObj && errorObj.message) {
+                return errorObj.message;
+            }
+        } catch (e) {
+            return err.error;
+        }
+        return err.error;
+    }
+    return 'An error occurred. Please try again.';
   }
 }
