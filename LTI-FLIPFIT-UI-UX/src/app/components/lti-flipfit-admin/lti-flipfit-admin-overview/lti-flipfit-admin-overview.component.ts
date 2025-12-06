@@ -10,6 +10,12 @@ import { UserService } from '../../../services/user-service/user.service';
 import { LtiFlipFitNotificationComponent } from '../../common/lti-flipfit-notification/lti-flipfit-notification.component';
 import { RoleType } from '../../../models/enums/role.type';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminOverviewComponent
+ * @description: Dashboard overview component for admin, displaying high-level statistics like total gyms, users, bookings, and revenue.
+ */
 @Component({
   selector: 'app-lti-flipfit-admin-overview',
   standalone: true,
@@ -55,20 +61,38 @@ export class LtiFlipFitAdminOverviewComponent implements OnInit {
     private router: Router
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Triggers loading of all dashboard statistics.
+   */
   ngOnInit(): void {
     this.loadGymStats();
     this.loadUserStats();
     this.loadBookingAndRevenueStats();
   }
 
+  /**
+   * @methodname: viewGymDetails
+   * @description: Navigates to the details page of a specific gym center.
+   * @param: gymId - The gym's ID.
+   */
   viewGymDetails(gymId: number) {
     this.router.navigate(['/admin-dashboard/gyms', gymId]);
   }
 
+  /**
+   * @methodname: viewUserDetails
+   * @description: Navigates to the details page of a specific user.
+   * @param: userId - The user's ID.
+   */
   viewUserDetails(userId: number) {
     this.router.navigate(['/admin-dashboard/users', userId]);
   }
 
+  /**
+   * @methodname: loadGymStats
+   * @description: Fetches and aggregates gym-related statistics (total, approved, pending) and lists.
+   */
   loadGymStats() {
     this.adminService.getAllCenters().subscribe({
       next: (centers) => {
@@ -94,6 +118,10 @@ export class LtiFlipFitAdminOverviewComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadUserStats
+   * @description: Fetches and aggregates user-related statistics (total, customers, owners).
+   */
   loadUserStats() {
     this.userService.getAllUsers().subscribe({
       next: (users) => {
@@ -106,6 +134,10 @@ export class LtiFlipFitAdminOverviewComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadBookingAndRevenueStats
+   * @description: Fetches payment data to calculate revenue (monthly, weekly, daily) and total bookings.
+   */
   loadBookingAndRevenueStats() {
     this.adminService.viewPayments('MONTHLY').subscribe(payments => {
          this.monthlyRevenue = payments.reduce((sum: number, p: any) => sum + (p.amount || 0), 0);
@@ -126,6 +158,13 @@ export class LtiFlipFitAdminOverviewComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: formatStat
+   * @description: Reformats numbers or currency values for display.
+   * @param: value - The number to format.
+   * @param: isCurrency - Whether to format as currency (INR).
+   * @return: Formatted string.
+   */
   formatStat(value: number, isCurrency: boolean = false): string {
     if (value === undefined || value === null) return '0';
     if (isCurrency) {

@@ -14,6 +14,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdminService } from '../../../services/admin-service/admin.service';
 import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminGymsComponent
+ * @description: Component for managing and viewing all gym centers in the system.
+ */
 @Component({
   selector: 'app-lti-flipfit-admin-gyms',
   standalone: true,
@@ -45,11 +51,19 @@ export class LtiFlipFitAdminGymsComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Sets up filtering predicate and loads gym centers.
+   */
   ngOnInit() {
     this.setupFilterPredicate();
     this.loadGyms();
   }
 
+  /**
+   * @methodname: setupFilterPredicate
+   * @description: Configures proper filtering logic for the data table (search + status filter).
+   */
   setupFilterPredicate() {
     this.gyms.filterPredicate = (data: any, filter: string): boolean => {
       const searchStr = this.searchTerm.toLowerCase();
@@ -62,12 +76,20 @@ export class LtiFlipFitAdminGymsComponent implements OnInit {
     };
   }
 
+  /**
+   * @methodname: applyFilter
+   * @description: Triggers the data table filter update.
+   */
   applyFilter() {
     // Trigger filter update. The value passed to filter doesn't matter 
     // because we use custom predicate that reads from class properties
     this.gyms.filter = 'trigger'; 
   }
 
+  /**
+   * @methodname: loadGyms
+   * @description: Fetches all gym centers from the backend and populates the table.
+   */
   loadGyms() {
     this.adminService.getAllCenters().subscribe(centers => {
       this.gyms.data = centers.map(center => ({
@@ -82,10 +104,20 @@ export class LtiFlipFitAdminGymsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: viewGym
+   * @description: Navigates to the detailed view of a specific gym center.
+   * @param: id - The gym center ID.
+   */
   viewGym(id: string) {
     this.router.navigate(['/admin-dashboard/gyms', id]);
   }
 
+  /**
+   * @methodname: deleteGym
+   * @description: Deletes a gym center after confirmation.
+   * @param: id - The gym center ID.
+   */
   deleteGym(id: number) {
     const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
       width: '400px',

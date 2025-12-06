@@ -11,6 +11,12 @@ import { AdminService } from '../../../services/admin-service/admin.service';
 import { OwnerService } from '../../../services/owner-service/owner.service';
 import { GymCenter } from '../../../models/gym-center/gym-center.model';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminGymDetailsComponent
+ * @description: Component for displaying details of a specific gym center in the admin panel, including slots and owner stats.
+ */
 @Component({
   selector: 'app-lti-flipfit-admin-gym-details',
   standalone: true,
@@ -41,6 +47,10 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     private ownerService: OwnerService
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Reads the gym ID from route params and loads details.
+   */
   ngOnInit() {
     this.route.params.subscribe(params => {
       const id = params['id'];
@@ -51,6 +61,11 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadGymDetails
+   * @description: Fetches full details of a gym center by ID.
+   * @param: id - Center ID.
+   */
   loadGymDetails(id: number) {
     this.adminService.getCenterById(id).subscribe({
       next: (data) => {
@@ -65,6 +80,11 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadSlots
+   * @description: Fetches all slots associated with the gym center.
+   * @param: centerId - The center ID.
+   */
   loadSlots(centerId: number) {
     this.adminService.getSlotsByCenterId(centerId).subscribe({
       next: (data) => {
@@ -74,6 +94,11 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadOwnerStats
+   * @description: Loads statistics for the gym owner (total gyms, bookings, revenue).
+   * @param: ownerId - The owner's ID.
+   */
   loadOwnerStats(ownerId: number) {
     this.ownerService.getGymsByOwnerId(ownerId).subscribe(gyms => {
       this.totalGyms = gyms.length;
@@ -86,6 +111,10 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: approveGym
+   * @description: Approves the current gym center.
+   */
   approveGym() {
     if (this.gym?.centerId) {
       this.adminService.approveCenter(this.gym.centerId).subscribe({
@@ -97,6 +126,10 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: rejectGym
+   * @description: Rejects/Deletes the current gym center.
+   */
   rejectGym() {
     if (this.gym?.centerId) {
       this.adminService.deleteCenter(this.gym.centerId).subscribe({
@@ -108,6 +141,11 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: approveSlot
+   * @description: Approves a specific slot.
+   * @param: slotId - The slot ID.
+   */
   approveSlot(slotId: number) {
     this.adminService.approveSlot(slotId).subscribe({
       next: () => {
@@ -119,6 +157,11 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: rejectSlot
+   * @description: Rejects a specific slot.
+   * @param: slotId - The slot ID.
+   */
   rejectSlot(slotId: number) {
     this.adminService.rejectSlot(slotId).subscribe({
       next: () => {
@@ -130,6 +173,10 @@ export class LtiFlipFitAdminGymDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: goBack
+   * @description: Navigates back to the previous location.
+   */
   goBack() {
     this.location.back();
   }
