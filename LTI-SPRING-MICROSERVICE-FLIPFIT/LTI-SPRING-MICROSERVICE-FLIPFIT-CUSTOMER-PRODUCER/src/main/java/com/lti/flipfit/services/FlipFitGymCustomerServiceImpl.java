@@ -49,7 +49,6 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @throws UserNotFoundException if the customer is not found.
      */
     @Override
-    @Cacheable(value = "customerProfile", key = "#customerId")
     public GymCustomer getProfile(Long customerId) {
         logger.info("Fetching profile for customer ID: {}", customerId);
         return customerRepo.findById(customerId)
@@ -63,7 +62,6 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @return - A list of GymBooking entities.
      */
     @Override
-    @Cacheable(value = "customerBookings", key = "#customerId")
     public List<GymBooking> getCustomerBookings(Long customerId) {
         logger.info("Fetching bookings for customer ID: {}", customerId);
         return customerDAO.findBookingsByCustomerId(customerId);
@@ -75,7 +73,6 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
      * @return - A list of active GymCenter entities.
      */
     @Override
-    @Cacheable(value = "gymCenters")
     public List<com.lti.flipfit.entity.GymCenter> viewAllGyms() {
         logger.info("Fetching all active gym centers");
         return customerDAO.findActiveGyms();
