@@ -76,6 +76,8 @@ export class CustomerService {
    * @returns: Observable of the booking result.
    */
   bookSlot(bookingRequest: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/book-slot`, bookingRequest);
+    // URL changed to Booking Controller
+    const url = 'http://localhost:8080/booking/book';
+    return this.http.post(url, bookingRequest, { responseType: 'text' });
   }
 }

@@ -23,6 +23,7 @@ import { BookingDialogComponent } from '../../common/booking-dialog/booking-dial
   styleUrl: './lti-flipfit-customer-home.component.scss'
 })
 export class LtiFlipFitCustomerHomeComponent implements OnInit {
+  customerId: number | null = null;
   popularClasses: any[] = [];
   stockImages = [
     'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop', // Gym 1
@@ -39,6 +40,12 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      this.customerId = user.customerId;
+    }
+
     this.customerService.getAllSlots().subscribe(slots => {
       // Limit to 6 slots for display
       this.popularClasses = slots.slice(0, 6).map((slot, index) => ({
@@ -58,8 +65,11 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
   }
 
   onJoinWaitlist(classItem: any) {
-    // Assuming we have customerId (hardcoded 112 as per existing code)
-    const customerId = 112; 
+    if (!this.customerId) {
+        alert('Please login to join waitlist');
+        return;
+    }
+    const customerId = this.customerId; 
     
     if(confirm(`Do you want to join the waitlist for ${classItem.title}?`)) {
       this.customerService.joinWaitlist(customerId, classItem.slotId).subscribe({
@@ -99,9 +109,14 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
   }
 
   bookSlot(slot: any) {
+    if (!this.customerId) {
+        alert('Please login to book a slot');
+        return;
+    }
     const bookingRequest = {
-        slotId: slot.slotId,
-        customerId: 112, // TODO: Get from AuthService
+        customer: { customerId: this.customerId },
+        slot: { slotId: slot.slotId },
+        center: { centerId: slot.center ? slot.center.centerId : slot.centerId }, // Handle both cases just in case
         bookingDate: new Date().toISOString().split('T')[0]
     };
 

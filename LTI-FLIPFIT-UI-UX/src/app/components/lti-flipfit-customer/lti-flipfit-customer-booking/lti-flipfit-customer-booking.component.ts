@@ -34,6 +34,7 @@ import { GymSlotsDialogComponent } from './gym-slots-dialog/gym-slots-dialog.com
   styleUrl: './lti-flipfit-customer-booking.component.scss'
 })
 export class LtiFlipFitCustomerBookingComponent implements OnInit {
+  customerId: number | null = null;
   searchFilters = {
     location: '',
     time: '',
@@ -61,6 +62,11 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      this.customerId = user.customerId;
+    }
     this.loadData();
   }
 
@@ -199,9 +205,15 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
 
 
   bookSlot(slot: any) {
+    if (!this.customerId) {
+         alert('Please login to book a slot');
+         return;
+    }
     const bookingRequest = {
-        slotId: slot.slotId,
-        customerId: 112, // TODO: Get from AuthService/UserContext
+        // Fix Payload structure here as well for consistency
+        customer: { customerId: this.customerId },
+        slot: { slotId: slot.slotId },
+        center: { centerId: slot.center ? slot.center.centerId : slot.centerId },
         bookingDate: new Date().toISOString().split('T')[0]
     };
 

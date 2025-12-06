@@ -78,6 +78,7 @@ export class LtiFlipfitCustomerProfileComponent implements OnInit {
         this.isLoading = true;
         this.customerService.getCustomerBookings(this.customerId).subscribe({
             next: (response) => {
+                console.log('Fetched bookings for customer:', this.customerId, response);
                 this.bookings = response.map((booking: any) => ({
                     bookingId: booking.bookingId,
                     gymName: booking.slot?.center?.centerName || 'Unknown Gym',

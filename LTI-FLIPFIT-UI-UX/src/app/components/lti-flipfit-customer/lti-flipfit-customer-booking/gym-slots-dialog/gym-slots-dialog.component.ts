@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,8 @@ import { CustomerService } from '../../../../services/customer-service/customer.
   templateUrl: './gym-slots-dialog.component.html',
   styleUrls: ['./gym-slots-dialog.component.scss']
 })
-export class GymSlotsDialogComponent {
+export class GymSlotsDialogComponent implements OnInit {
+  customerId: number | null = null;
   
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -22,6 +23,14 @@ export class GymSlotsDialogComponent {
     private customerService: CustomerService,
     private dialogRef: MatDialogRef<GymSlotsDialogComponent>
   ) {}
+
+  ngOnInit() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      this.customerId = user.customerId;
+    }
+  }
 
   onBook(slot: any) {
     const dialogRef = this.dialog.open(BookingDialogComponent, {
@@ -43,8 +52,11 @@ export class GymSlotsDialogComponent {
   }
 
   onJoinWaitlist(slot: any) {
-    // Assuming we have customerId (hardcoded 112 as per existing flow)
-    const customerId = 112; 
+    if (!this.customerId) {
+        alert('Please login to join waitlist');
+        return;
+    }
+    const customerId = this.customerId; 
     
     if(confirm(`Do you want to join the waitlist for ${slot.activity}?`)) {
       this.customerService.joinWaitlist(customerId, slot.slotId).subscribe({
@@ -62,9 +74,14 @@ export class GymSlotsDialogComponent {
   }
 
   processBooking(slot: any) {
+    if (!this.customerId) {
+        alert('Please login to book a slot');
+        return;
+    }
     const bookingRequest = {
-        slotId: slot.slotId,
-        customerId: 112, // TODO: Get from AuthService
+        customer: { customerId: this.customerId }, // Object structure
+        slot: { slotId: slot.slotId },
+        center: { centerId: this.data.gym.id }, // Retrieve centerId from passed gym data
         bookingDate: new Date().toISOString().split('T')[0]
     };
 
