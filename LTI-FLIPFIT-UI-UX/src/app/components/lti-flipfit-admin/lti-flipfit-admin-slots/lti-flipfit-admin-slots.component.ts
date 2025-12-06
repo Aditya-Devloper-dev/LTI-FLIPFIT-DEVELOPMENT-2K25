@@ -17,6 +17,12 @@ interface GymWithSlotStats extends GymCenter {
   pendingSlots: number;
 }
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminSlotsComponent
+ * @description: Component for listing gym centers with their slot statistics for admin approval/management.
+ */
 @Component({
   selector: 'app-admin-slots',
   standalone: true,
@@ -43,10 +49,18 @@ export class LtiFlipFitAdminSlotsComponent implements OnInit {
     private router: Router
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Triggers loading of gym and slot data.
+   */
   ngOnInit() {
     this.loadGyms();
   }
 
+  /**
+   * @methodname: loadGyms
+   * @description: Fetches all centers and allows calculation of total, approved, and pending slots for each.
+   */
   loadGyms() {
     this.adminService.getAllCenters().subscribe(centers => {
       this.gyms = centers.map(center => ({
@@ -71,10 +85,19 @@ export class LtiFlipFitAdminSlotsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: applyFilter
+   * @description: Filters the gym list based on the search term.
+   */
   applyFilter() {
     this.filteredGyms.filter = this.searchTerm.trim().toLowerCase();
   }
 
+  /**
+   * @methodname: viewSlots
+   * @description: Navigates to the detailed slot management view for a specific center.
+   * @param: centerId - The center ID.
+   */
   viewSlots(centerId: number | undefined) {
     if (centerId) {
       this.router.navigate(['/admin-dashboard/slots', centerId]);

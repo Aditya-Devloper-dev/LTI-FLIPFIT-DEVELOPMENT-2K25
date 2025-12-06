@@ -13,6 +13,12 @@ import { AdminService } from '../../../services/admin-service/admin.service';
 import { GymSlot } from '../../../models/gym-slot/gym-slot.model';
 import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminSlotDetailsComponent
+ * @description: Component for viewing and managing slots for a specific gym center.
+ */
 @Component({
   selector: 'app-admin-slot-details',
   standalone: true,
@@ -41,6 +47,10 @@ export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Gets center ID from route and loads slots.
+   */
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -51,6 +61,10 @@ export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadSlots
+   * @description: Fetches all slots for the current center ID.
+   */
   loadSlots() {
     if (this.centerId) {
       this.adminService.getSlotsByCenterId(this.centerId).subscribe(slots => {
@@ -59,6 +73,11 @@ export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: approveSlot
+   * @description: Approves a pending slot.
+   * @param: slotId - The slot ID.
+   */
   approveSlot(slotId: number | undefined) {
     if (slotId) {
       this.adminService.approveSlot(slotId).subscribe(() => {
@@ -70,6 +89,11 @@ export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: deleteSlot
+   * @description: Deletes a slot after confirmation.
+   * @param: slotId - The slot ID.
+   */
   deleteSlot(slotId: number | undefined) {
     if (slotId) {
       const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
@@ -92,6 +116,10 @@ export class LtiFlipFitAdminSlotDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: goBack
+   * @description: Navigates back to the main slots management page.
+   */
   goBack() {
     this.router.navigate(['/admin-dashboard/slots']);
   }

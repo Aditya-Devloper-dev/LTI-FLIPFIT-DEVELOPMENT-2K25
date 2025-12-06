@@ -80,4 +80,13 @@ export class CustomerService {
     const url = 'http://localhost:8080/booking/book';
     return this.http.post(url, bookingRequest, { responseType: 'text' });
   }
+
+  /**
+   * @description: Cancel a booking.
+   * @param bookingId: The ID of the booking to cancel.
+   * @returns: Observable of the cancellation result.
+   */
+  cancelBooking(bookingId: number): Observable<any> {
+    return this.http.put(`http://localhost:8080/booking/cancel/${bookingId}`, {}, { responseType: 'text' });
+  }
 }

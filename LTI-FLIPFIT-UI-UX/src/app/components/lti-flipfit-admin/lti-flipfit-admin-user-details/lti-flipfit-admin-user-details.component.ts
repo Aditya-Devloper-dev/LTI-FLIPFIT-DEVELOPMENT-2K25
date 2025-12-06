@@ -13,6 +13,12 @@ import { OwnerService } from '../../../services/owner-service/owner.service';
 import { AdminService } from '../../../services/admin-service/admin.service';
 import { RoleType } from '../../../models/enums/role.type';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminUserDetailsComponent
+ * @description: Component for displaying detailed information about a user (Customer or Owner) and performing admin actions like approval.
+ */
 @Component({
   selector: 'app-lti-flipfit-admin-user-details',
   standalone: true,
@@ -43,6 +49,10 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     private adminService: AdminService
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Reads user ID from route and initiates detail loading.
+   */
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('id');
     if (userId) {
@@ -50,6 +60,11 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: loadUserDetails
+   * @description: Fetches base user details and directs to role-specific data loading (Customer or Owner).
+   * @param: userId - The user ID string from route.
+   */
   loadUserDetails(userId: string) {
     this.userService.getAllUsers().subscribe(users => {
       const foundUser = users.find(u => u.userId.toString() === userId);
@@ -69,6 +84,10 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: approveOwner
+   * @description: Approves a gym owner account.
+   */
   approveOwner() {
     if (this.user && this.user.ownerId) {
       this.adminService.approveOwner(this.user.ownerId).subscribe({
@@ -81,6 +100,11 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * @methodname: loadCustomerData
+   * @description: Fetches specific data for customers (bookings, stats).
+   * @param: userId - The user ID.
+   */
   loadCustomerData(userId: number) {
     this.customerService.getCustomerByUserId(userId).subscribe(customer => {
       if (customer) {
@@ -111,6 +135,11 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: loadOwnerData
+   * @description: Fetches specific data for owners (gyms, approval status, stats).
+   * @param: userId - The user ID.
+   */
   loadOwnerData(userId: number) {
     this.ownerService.getOwnerByUserId(userId).subscribe(owner => {
       if (owner) {
@@ -146,6 +175,10 @@ export class LtiFlipFitAdminUserDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: goBack
+   * @description: Navigates back to the users list.
+   */
   goBack() {
     this.location.back();
   }

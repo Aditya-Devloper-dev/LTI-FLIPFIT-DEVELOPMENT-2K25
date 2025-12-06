@@ -10,10 +10,18 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomerService } from '../../../services/customer-service/customer.service';
 import { BookingDialogComponent } from '../../common/booking-dialog/booking-dialog.component';
 import { GymSlotsDialogComponent } from './gym-slots-dialog/gym-slots-dialog.component';
+import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitCustomerBookingComponent
+ * @description: Component for handling customer booking flow, including viewing gyms, filtering slots, and managing booking actions.
+ */
 @Component({
   selector: 'app-lti-flipfit-customer-booking',
   standalone: true,
@@ -58,9 +66,14 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook that initializes the component. Loads user data and initial gym data.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -70,6 +83,10 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * @methodname: loadData
+   * @description: Fetches all gyms and slots from the backend.
+   */
   loadData() {
     this.isLoading = true;
     this.customerService.viewAllGyms().subscribe({
@@ -94,11 +111,19 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onSearch
+   * @description: Triggered when search filters are applied.
+   */
   onSearch() {
     console.log('Searching with filters:', this.searchFilters);
     this.filterData();
   }
 
+  /**
+   * @methodname: filterData
+   * @description: Filters the loaded slots based on search criteria and groups them by gym.
+   */
   filterData() {
     // Debugging logs
     console.log('All Gyms:', this.allGyms);
@@ -174,6 +199,11 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     this.gyms = Array.from(gymSlotsMap.values());
   }
 
+  /**
+   * @methodname: openGymSlotsDialog
+   * @description: Opens a dialog showing detailed slots for a specific gym.
+   * @param: gym - The gym object containing slots.
+   */
   openGymSlotsDialog(gym: any) {
     this.dialog.open(GymSlotsDialogComponent, {
       width: '600px',
@@ -184,29 +214,53 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     });
   }
 
+  /**
+   * @methodname: onJoinWaitlist
+   * @description: Handles the action of joining a waitlist for a full slot.
+   * @param: gym - The gym object involved.
+   */
   onJoinWaitlist(gym: any) {
-     // Assuming we have customerId (hardcoded 112 as per existing code)
-    const customerId = 112; 
-    
-    if(confirm(`Do you want to join the waitlist for ${gym.name} - ${gym.activity}?`)) {
-      this.customerService.joinWaitlist(customerId, gym.slotId).subscribe({
-        next: (res) => {
-          console.log('Joined waitlist:', res);
-          alert('Successfully joined the waitlist!');
-        },
-        error: (err) => {
-          console.error('Failed to join waitlist:', err);
-          alert('Failed to join waitlist. Please try again.');
-        }
-      });
+    if (!this.customerId) {
+        this.snackBar.open('Please login to join waitlist', 'Close', { duration: 3000 });
+        return;
     }
+    const customerId = this.customerId;
+    
+    const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Join Waitlist',
+        message: `Do you want to join the waitlist for ${gym.name || 'this gym'}?` // Fixed message access
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.joinWaitlist(customerId, gym.slotId).subscribe({
+          next: (res) => {
+            console.log('Joined waitlist:', res);
+            this.snackBar.open('Successfully joined the waitlist!', 'Close', { duration: 3000 });
+          },
+          error: (err) => {
+            console.error('Failed to join waitlist:', err);
+            const errorMsg = this.getErrorMessage(err);
+            this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
 
 
+  /**
+   * @methodname: bookSlot
+   * @description: Handles the booking of a slot.
+   * @param: slot - The slot to book.
+   */
   bookSlot(slot: any) {
     if (!this.customerId) {
-         alert('Please login to book a slot');
+         this.snackBar.open('Please login to book a slot', 'Close', { duration: 3000 });
          return;
     }
     const bookingRequest = {
@@ -220,12 +274,36 @@ export class LtiFlipFitCustomerBookingComponent implements OnInit {
     this.customerService.bookSlot(bookingRequest).subscribe({
         next: (response) => {
             console.log('Booking successful', response);
-            alert('Booking Successful!');
+            this.snackBar.open('Booking Successful!', 'Close', { duration: 3000 });
         },
         error: (err) => {
             console.error('Booking failed', err);
-            alert('Booking Failed: ' + (err.error?.message || 'Server error'));
+            const errorMsg = this.getErrorMessage(err);
+            this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
         }
     });
+  }
+
+  /**
+   * @methodname: getErrorMessage
+   * @description: Helper method to extract error message from API response.
+   * @param: err - The error object.
+   * @return: Extracted error message string.
+   */
+  private getErrorMessage(err: any): string {
+    if (err.error) {
+        try {
+            // Try parsing if it's a JSON string
+            const errorObj = JSON.parse(err.error);
+            if (errorObj && errorObj.message) {
+                return errorObj.message;
+            }
+        } catch (e) {
+            // If parsing fails, use the raw string
+            return err.error;
+        }
+        return err.error; // Fallback to raw string if no message field
+    }
+    return 'An error occurred. Please try again.';
   }
 }

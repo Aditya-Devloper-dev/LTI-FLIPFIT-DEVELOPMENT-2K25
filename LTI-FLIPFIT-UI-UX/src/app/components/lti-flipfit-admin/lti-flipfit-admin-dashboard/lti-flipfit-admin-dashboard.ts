@@ -4,6 +4,12 @@ import { RouterOutlet, Router } from '@angular/router';
 import { HeaderComponent, MenuItem } from '../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipFitAdminDashboard
+ * @description: Main dashboard layout component for administrators, handling navigation and user context.
+ */
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -22,6 +28,10 @@ export class LtiFlipFitAdminDashboard implements OnInit {
 
   constructor(private router: Router) {}
 
+  /**
+   * @methodname: ngOnInit
+   * @description: Lifecycle hook. Initializes user information from local storage.
+   */
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -38,12 +48,20 @@ export class LtiFlipFitAdminDashboard implements OnInit {
     { label: 'Slots', route: '/admin-dashboard/slots' }
   ];
 
+  /**
+   * @methodname: onLogout
+   * @description: Logs out the admin user and redirects to login.
+   */
   onLogout() {
     console.log('Logout clicked');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
+  /**
+   * @methodname: onProfile
+   * @description: Navigates to the admin profile page.
+   */
   onProfile() {
     console.log('Profile clicked');
     this.router.navigate(['/admin-dashboard/profile']);

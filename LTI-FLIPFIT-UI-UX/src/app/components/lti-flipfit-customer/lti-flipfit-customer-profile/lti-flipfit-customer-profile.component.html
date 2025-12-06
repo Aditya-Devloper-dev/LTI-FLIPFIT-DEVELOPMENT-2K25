@@ -1,12 +1,13 @@
 <div class="profile-container">
   <div class="header-section">
     <h1>My Profile</h1>
-    <p>Manage your account and view your booking history.</p>
+    <p>Manage your account settings and view your activity.</p>
   </div>
 
   <mat-tab-group animationDuration="0ms" class="profile-tabs">
-    <mat-tab label="Personal Details">
+    <mat-tab label="Overview">
       <div class="tab-content split-layout">
+        <!-- Profile Details Card -->
         <mat-card class="profile-card">
             <mat-card-header>
                 <mat-card-title>Account Information</mat-card-title>
@@ -14,23 +15,35 @@
           <mat-card-content>
             <div class="details-grid">
               <div class="detail-item">
-                <mat-label>Full Name</mat-label>
-                <div class="value">{{ customerProfile.fullName || 'N/A' }}</div>
+                <mat-icon>person_outline</mat-icon>
+                <div>
+                    <mat-label>Full Name</mat-label>
+                    <div class="value">{{ customerProfile.fullName || 'N/A' }}</div>
+                </div>
               </div>
 
               <div class="detail-item">
-                <mat-label>Email Address</mat-label>
-                <div class="value">{{ customerProfile.email || 'N/A' }}</div>
+                <mat-icon>email</mat-icon>
+                <div>
+                    <mat-label>Email Address</mat-label>
+                    <div class="value">{{ customerProfile.email || 'N/A' }}</div>
+                </div>
               </div>
 
               <div class="detail-item">
-                <mat-label>Phone Number</mat-label>
-                <div class="value">{{ customerProfile.phoneNumber || 'N/A' }}</div>
+                <mat-icon>phone</mat-icon>
+                <div>
+                    <mat-label>Phone Number</mat-label>
+                    <div class="value">{{ customerProfile.phoneNumber || 'N/A' }}</div>
+                </div>
               </div>
 
               <div class="detail-item">
-                <mat-label>Role</mat-label>
-                <div class="value">{{ customerProfile.roleName || 'Customer' }}</div>
+                <mat-icon>badge</mat-icon>
+                <div>
+                    <mat-label>Role</mat-label>
+                    <div class="value">{{ customerProfile.roleName || 'Customer' }}</div>
+                </div>
               </div>
             </div>
           </mat-card-content>
@@ -92,12 +105,26 @@
               </td>
             </ng-container>
 
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-flat-button color="warn" style="transform: scale(0.8);"
+                        *ngIf="element.status === 'BOOKED'"
+                        (click)="cancelBooking(element)">
+                  Cancel
+                </button>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
             <!-- No Data Row -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="5">No booking history available.</td>
+                <td class="mat-cell" colspan="6" style="text-align: center; padding: 40px; color: #9CA3AF;">
+                    No booking history available.
+                </td>
             </tr>
           </table>
         </div>
