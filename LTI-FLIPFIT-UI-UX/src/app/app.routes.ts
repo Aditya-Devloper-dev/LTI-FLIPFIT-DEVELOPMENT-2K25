@@ -19,6 +19,7 @@ import { LtiFlipFitOwnerGymDetailsComponent } from './components/lti-flipfit-own
 import { LtiFlipFitCustomerLayoutComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-layout/lti-flipfit-customer-layout.component';
 import { LtiFlipFitCustomerHomeComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-home/lti-flipfit-customer-home.component';
 import { LtiFlipFitCustomerBookingComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-booking/lti-flipfit-customer-booking.component';
+import { LtiFlipfitCustomerProfileComponent } from './components/lti-flipfit-customer/lti-flipfit-customer-profile/lti-flipfit-customer-profile.component';
 
 import { LtiFlipfitLandingComponent } from './components/lti-flipfit-landing/lti-flipfit-landing.component';
 
@@ -63,7 +64,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: LtiFlipFitCustomerHomeComponent },
       { path: 'workouts', component: LtiFlipFitCustomerBookingComponent },
-      { path: 'profile', component: LtiFlipFitProfileComponent }
+      { path: 'profile', component: LtiFlipfitCustomerProfileComponent },
+      { path: 'manage-profile', component: LtiFlipFitProfileComponent }
     ]
   }
 ];

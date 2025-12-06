@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{data.gym.name}} - Available Slots</h2>
+<mat-dialog-content>
+  <div class="slots-list">
+    <div *ngIf="data.slots.length === 0" class="no-slots">
+      <p>No slots matching your filters found for this gym.</p>
+    </div>
+    
+    <div class="slot-item" *ngFor="let slot of data.slots">
+      <div class="slot-info">
+        <h4 class="activity-title">{{slot.activity || 'Workout'}}</h4>
+        <div class="slot-details">
+          <span class="detail"><mat-icon>schedule</mat-icon> {{slot.startTime.substring(0,5)}} - {{slot.endTime.substring(0,5)}}</span>
+          <span class="detail"><mat-icon>payments</mat-icon> ₹{{slot.price}}</span>
+          <span class="detail" [ngClass]="{'available': slot.availableSeats > 0, 'full': slot.availableSeats === 0}">
+            <mat-icon>event_seat</mat-icon> {{slot.availableSeats}} seats left
+          </span>
+        </div>
+      </div>
+      
+      <div class="slot-actions">
+        <!-- Show Book if seats available, else Join Waitlist -->
+        <button *ngIf="slot.availableSeats > 0; else waitlistBtn" mat-flat-button color="primary" (click)="onBook(slot)">
+          Book
+        </button>
+        <ng-template #waitlistBtn>
+          <button mat-stroked-button color="warn" (click)="onJoinWaitlist(slot)">
+             Waitlist
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

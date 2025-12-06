@@ -44,4 +44,7 @@ public class GymSlot {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "activity")
+    private String activity;
 }

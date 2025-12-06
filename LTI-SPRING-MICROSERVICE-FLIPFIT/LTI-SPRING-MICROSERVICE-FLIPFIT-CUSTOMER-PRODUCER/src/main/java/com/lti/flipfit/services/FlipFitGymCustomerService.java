@@ -8,7 +8,7 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
-
+import com.lti.flipfit.entity.GymSlot;
 import java.util.List;
 import java.util.Map;
 
@@ -20,14 +20,11 @@ import java.util.Map;
 public interface FlipFitGymCustomerService {
 
     /**
-     * @methodname - viewAvailability
-     * @description - Checks the availability of slots for a given center on a
-     *              specific date.
-     * @param - centerId The ID of the gym center.
-     * @param - date The date to check availability for.
-     * @return - A list of maps containing slot details and availability.
+     * @methodname - getAllAvailableSlots
+     * @description - Retrieves all active gym slots.
+     * @return - A list of GymSlot entities.
      */
-    List<Map<String, Object>> viewAvailability(String centerId, String date);
+    List<GymSlot> getAllAvailableSlots();
 
     /**
      * @methodname - getProfile

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lti.flipfit.entity.GymSlot;
 import java.util.List;
 import java.util.Map;
 
@@ -30,20 +31,15 @@ public class FlipFitGymCustomerController {
         this.customerService = customerService;
     }
 
-    /**
-     * @methodname - viewAvailability
-     * @description - Fetches availability details for a given center on a specific
-     *              date.
-     * @param - centerId The ID of the gym center.
-     * @param - date The date to check availability for.
-     * @return - A list of maps containing slot details and availability.
+    /*
+     * @Method: getAllAvailableSlots
+     * 
+     * @Description: Fetches all active/available slots
      */
-    @RequestMapping(value = "/availability", method = RequestMethod.GET)
-    public List<Map<String, Object>> viewAvailability(
-            @RequestParam String centerId,
-            @RequestParam String date) {
-        logger.info("Received request to view availability for center ID: {} on date: {}", centerId, date);
-        return customerService.viewAvailability(centerId, date);
+    @RequestMapping(value = "/slots", method = RequestMethod.GET)
+    public ResponseEntity<List<GymSlot>> getAllAvailableSlots() {
+        logger.info("Received request to get all available slots");
+        return ResponseEntity.ok(customerService.getAllAvailableSlots());
     }
 
     /**

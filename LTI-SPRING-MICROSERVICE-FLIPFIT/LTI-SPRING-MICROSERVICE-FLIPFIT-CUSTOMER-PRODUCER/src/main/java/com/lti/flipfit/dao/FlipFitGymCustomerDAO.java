@@ -2,6 +2,7 @@ package com.lti.flipfit.dao;
 
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCenter;
+import com.lti.flipfit.entity.GymSlot;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,13 +15,11 @@ import java.util.List;
 public interface FlipFitGymCustomerDAO {
 
     /**
-     * Retrieves slots and their booked count for a specific center and date.
+     * Retrieves all active slots.
      * 
-     * @param centerId The ID of the center.
-     * @param date     The date to check availability.
-     * @return List of Object arrays containing GymSlot and booked count (Long).
+     * @return List of GymSlot entities.
      */
-    List<Object[]> findSlotAvailability(Long centerId, LocalDate date);
+    List<GymSlot> findAllActiveSlots();
 
     /**
      * Retrieves all bookings made by a customer.

@@ -105,7 +105,6 @@ public class FlipFitGymCenterServiceImpl implements FlipFitGymCenterService {
      * @return - A list of GymBooking objects.
      */
     @Override
-    @Cacheable(value = "ownerCache", key = "'bookings-' + #centerId")
     public List<GymBooking> viewAllBookings(Long centerId) {
         logger.info("Fetching all bookings for center ID: {}", centerId);
         if (!centerRepo.existsById(centerId)) {

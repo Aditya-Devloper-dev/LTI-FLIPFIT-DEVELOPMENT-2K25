@@ -20,4 +20,6 @@ public interface FlipFitGymSlotRepository extends JpaRepository<GymSlot, Long> {
     List<GymSlot> findByCenterCenterId(Long centerId);
 
     List<GymSlot> findByCenterCenterIdAndIsActive(Long centerId, Boolean isActive);
+
+    List<GymSlot> findByIsActive(Boolean isActive);
 }

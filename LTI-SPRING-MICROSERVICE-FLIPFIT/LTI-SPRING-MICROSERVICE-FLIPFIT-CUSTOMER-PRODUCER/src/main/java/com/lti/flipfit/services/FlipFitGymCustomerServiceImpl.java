@@ -2,6 +2,7 @@ package com.lti.flipfit.services;
 
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.user.UserNotFoundException;
 import com.lti.flipfit.repository.FlipFitGymCustomerRepository;
 import com.lti.flipfit.dao.FlipFitGymCustomerDAO;
@@ -32,41 +33,12 @@ public class FlipFitGymCustomerServiceImpl implements FlipFitGymCustomerService 
         this.customerDAO = customerDAO;
     }
 
-    /**
-     * @methodname - viewAvailability
-     * @description - Checks the availability of slots for a given center on a
-     *              specific date.
-     * @param - centerId The ID of the gym center.
-     * @param - date The date to check availability for.
-     * @return - A list of maps containing slot details and availability.
-     */
     @Override
-    @Cacheable(value = "gymAvailability")
-    public List<Map<String, Object>> viewAvailability(String centerId, String date) {
-        logger.info("Checking availability for center ID: {} on date: {}", centerId, date);
-
-        Long cId = Long.parseLong(centerId);
-        java.time.LocalDate bookingDate = java.time.LocalDate.parse(date);
-
-        List<Object[]> results = customerDAO.findSlotAvailability(cId, bookingDate);
-        List<Map<String, Object>> availabilityList = new ArrayList<>();
-
-        for (Object[] result : results) {
-            com.lti.flipfit.entity.GymSlot slot = (com.lti.flipfit.entity.GymSlot) result[0];
-            Long bookedCount = (Long) result[1];
-            int availableSeats = slot.getCapacity() - bookedCount.intValue();
-
-            Map<String, Object> slotDetails = new HashMap<>();
-            slotDetails.put("slotId", slot.getSlotId());
-            slotDetails.put("startTime", slot.getStartTime());
-            slotDetails.put("endTime", slot.getEndTime());
-            slotDetails.put("availableSeats", Math.max(0, availableSeats));
-            slotDetails.put("price", slot.getPrice());
-
-            availabilityList.add(slotDetails);
-        }
-
-        return availabilityList;
+    public List<GymSlot> getAllAvailableSlots() {
+        // Fetch all active slots for display on customer home
+        List<GymSlot> slots = customerDAO.findAllActiveSlots();
+        logger.info("Fetched {} active and approved slots from database", slots.size());
+        return slots;
     }
 
     /**

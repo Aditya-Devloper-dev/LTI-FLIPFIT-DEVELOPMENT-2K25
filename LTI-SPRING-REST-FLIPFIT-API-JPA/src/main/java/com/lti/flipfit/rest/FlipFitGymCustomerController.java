@@ -2,6 +2,7 @@ package com.lti.flipfit.rest;
 
 import com.lti.flipfit.entity.GymBooking;
 import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymSlot;
 import com.lti.flipfit.exceptions.InvalidInputException;
 import com.lti.flipfit.services.FlipFitGymCustomerService;
 import org.slf4j.Logger;
@@ -30,27 +31,6 @@ public class FlipFitGymCustomerController {
 
     public FlipFitGymCustomerController(FlipFitGymCustomerService customerService) {
         this.customerService = customerService;
-    }
-
-    /*
-     * @Method: Viewing slot availability
-     * 
-     * @Description: Fetches availability details for a given center on a specific
-     * date
-     * 
-     * @MethodParameters: String centerId, String date
-     * 
-     * @Exception: Throws exceptions if centerId/date is invalid or data retrieval
-     * fails
-     */
-
-    @RequestMapping(value = "/availability", method = RequestMethod.GET)
-    public List<Map<String, Object>> viewAvailability(
-            @RequestParam String centerId,
-            @RequestParam String date) {
-        logger.info("Received request to view availability for center ID: {} on date: {}", centerId, date);
-
-        return customerService.viewAvailability(centerId, date);
     }
 
     /*
@@ -87,5 +67,16 @@ public class FlipFitGymCustomerController {
             throw new InvalidInputException("Customer ID cannot be empty");
         }
         return ResponseEntity.ok(customerService.getCustomerBookings(customerId));
+    }
+
+    /*
+     * @Method: getAllAvailableSlots
+     * 
+     * @Description: Fetches all active/available slots
+     */
+    @RequestMapping(value = "/slots", method = RequestMethod.GET)
+    public ResponseEntity<List<GymSlot>> getAllAvailableSlots() {
+        logger.info("Received request to get all available slots");
+        return ResponseEntity.ok(customerService.getAllAvailableSlots());
     }
 }
