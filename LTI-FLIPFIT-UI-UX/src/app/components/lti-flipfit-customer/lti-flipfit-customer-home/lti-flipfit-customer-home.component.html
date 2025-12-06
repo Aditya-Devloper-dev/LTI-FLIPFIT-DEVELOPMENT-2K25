@@ -44,23 +44,40 @@
     <h2>Popular Classes Near You</h2>
     <div class="classes-grid">
       <mat-card class="class-card" *ngFor="let classItem of popularClasses">
-        <img mat-card-image [src]="classItem.image" alt="Class image" class="class-image"> 
-        <mat-card-content>
-          <h3>{{classItem.title}}</h3>
-          <p class="location-text">{{classItem.location}}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-weight: 500; font-size: 0.9rem;">
-             <span style="display: flex; align-items: center; gap: 4px; color: #666;">
-                <mat-icon style="font-size: 16px; height: 16px; width: 16px;">access_time</mat-icon> {{classItem.time}}
+        <div class="card-image-wrapper">
+            <img [src]="classItem.image" alt="Class image" class="class-image">
+            <span class="price-badge">₹{{classItem.price}}</span>
+        </div>
+        <mat-card-content class="card-content">
+          <div class="card-header">
+              <h3>{{classItem.title}}</h3>
+              <p class="gym-name">{{classItem.gymName}}</p>
+          </div>
+          
+          <div class="card-details">
+             <div class="detail-row">
+                <mat-icon>location_on</mat-icon>
+                <span>{{classItem.location}}</span>
+             </div>
+             <div class="detail-row">
+                <mat-icon>access_time</mat-icon>
+                <span>{{classItem.time}}</span>
+             </div>
+          </div>
+          
+          <div class="seats-info" *ngIf="classItem.availableSeats !== undefined">
+             <span [class.low-seats]="classItem.availableSeats < 5" [class.available]="classItem.availableSeats >= 5">
+                {{classItem.availableSeats}} seats left
              </span>
-             <span style="color: #2e7d32; font-weight: 600;">₹{{classItem.price}}</span>
           </div>
         </mat-card-content>
-        <mat-card-actions>
-          <button *ngIf="classItem.availableSeats > 0; else waitlistBtn" mat-flat-button color="primary" (click)="openBookingDialog(classItem)" style="width: 100%">Book</button>
-          <ng-template #waitlistBtn>
-            <button mat-flat-button color="warn" (click)="onJoinWaitlist(classItem)" style="width: 100%">Join Waitlist</button>
-          </ng-template>
-        </mat-card-actions>
+        
+        <div class="card-actions">
+           <button *ngIf="classItem.availableSeats > 0; else waitlistBtn" mat-flat-button color="primary" (click)="openBookingDialog(classItem)">Book Now</button>
+           <ng-template #waitlistBtn>
+             <button mat-stroked-button color="warn" (click)="onJoinWaitlist(classItem)">Join Waitlist</button>
+           </ng-template>
+        </div>
       </mat-card>
     </div>
   </section>

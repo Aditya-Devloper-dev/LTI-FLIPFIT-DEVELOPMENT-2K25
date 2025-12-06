@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -10,7 +11,7 @@ import { CustomerService } from '../../../../services/customer-service/customer.
 @Component({
   selector: 'app-gym-slots-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatListModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatListModule, MatSnackBarModule],
   templateUrl: './gym-slots-dialog.component.html',
   styleUrls: ['./gym-slots-dialog.component.scss']
 })
@@ -21,7 +22,8 @@ export class GymSlotsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     private customerService: CustomerService,
-    private dialogRef: MatDialogRef<GymSlotsDialogComponent>
+    private dialogRef: MatDialogRef<GymSlotsDialogComponent>,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -62,12 +64,13 @@ export class GymSlotsDialogComponent implements OnInit {
       this.customerService.joinWaitlist(customerId, slot.slotId).subscribe({
         next: (res) => {
           console.log('Joined waitlist:', res);
-          alert('Successfully joined the waitlist!');
+          this.snackBar.open('Successfully joined the waitlist!', 'Close', { duration: 3000 });
           this.dialogRef.close(true); // Close dialog on success
         },
         error: (err) => {
           console.error('Failed to join waitlist:', err);
-          alert('Failed to join waitlist. Please try again.');
+          const errorMsg = err.error || 'Failed to join waitlist. Please try again.';
+          this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
         }
       });
     }
@@ -88,12 +91,13 @@ export class GymSlotsDialogComponent implements OnInit {
     this.customerService.bookSlot(bookingRequest).subscribe({
         next: (response) => {
             console.log('Booking successful', response);
-            alert('Booking Successful!');
+            this.snackBar.open('Booking Successful!', 'Close', { duration: 3000 });
             this.dialogRef.close(true);
         },
         error: (err) => {
             console.error('Booking failed', err);
-            alert('Booking Failed: ' + (err.error?.message || 'Server error'));
+            const errorMsg = err.error || 'Booking Failed. Please try again.';
+            this.snackBar.open(errorMsg, 'Close', { duration: 3000 });
         }
     });
   }

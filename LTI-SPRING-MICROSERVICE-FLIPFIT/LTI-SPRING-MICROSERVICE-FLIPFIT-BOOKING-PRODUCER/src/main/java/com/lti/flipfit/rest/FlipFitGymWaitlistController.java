@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/waitlist")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class FlipFitGymWaitlistController {
 
     private static final Logger logger = LoggerFactory.getLogger(FlipFitGymWaitlistController.class);

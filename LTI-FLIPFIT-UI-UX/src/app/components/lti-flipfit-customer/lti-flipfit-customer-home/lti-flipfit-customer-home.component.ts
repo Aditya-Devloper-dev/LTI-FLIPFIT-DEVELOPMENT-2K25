@@ -5,8 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomerService } from '../../../services/customer-service/customer.service';
 import { BookingDialogComponent } from '../../common/booking-dialog/booking-dialog.component';
+import { LtiFlipFitConfirmDialogComponent } from '../../common/lti-flipfit-confirm-dialog/lti-flipfit-confirm-dialog.component';
 
 @Component({
   selector: 'app-lti-flipfit-customer-home',
@@ -17,7 +19,8 @@ import { BookingDialogComponent } from '../../common/booking-dialog/booking-dial
     MatCardModule,
     MatIconModule,
     RouterModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './lti-flipfit-customer-home.component.html',
   styleUrl: './lti-flipfit-customer-home.component.scss'
@@ -36,7 +39,8 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
   constructor(
     private router: Router,
     private customerService: CustomerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -47,7 +51,6 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     }
 
     this.customerService.getAllSlots().subscribe(slots => {
-      // Show all data
       this.popularClasses = slots.map((slot, index) => ({
         slotId: slot.slotId,
         title: slot.activity && slot.activity.trim() !== '' ? slot.activity : 'Workout Session', // Use activity if available
@@ -71,18 +74,35 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     }
     const customerId = this.customerId; 
     
-    if(confirm(`Do you want to join the waitlist for ${classItem.title}?`)) {
-      this.customerService.joinWaitlist(customerId, classItem.slotId).subscribe({
-        next: (res) => {
-          console.log('Joined waitlist:', res);
-          alert('Successfully joined the waitlist!');
-        },
-        error: (err) => {
-          console.error('Failed to join waitlist:', err);
-          alert('Failed to join waitlist. Please try again.');
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(LtiFlipFitConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Join Waitlist',
+        message: `Do you want to join the waitlist for ${classItem.title}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.joinWaitlist(customerId, classItem.slotId).subscribe({
+          next: (res) => {
+            console.log('Joined waitlist:', res);
+            this.snackBar.open('Successfully joined the waitlist!', 'Close', { 
+              duration: 3000,
+              panelClass: ['success-snackbar']
+            });
+          },
+          error: (err) => {
+            console.error('Failed to join waitlist:', err);
+            const errorMsg = err.error || 'Failed to join waitlist. Please try again.';
+            this.snackBar.open(errorMsg, 'Close', { 
+              duration: 3000, 
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
+      }
+    });
   }
 
   onFindGym() {
@@ -123,11 +143,18 @@ export class LtiFlipFitCustomerHomeComponent implements OnInit {
     this.customerService.bookSlot(bookingRequest).subscribe({
         next: (response) => {
             console.log('Booking successful', response);
-            alert('Booking Successful!');
+            this.snackBar.open('Booking Successful!', 'Close', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+            });
         },
         error: (err) => {
             console.error('Booking failed', err);
-            alert('Booking Failed');
+            const errorMsg = err.error || 'Booking Failed. Please try again.';
+            this.snackBar.open(errorMsg, 'Close', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+            });
         }
     });
   }
