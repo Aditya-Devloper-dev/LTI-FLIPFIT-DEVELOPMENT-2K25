@@ -39,4 +39,5 @@ public interface FlipFitGymBookingRepository extends JpaRepository<GymBooking, L
      * @return A list of bookings with the given status.
      */
     List<GymBooking> findByStatus(BookingStatus status);
+
 }

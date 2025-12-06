@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  * Author :
@@ -241,23 +242,21 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         return bookingDAO.findPaymentsByDateRange(startDateTime, endDateTime);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 60000) // Run every minute
     @Transactional
     public void markBookingsAsAttended() {
+        logger.info("Running scheduled task to mark bookings as ATTENDED");
         java.util.List<GymBooking> bookings = bookingRepo.findByStatus(BookingStatus.BOOKED);
         LocalDateTime now = LocalDateTime.now();
 
         for (GymBooking booking : bookings) {
-            LocalDate bookingDate = booking.getBookingDate();
-            if (bookingDate == null)
-                continue;
-
-            LocalDateTime slotEndTime = LocalDateTime.of(bookingDate, booking.getSlot().getEndTime());
-
-            if (now.isAfter(slotEndTime.plusMinutes(20))) {
-                booking.setStatus(BookingStatus.ATTENDED);
-                bookingRepo.save(booking);
-                logger.info("Booking ID {} marked as ATTENDED", booking.getBookingId());
+            if (booking.getBookingDate() != null && booking.getSlot() != null) {
+                LocalDateTime slotEndTime = LocalDateTime.of(booking.getBookingDate(), booking.getSlot().getEndTime());
+                if (slotEndTime.plusMinutes(20).isBefore(now)) {
+                    booking.setStatus(BookingStatus.ATTENDED);
+                    bookingRepo.save(booking);
+                    logger.info("Marked Booking ID {} as ATTENDED", booking.getBookingId());
+                }
             }
         }
     }

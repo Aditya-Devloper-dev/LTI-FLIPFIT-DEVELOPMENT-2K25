@@ -152,7 +152,7 @@
             <th mat-header-cell *matHeaderCellDef> Status </th>
             <td mat-cell *matCellDef="let element">
               <mat-chip-set>
-                <mat-chip class="status-booking" selected>{{element.status}}</mat-chip>
+                <mat-chip [ngClass]="'status-' + element.status.toLowerCase()" selected>{{element.status}}</mat-chip>
               </mat-chip-set>
             </td>
           </ng-container>
