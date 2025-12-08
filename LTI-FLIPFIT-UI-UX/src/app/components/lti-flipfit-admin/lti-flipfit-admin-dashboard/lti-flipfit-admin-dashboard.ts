@@ -43,6 +43,7 @@ export class LtiFlipFitAdminDashboard implements OnInit {
   }
   menuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/admin-dashboard/overview' },
+    { label: 'Reports', route: '/admin-dashboard/report' },
     { label: 'Gyms', route: '/admin-dashboard/gyms' },
     { label: 'Users', route: '/admin-dashboard/users' },
     { label: 'Slots', route: '/admin-dashboard/slots' }

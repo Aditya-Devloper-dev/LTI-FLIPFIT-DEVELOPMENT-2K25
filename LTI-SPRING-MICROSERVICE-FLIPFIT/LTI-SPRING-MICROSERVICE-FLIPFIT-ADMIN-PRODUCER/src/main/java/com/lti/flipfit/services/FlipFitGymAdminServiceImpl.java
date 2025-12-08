@@ -71,18 +71,7 @@ public class FlipFitGymAdminServiceImpl implements FlipFitGymAdminService {
         if (Boolean.TRUE.equals(slot.getIsApproved())) {
             return "Slot is already approved.";
         }
-
-        // Validate time overlap with other ACTIVE slots
-        List<GymSlot> existingSlots = slotRepo.findByCenterCenterIdAndIsActive(slot.getCenter().getCenterId(), true);
-        boolean overlap = existingSlots.stream().anyMatch(existing -> timesOverlap(
-                existing.getStartTime(),
-                existing.getEndTime(),
-                slot.getStartTime(),
-                slot.getEndTime()));
-
-        if (overlap) {
-            throw new SlotAlreadyExistsException("An active slot already exists in this time range");
-        }
+        
 
         adminDAO.approveSlot(slotId);
         logger.info("Slot approved with ID: {}", slotId);

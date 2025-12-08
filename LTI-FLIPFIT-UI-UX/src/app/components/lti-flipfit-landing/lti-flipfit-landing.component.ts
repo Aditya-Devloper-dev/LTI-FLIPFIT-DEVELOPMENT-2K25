@@ -6,6 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { HeaderComponent, MenuItem } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 
+/**
+ * @author: 
+ * @version: 1.0
+ * @Component: LtiFlipfitLandingComponent
+ * @description: Landing page component for FlipFit application.
+ */
 @Component({
   selector: 'app-lti-flipfit-landing',
   standalone: true,

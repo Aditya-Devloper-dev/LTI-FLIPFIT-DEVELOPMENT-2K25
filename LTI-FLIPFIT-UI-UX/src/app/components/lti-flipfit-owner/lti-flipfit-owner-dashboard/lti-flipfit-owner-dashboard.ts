@@ -56,6 +56,7 @@ export class LtiFlipFitGymOwnerDashboard implements OnInit {
   }
   menuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/gym-owner-dashboard/overview' },
+    { label: 'Reports', route: '/gym-owner-dashboard/report' },
     { label: 'My Gyms', route: '/gym-owner-dashboard/my-gyms' },
     { label: 'Slots', route: '/gym-owner-dashboard/slots' }
   ];
