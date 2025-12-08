@@ -11,71 +11,84 @@
         <p class="subtitle">Join the fitness revolution</p>
       </div>
 
-      <form class="register-form" (ngSubmit)="onSubmit()">
+      <form class="register-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Full Name</mat-label>
-          <input matInput placeholder="John Doe" [(ngModel)]="user.fullName" name="fullName" required>
+          <input matInput placeholder="John Doe" formControlName="fullName" required>
           <mat-icon matSuffix>person_outline</mat-icon>
+          <mat-error *ngIf="signupForm.get('fullName')?.hasError('required')">Full name is required</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email Address</mat-label>
-          <input matInput placeholder="name@example.com" type="email" [(ngModel)]="user.email" name="email" required>
+          <input matInput placeholder="name@example.com" type="email" formControlName="email" required>
           <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="signupForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="signupForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Phone Number</mat-label>
-          <input matInput placeholder="1234567890" [(ngModel)]="user.phoneNumber" name="phoneNumber" required>
+          <input matInput placeholder="1234567890" formControlName="phoneNumber" required>
           <mat-icon matSuffix>phone</mat-icon>
+          <mat-error *ngIf="signupForm.get('phoneNumber')?.hasError('required')">Phone number is required</mat-error>
+          <mat-error *ngIf="signupForm.get('phoneNumber')?.hasError('pattern')">Phone number must be 10 digits</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>I am a...</mat-label>
-          <mat-select [(ngModel)]="user.role" (selectionChange)="onRoleChange($event.value)" name="role">
+          <mat-select formControlName="role" (selectionChange)="onRoleChange($event.value)">
             <mat-option value="CUSTOMER">Gym Customer</mat-option>
             <mat-option value="OWNER">Gym Owner</mat-option>
           </mat-select>
+          <mat-error *ngIf="signupForm.get('role')?.hasError('required')">Role is required</mat-error>
         </mat-form-field>
 
-        <div *ngIf="user.role === 'OWNER'">
+        <div *ngIf="signupForm.get('role')?.value === 'OWNER'">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Business Name</mat-label>
-            <input matInput placeholder="My Fitness Gym" [(ngModel)]="user.businessName" name="businessName" required>
+            <input matInput placeholder="My Fitness Gym" formControlName="businessName" required>
             <mat-icon matSuffix>business</mat-icon>
+            <mat-error *ngIf="signupForm.get('businessName')?.hasError('required')">Business name is required</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>PAN Card Number</mat-label>
-            <input matInput placeholder="ABCDE1234F" [(ngModel)]="user.panNumber" name="panNumber" required>
+            <input matInput placeholder="ABCDE1234F" formControlName="panNumber" required>
             <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="signupForm.get('panNumber')?.hasError('required')">PAN number is required</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>GST Number</mat-label>
-            <input matInput placeholder="22AAAAA0000A1Z5" [(ngModel)]="user.gstNumber" name="gstNumber" required>
+            <input matInput placeholder="22AAAAA0000A1Z5" formControlName="gstNumber" required>
             <mat-icon matSuffix>receipt</mat-icon>
+            <mat-error *ngIf="signupForm.get('gstNumber')?.hasError('required')">GST number is required</mat-error>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="user.password" name="password" required>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
           <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          <mat-error *ngIf="signupForm.get('password')?.hasError('required')">Password is required</mat-error>
+          <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Confirm Password</mat-label>
-          <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" name="confirmPassword" [(ngModel)]="confirmPassword">
+          <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" required>
           <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
             <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          <mat-error *ngIf="signupForm.get('confirmPassword')?.hasError('required')">Confirm Password is required</mat-error>
+          <mat-error *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched">Passwords do not match</mat-error>
         </mat-form-field>
 
-        <button mat-flat-button color="primary" class="register-btn" type="submit">
+        <button mat-flat-button color="primary" class="register-btn" type="submit" [disabled]="!signupForm.valid">
           Sign Up
         </button>
 

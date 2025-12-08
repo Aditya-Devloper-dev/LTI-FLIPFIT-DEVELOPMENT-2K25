@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleType } from '../../models/enums/role.type';
 import { UserService } from '../../services/user-service/user.service';
@@ -25,7 +25,7 @@ import { UserService } from '../../services/user-service/user.service';
     MatSelectModule,
     MatFormFieldModule,
     MatIconModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatSnackBarModule
   ],
   templateUrl: './lti-flipfit-signup.html',
@@ -34,98 +34,123 @@ import { UserService } from '../../services/user-service/user.service';
 export class LtiFlipFitSignUp {
   hidePassword = true;
   hideConfirmPassword = true;
-  selectedRole: string = 'CUSTOMER';
-  confirmPassword = '';
+  signupForm: FormGroup;
   
-  user: UserRegistration = {
-    email: '',
-    password: '',
-    fullName: '',
-    phoneNumber: '',
-    role: 'CUSTOMER',
-    businessName: '',
-    gstNumber: '',
-    panNumber: ''
-  };
-
   constructor(
     private userService: UserService, 
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.signupForm = new FormGroup({
+      fullName: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+      role: new FormControl('CUSTOMER', [Validators.required]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      confirmPassword: new FormControl('', [Validators.required]),
+      businessName: new FormControl(''),
+      gstNumber: new FormControl(''),
+      panNumber: new FormControl('')
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { mismatch: true };
+  }
 
   onRoleChange(role: string) {
-    this.selectedRole = role;
-    this.user.role = role;
+    const businessNameControl = this.signupForm.get('businessName');
+    const gstNumberControl = this.signupForm.get('gstNumber');
+    const panNumberControl = this.signupForm.get('panNumber');
+
+    if (role === 'OWNER') {
+      businessNameControl?.setValidators([Validators.required]);
+      gstNumberControl?.setValidators([Validators.required]);
+      panNumberControl?.setValidators([Validators.required]);
+    } else {
+      businessNameControl?.clearValidators();
+      gstNumberControl?.clearValidators();
+      panNumberControl?.clearValidators();
+      
+      // Reset values when switching back to customer
+      businessNameControl?.setValue('');
+      gstNumberControl?.setValue('');
+      panNumberControl?.setValue('');
+    }
+
+    businessNameControl?.updateValueAndValidity();
+    gstNumberControl?.updateValueAndValidity();
+    panNumberControl?.updateValueAndValidity();
   }
 
   onSubmit() {
-    console.log('Registering user:', this.user);
+    if (this.signupForm.valid) {
+      const formValue = this.signupForm.value;
+      console.log('Registering user:', formValue);
 
-    if (this.user.password !== this.confirmPassword) {
-      this.snackBar.open('Passwords do not match!', 'Close', {
+      // Create payload matching UserRegistration interface
+      const userPayload: UserRegistration = {
+        email: formValue.email,
+        password: formValue.password,
+        fullName: formValue.fullName,
+        phoneNumber: formValue.phoneNumber,
+        role: formValue.role,
+        // Optional fields will be included if they have values
+        ...(formValue.role === 'OWNER' && {
+          businessName: formValue.businessName,
+          gstNumber: formValue.gstNumber,
+          panNumber: formValue.panNumber
+        })
+      };
+
+      this.userService.register(userPayload).subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.snackBar.open('Registration successful! Please login.', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          console.error('Registration failed', error);
+          let errorMessage = 'Registration failed';
+          
+          if (error.error) {
+              if (typeof error.error === 'string') {
+                  try {
+                      const parsedError = JSON.parse(error.error);
+                      if (parsedError.message) {
+                          errorMessage = parsedError.message;
+                      } else {
+                          errorMessage = error.error;
+                      }
+                  } catch (e) {
+                      errorMessage = error.error;
+                  }
+              } else if (error.error.message) {
+                  errorMessage = error.error.message;
+              }
+          } else if (error.message) {
+              errorMessage = error.message;
+          }
+
+          this.snackBar.open(errorMessage, 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
+    } else {
+      this.snackBar.open('Please fill all required fields correctly', 'Close', {
         duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
         panelClass: ['error-snackbar']
       });
-      return;
     }
-    
-    // Create a copy of the user object to avoid modifying the form model directly
-    const userPayload = { ...this.user };
-
-    // Remove unnecessary fields for CUSTOMER role
-    if (this.user.role === RoleType.CUSTOMER) {
-      delete userPayload.businessName;
-      delete userPayload.gstNumber;
-      delete userPayload.panNumber;
-    }
-
-    this.userService.register(userPayload).subscribe({
-      next: (response) => {
-        console.log('Registration successful', response);
-        this.snackBar.open('Registration successful! Please login.', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error('Registration failed', error);
-        let errorMessage = 'Registration failed';
-        
-        if (error.error) {
-            // Check if error.error is a string (sometimes happens with API Gateway)
-            if (typeof error.error === 'string') {
-                try {
-                    const parsedError = JSON.parse(error.error);
-                    if (parsedError.message) {
-                        errorMessage = parsedError.message;
-                    } else {
-                        errorMessage = error.error;
-                    }
-                } catch (e) {
-                    // If parsing fails, use the string directly
-                    errorMessage = error.error;
-                }
-            } else if (error.error.message) {
-                // Standard JSON error object
-                errorMessage = error.error.message;
-            }
-        } else if (error.message) {
-            // Fallback to generic HTTP error message
-            errorMessage = error.message;
-        }
-
-        this.snackBar.open(errorMessage, 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
-      }
-    });
   }
 }

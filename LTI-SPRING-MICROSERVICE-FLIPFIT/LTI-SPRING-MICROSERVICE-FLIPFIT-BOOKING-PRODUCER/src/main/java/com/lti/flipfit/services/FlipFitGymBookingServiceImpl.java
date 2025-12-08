@@ -78,8 +78,8 @@ public class FlipFitGymBookingServiceImpl implements FlipFitGymBookingService {
         // Entities are set in the validator
         GymSlot slot = booking.getSlot();
 
-        // Step 1: Initialize Booking with PENDING status
-        // We do NOT decrement the seat yet.
+        // Step 1: Initialize Booking with PENDING status We do NOT decrement the seat
+        // yet.
         booking.setStatus(BookingStatus.PENDING);
         booking.setCreatedAt(LocalDateTime.now());
 

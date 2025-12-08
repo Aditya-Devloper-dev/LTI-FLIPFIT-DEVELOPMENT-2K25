@@ -10,19 +10,22 @@
         <h1 class="welcome-text">Welcome Back</h1>
       </div>
 
-      <form class="login-form" (ngSubmit)="onSubmit()">
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email Address</mat-label>
-          <input matInput placeholder="name@example.com" type="email" [(ngModel)]="email" name="email" required>
+          <input matInput placeholder="name@example.com" type="email" formControlName="email" required>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password" name="password" required>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
           <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" type="button">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
         </mat-form-field>
 
         <div class="options-row">
@@ -30,7 +33,7 @@
           <a routerLink="/forgot-password" class="forgot-link">Forgot Password?</a>
         </div>
 
-        <button mat-flat-button color="primary" class="login-btn" type="submit">
+        <button mat-flat-button color="primary" class="login-btn" type="submit" [disabled]="!loginForm.valid">
           Login
         </button>
 
