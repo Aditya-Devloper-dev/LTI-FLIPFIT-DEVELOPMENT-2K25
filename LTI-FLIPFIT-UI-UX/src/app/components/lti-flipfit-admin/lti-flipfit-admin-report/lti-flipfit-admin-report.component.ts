@@ -48,12 +48,10 @@ export class LtiFlipFitAdminReportComponent implements OnInit {
     this.adminService.viewPayments('ALL').subscribe({
       next: (payments: any[]) => {
         const revenueByMonth = new Array(12).fill(0);
-        
+        console.log('Payments data:', payments);
+
         payments.forEach(payment => {
-          // Assuming payment.booking.date is available and parseable
-          // Or payment.booking.slot.date, checking various possibilities since model is 'any'
-          // Standard FlipFit model usually has date in booking
-          let dateStr = payment.booking?.date || payment.paymentDate;
+          let dateStr = payment.booking?.bookingDate || payment.paymentDate;
           
           if (dateStr) {
              const date = new Date(dateStr);
