@@ -1,7 +1,6 @@
-package com.lti.flipfit.service;
+package com.lti.flipfit.services;
 
 import com.lti.flipfit.dto.NotificationEvent;
-import com.lti.flipfit.services.FlipFitGymNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
